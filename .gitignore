@@ -1,0 +1,64 @@
+############################
+# General
+############################
+
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.orig
+
+############################
+# IntelliJ / Android Studio
+############################
+
+.idea/
+*.iml
+out/
+
+############################
+# Gradle (Android frontend)
+############################
+
+.gradle/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# Local environment config (DO NOT COMMIT)
+local.properties
+
+############################
+# Android
+############################
+
+*.apk
+*.aab
+*.ap_
+*.dex
+captures/
+.externalNativeBuild/
+.cxx/
+
+############################
+# Maven (Spring Boot backend)
+############################
+
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+
+############################
+# Java
+############################
+
+*.class
+hs_err_pid*
+replay_pid*
+*.hprof
