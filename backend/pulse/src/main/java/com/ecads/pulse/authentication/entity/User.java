@@ -3,12 +3,10 @@ package com.ecads.pulse.authentication.entity;
 import com.ecads.pulse.common.enums.Gender;
 import com.ecads.pulse.common.enums.UserRole;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "users")
@@ -32,8 +30,8 @@ public class User {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
-    private String password;
+    @Column(name = "password_hash", nullable = false)
+    private String passwordHash;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -41,7 +39,7 @@ public class User {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "date_of_birth", nullable = false)
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
