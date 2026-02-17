@@ -1,10 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <!-- Light Theme Colors -->
+    <color name="light_background">#F5F8F4</color>
+    <color name="light_text_primary">#1D2A1D</color>
+    <color name="light_text_sub">#1D2A1D80</color>           <!-- 50% opacity -->
+    <color name="light_text_copyright">#1D2A1D80</color>     <!-- same as above -->
+    <color name="light_primary_green">#82E03A</color>
+    <color name="light_green_45">#82E03A73</color>           <!-- ~45% -->
+    <color name="light_green_80">#99e55f</color>           <!-- edited -->
+    <color name="light_green_20">#def3cf</color>           <!-- edited -->
+    <color name="light_green_75">#82E03ABF</color>           <!-- 75% -->
+    <color name="light_green_30">#82E03A4D</color>           <!-- 30% -->
+    <color name="light_green_65">#82E03AA6</color>           <!-- 65% -->
+    <color name="light_textfield_bg">#fffffe</color>       <!-- edited -->
+    <color name="light_button_text">#FFFFFF</color>
+    <color name="light_text_green_95">#88e143</color> <!-- edited -->
+    <color name="light_text_85">#3d493d</color> <!--  edited  -->
+    <color name="light_text_55">#7e877e</color> <!--  edited  -->
+    <color name="light_text_75">#535e53</color> <!--  edited  -->
+    <color name="light_text_90">#1D2A1DE6</color>
+    <color name="light_text_70">#1D2A1DB3</color>
+    <color name="light_text_40">#1D2A1D66</color>
+    <color name="emergency_button_bg">#E04A4D</color>
+    <color name="light_bg_75">#e3e3e3</color>     <!--  back btn color  -->
+    <color name="light_badge_bg_15">#1F2C1F26</color>        <!-- very light -->
+    <color name="light_badge_bg_25">#1F2C1F40</color>
+    <color name="light_bottom_nav_bg">#DDDDDD</color>
+    <color name="light_badge_bg_white_75">#FFFFFFBF</color>
+    <color name="light_card_bg">#DDDDDDF2</color>            <!-- 95% -->
+
+    <!-- Dark Theme Colors -->
+    <color name="dark_background">#0F1A0F</color>
+    <color name="dark_text_primary">#E8F2E0</color>
+    <color name="dark_text_sub">#E8F2E0BF</color>
+    <color name="dark_text_copyright">#7b8677</color>      <!-- 50% -->
+    <color name="dark_primary_green">#90E04A</color>
+    <color name="dark_green_45">#90E04A73</color>
+    <color name="dark_green_50">#4f7d2c</color> <!--  edited  -->
+    <color name="dark_green_15">#223818</color> <!--  edited  -->
+    <color name="dark_green_70">#90E04AB3</color>
+    <color name="dark_green_30">#90E04A4D</color>
+    <color name="dark_green_65">#90E04AA6</color>
+    <color name="dark_text_85">#c7d2c1</color> <!--  edited  -->
+    <color name="dark_text_55">#869182</color> <!--  edited  -->
+    <color name="dark_text_75">#b2bcac</color>  <!--  edited  -->
+    <color name="dark_text_70">#E8F2E0B3</color>
+    <color name="dark_text_40">#E8F2E066</color>
+    <color name="dark_textfield_bg">#1e2b1e</color>        <!-- edited -->
+    <color name="dark_button_text">#FFFFFF</color>
+    <color name="dark_text_green_95">#8ad647</color> <!-- edited -->
+    <color name="dark_bg_65">#192619</color>      <!--  back btn color  -->
+    <color name="dark_badge_bg_75">#1F2C1FBF</color>
+    <color name="dark_badge_bg_35">#1F2C1F59</color>
+    <color name="dark_badge_bg_65">#1F2C1FA6</color>
+    <color name="dark_bottom_nav_bg">#1F2C1FA6</color>
+    <color name="dark_badge_bg_white_15">#FFFFFF26</color>
+    <color name="dark_card_bg">#1F2C1FF2</color>             <!-- 95% -->
+
 </resources>

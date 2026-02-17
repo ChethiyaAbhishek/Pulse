@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorCopyright" format="color"/>
+    <attr name="color_text_75" format="color"/>
+    <attr name="colorBg65" format="color"/>
+    <attr name="progressIndicatorActive" format="color"/>
+    <attr name="progressIndicatorInactive" format="color"/>
+    <attr name="colorTextField" format="color"/>
+    <attr name="colorAuthSubtext1" format="color"/>
+    <attr name="colorAuthLink" format="color"/>
+    <attr name="colorAuthFooter" format="color"/>
+</resources>
