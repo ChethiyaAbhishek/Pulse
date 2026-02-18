@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_padding"
     android:layout_gravity="center_vertical"
+    android:padding="@dimen/activity_padding"
     tools:context=".activity.LoginActivity">
 
     <!-- Back Button -->
@@ -16,234 +16,200 @@
         android:background="@drawable/circular_btn_shape"
         android:src="@drawable/back_arrow"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/emergencyBtnLogin"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/btn_height"
+        android:background="@drawable/emergency_btn_bg"
+        android:paddingStart="@dimen/value_15dp"
+        android:paddingEnd="@dimen/value_15dp"
         android:text="@string/emergency_btn_text"
         android:textColor="@color/light_button_text"
         android:textSize="@dimen/regular_size_16"
         android:textStyle="bold"
+        app:backgroundTint="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/loginTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:text="@string/login_title_text"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="@dimen/size_32"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/backBtnLogin" />
+
+    <TextView
+        android:id="@+id/loginAppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/size_32"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginTitle" />
+
+    <TextView
+        android:id="@+id/loginSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="@string/login_subtitle_text"
+        android:textColor="?attr/color_text_75"
+        android:textSize="@dimen/size_14"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginAppName" />
+
+    <TextView
+        android:id="@+id/loginEmailLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value_30dp"
+        android:text="@string/email_label_text"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="@dimen/regular_size_16"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginSubtitle" />
+
+    <EditText
+        android:id="@+id/loginEmailField"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/value_45dp"
+        android:layout_marginTop="@dimen/value_8dp"
+        android:background="@drawable/textfield_background"
+        android:drawableStart="@drawable/email_icon"
+        android:drawablePadding="@dimen/padding_10"
+        android:hint="@string/email_field_hint"
+        android:inputType="textEmailAddress"
         android:paddingStart="@dimen/value_15dp"
         android:paddingEnd="@dimen/value_15dp"
-        android:background="@drawable/emergency_btn_bg"
-        android:backgroundTint="@null"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <!-- Title -->
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome Back"
-        android:textColor="#FFFFFF"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginTop="48dp"
+        android:textColor="?attr/color_text_75"
+        android:textColorHint="?attr/color_text_75"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/backBtnLogin"/>
+        app:layout_constraintTop_toBottomOf="@id/loginEmailLabel" />
 
     <TextView
-        android:id="@+id/tvToPulse"
+        android:id="@+id/loginPasswordLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="to Pulse"
-        android:textColor="#8CE96B"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/value_30dp"
+        android:text="@string/password_label_text"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="@dimen/regular_size_16"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"/>
+        app:layout_constraintTop_toBottomOf="@id/loginEmailField" />
 
-    <!-- Subtitle -->
-    <TextView
-        android:id="@+id/tvSubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="This keeps your recovery data and doctor\nconnections safe and private."
-        android:textColor="#B0B3B8"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:layout_marginTop="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvToPulse"/>
-
-    <!-- Email Label -->
-    <TextView
-        android:id="@+id/labelEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        android:layout_marginTop="40dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSubtitle"/>
-
-    <!-- Email Field -->
     <EditText
-        android:id="@+id/etEmail"
+        android:id="@+id/loginPasswordField"
         android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/edit_text_bg"
-        android:paddingStart="56dp"
-        android:paddingEnd="16dp"
-        android:hint="Enter your email"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#6B7280"
-        android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/labelEmail"/>
-
-    <!-- Email Icon -->
-    <ImageView
-        android:id="@+id/ivEmailIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/ic_email"
-        android:contentDescription="Email"
-        app:layout_constraintStart_toStartOf="@id/etEmail"
-        app:layout_constraintTop_toTopOf="@id/etEmail"
-        app:layout_constraintBottom_toBottomOf="@id/etEmail"
-        android:layout_marginStart="16dp"/>
-
-    <!-- Password Label -->
-    <TextView
-        android:id="@+id/labelPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Password"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etEmail"/>
-
-    <!-- Password Field -->
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/edit_text_bg"
-        android:paddingStart="56dp"
-        android:paddingEnd="16dp"
-        android:hint="Enter your password"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#6B7280"
+        android:layout_height="@dimen/value_45dp"
+        android:layout_marginTop="@dimen/value_8dp"
+        android:background="@drawable/textfield_background"
+        android:drawableStart="@drawable/lock_icon"
+        android:drawablePadding="@dimen/padding_10"
+        android:hint="@string/password_field_hint_text"
         android:inputType="textPassword"
+        android:paddingStart="@dimen/value_15dp"
+        android:paddingEnd="@dimen/value_15dp"
+        android:textColor="?attr/color_text_75"
+        android:textColorHint="?attr/color_text_75"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/labelPassword"/>
+        app:layout_constraintTop_toBottomOf="@id/loginPasswordLabel" />
 
-    <!-- Password Icon -->
-    <ImageView
-        android:id="@+id/ivPasswordIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/ic_lock"
-        android:contentDescription="Password"
-        app:layout_constraintStart_toStartOf="@id/etPassword"
-        app:layout_constraintTop_toTopOf="@id/etPassword"
-        app:layout_constraintBottom_toBottomOf="@id/etPassword"
-        android:layout_marginStart="16dp"/>
-
-    <!-- Forgot Password -->
     <TextView
-        android:id="@+id/tvForgotPassword"
+        android:id="@+id/loginForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forgot Password?"
-        android:textColor="#8CE96B"
-        android:textSize="14sp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/value_8dp"
         android:clickable="true"
         android:focusable="true"
+        android:text="@string/forgot_password_text"
+        android:textColor="?attr/color_text_75"
+        android:textSize="@dimen/size_14"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etPassword"/>
+        app:layout_constraintTop_toBottomOf="@id/loginPasswordField" />
 
-    <!-- Sign In Button -->
     <Button
-        android:id="@+id/btnSignIn"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:id="@+id/signInBtn"
+        android:layout_width="@dimen/btn_width"
+        android:layout_height="@dimen/btn_height"
         android:layout_marginTop="40dp"
-        android:background="@drawable/button_green_bg"
-        android:text="Sign In"
-        android:textColor="#1B1E1B"
-        android:textSize="16sp"
+        android:text="@string/sign_in_text"
+        android:textSize="@dimen/size_17"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvForgotPassword"/>
+        app:layout_constraintTop_toBottomOf="@id/loginForgotPassword" />
 
-    <!-- Biometric Icons Container -->
     <LinearLayout
-        android:id="@+id/llBiometric"
+        android:id="@+id/biometrics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value_30dp"
         android:orientation="horizontal"
-        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnSignIn">
+        app:layout_constraintTop_toBottomOf="@id/signInBtn">
 
         <ImageView
-            android:id="@+id/ivFingerprint"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_fingerprint"
-            android:contentDescription="Fingerprint"
-            android:layout_marginEnd="24dp"
+            android:id="@+id/fingerPrintAuth"
+            android:layout_width="@dimen/value_40dp"
+            android:layout_height="@dimen/value_40dp"
+            android:layout_marginEnd="@dimen/value_24dp"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:src="@drawable/fingerprint_icon" />
 
         <ImageView
-            android:id="@+id/ivFaceRecognition"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_face_recognition"
-            android:contentDescription="Face Recognition"
+            android:id="@+id/faceRecognitionAuth"
+            android:layout_width="@dimen/value_40dp"
+            android:layout_height="@dimen/value_40dp"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:src="@drawable/face_recog_icon" />
     </LinearLayout>
 
-    <!-- Register Text -->
     <TextView
-        android:id="@+id/tvRegisterText"
+        android:id="@+id/loginFooter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Don't have an account? "
-        android:textColor="#B0B3B8"
-        android:textSize="14sp"
-        android:layout_marginTop="48dp"
-        app:layout_constraintEnd_toStartOf="@id/tvRegister"
+        android:text="@string/login_footer_text"
+        android:textColor="?attr/colorAuthFooter"
+        android:textSize="@dimen/regular_size_16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/login_reg_text"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llBiometric"/>
+        app:layout_constraintTop_toBottomOf="@id/biometrics" />
 
     <TextView
-        android:id="@+id/tvRegister"
+        android:id="@+id/login_reg_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register"
-        android:textColor="#8CE96B"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:layout_marginStart="@dimen/value_8dp"
         android:clickable="true"
         android:focusable="true"
+        android:text="@string/login_reg_text"
+        android:textColor="?attr/colorAuthLink"
+        android:textSize="@dimen/regular_size_16"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tvRegisterText"
-        app:layout_constraintTop_toTopOf="@id/tvRegisterText"/>
-
+        app:layout_constraintStart_toEndOf="@id/loginFooter"
+        app:layout_constraintTop_toTopOf="@id/loginFooter" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

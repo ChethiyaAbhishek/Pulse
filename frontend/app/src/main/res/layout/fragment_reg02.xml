@@ -79,79 +79,85 @@
         android:id="@+id/emailLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value_30dp"
         android:text="@string/email_label_text"
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/regular_size_16"
-        android:layout_marginTop="@dimen/value_30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progressIndicator2"/>
+        app:layout_constraintTop_toBottomOf="@id/progressIndicator2" />
 
     <EditText
         android:id="@+id/emailField"
         android:layout_width="0dp"
-        android:layout_height="@dimen/value_55dp"
+        android:layout_height="@dimen/value_45dp"
         android:layout_marginTop="@dimen/value_8dp"
         android:background="@drawable/textfield_background"
+        android:drawableStart="@drawable/email_icon"
+        android:drawablePadding="@dimen/padding_10"
+        android:hint="@string/email_field_hint"
         android:paddingStart="@dimen/value_15dp"
         android:paddingEnd="@dimen/value_15dp"
-        android:hint="@string/email_field_hint"
         android:textColor="?attr/color_text_75"
         android:textColorHint="?attr/color_text_75"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailLabel"/>
+        app:layout_constraintTop_toBottomOf="@id/emailLabel" />
 
     <TextView
         android:id="@+id/passwordLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value_30dp"
         android:text="@string/password_label_text"
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/regular_size_16"
-        android:layout_marginTop="@dimen/value_30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailField"/>
+        app:layout_constraintTop_toBottomOf="@id/emailField" />
 
     <EditText
         android:id="@+id/passwordField"
         android:layout_width="0dp"
-        android:layout_height="@dimen/value_55dp"
+        android:layout_height="@dimen/value_45dp"
         android:layout_marginTop="@dimen/value_8dp"
         android:background="@drawable/textfield_background"
+        android:drawableStart="@drawable/lock_icon"
+        android:drawablePadding="@dimen/padding_10"
+        android:hint="@string/password_field_hint_text"
         android:paddingStart="@dimen/value_15dp"
         android:paddingEnd="@dimen/value_15dp"
-        android:hint="@string/password_field_hint_text"
         android:textColor="?attr/color_text_75"
         android:textColorHint="?attr/color_text_75"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordLabel"/>
+        app:layout_constraintTop_toBottomOf="@id/passwordLabel" />
 
     <TextView
         android:id="@+id/confirmPasswordLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value_30dp"
         android:text="@string/confirm_password_label_text"
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/regular_size_16"
-        android:layout_marginTop="@dimen/value_30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordField"/>
+        app:layout_constraintTop_toBottomOf="@id/passwordField" />
 
     <EditText
         android:id="@+id/confirmPasswordField"
         android:layout_width="0dp"
-        android:layout_height="@dimen/value_55dp"
+        android:layout_height="@dimen/value_45dp"
         android:layout_marginTop="@dimen/value_8dp"
         android:background="@drawable/textfield_background"
+        android:drawableStart="@drawable/lock_icon"
+        android:drawablePadding="@dimen/padding_10"
+        android:hint="@string/confirm_password_field_hint_text"
         android:paddingStart="@dimen/value_15dp"
         android:paddingEnd="@dimen/value_15dp"
-        android:hint="@string/confirm_password_field_hint_text"
         android:textColor="?attr/color_text_75"
         android:textColorHint="?attr/color_text_75"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/confirmPasswordLabel"/>
+        app:layout_constraintTop_toBottomOf="@id/confirmPasswordLabel" />
 
     <Button
         android:id="@+id/createAccountBtn"
@@ -161,23 +167,23 @@
         android:text="@string/create_account_btn_text"
         android:textSize="@dimen/size_17"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/reg2_footer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/reg2_footer"
-        app:layout_constraintTop_toBottomOf="@id/confirmPasswordField"/>
+        app:layout_constraintTop_toBottomOf="@id/confirmPasswordField" />
 
     <TextView
         android:id="@+id/reg2_footer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/reg2_footer_text"
         android:textColor="?attr/colorAuthFooter"
         android:textSize="@dimen/size_14"
-        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/createAccountBtn"/>
+        app:layout_constraintTop_toBottomOf="@id/createAccountBtn" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

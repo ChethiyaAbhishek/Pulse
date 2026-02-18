@@ -50,7 +50,22 @@
         <item name="android:textColorPrimary">@color/light_text_primary</item>
         <item name="android:textColorSecondary">@color/light_text_sub</item>
 
+        <item name="textAppearanceTitleLarge">@style/AppText</item>
+        <item name="textAppearanceTitleMedium">@style/AppText</item>
+        <item name="textAppearanceBodySmall">@style/AppText</item>
+        <item name="textAppearanceBodyLarge">@style/AppText</item>
+        <item name="textAppearanceBodyMedium">@style/AppText</item>
+        <item name="textAppearanceLabelLarge">@style/AppButtonText</item>
     </style>
+
+    <style name="AppText" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/inter_family</item>
+    </style>
+
+    <style name="AppButtonText" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/inter_family</item>
+    </style>
+
 
     <!-- Light theme (applied by default) -->
     <!--<style name="Theme.Pulse" parent="Theme.Pulse" />-->

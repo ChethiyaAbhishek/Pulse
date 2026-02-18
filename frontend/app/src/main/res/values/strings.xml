@@ -46,4 +46,10 @@
     <string name="ec_helper_text">*Someone we can reach quickly if needed (e.g., family member)</string>
     <string name="regf_btn_text">Continue</string>
     <string name="emergency_btn_text">1990 EMERGENCY</string>
+    <string name="login_title_text">Welcome Back to</string>
+    <string name="login_subtitle_text">This keeps your recovery data and doctor\nconnections safe and private.</string>
+    <string name="forgot_password_text">Forgot Password?</string>
+    <string name="sign_in_text">Sign In</string>
+    <string name="login_footer_text">Don\'t have an account?</string>
+    <string name="login_reg_text">Register</string>
 </resources>

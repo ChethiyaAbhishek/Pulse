@@ -3,14 +3,16 @@
     <dimen name="activity_padding">30dp</dimen>
 
     <dimen name="btn_height">55dp</dimen>
-    <dimen name="btn_width">315dp</dimen>
+    <dimen name="btn_width">match_parent</dimen>
 
     <dimen name="value_5dp">5dp</dimen>
     <dimen name="value_8dp">8dp</dimen>
     <dimen name="value_15dp">15dp</dimen>
+    <dimen name="value_24dp">24dp</dimen>
     <dimen name="value_30dp">30dp</dimen>
     <dimen name="value_35dp">35dp</dimen>
-    <dimen name="value_55dp">55dp</dimen>
+    <dimen name="value_40dp">40dp</dimen>
+    <dimen name="value_45dp">45dp</dimen>
 
     <dimen name="text_size_48">48sp</dimen>
     <dimen name="size_32">32sp</dimen>
