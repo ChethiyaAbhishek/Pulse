@@ -1,26 +1,35 @@
 package com.ecads.pulse.android.activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.ecads.pulse.android.R;
+import com.ecads.pulse.android.fragment.Reg01Fragment;
+import com.ecads.pulse.android.fragment.Reg03Fragment;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registration);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+//        SharedPreferences preferences = getSharedPreferences(SplashActivity.APP_DATA, MODE_PRIVATE);
+//        if (preferences.getBoolean("tempDataAvailable", false)) {
+//            loadFragment(new Reg03Fragment());
+//        } else {
+            loadFragment(new Reg01Fragment());
+//        }
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.regFragmentContainer, fragment);
+        transaction.commit();
     }
 }

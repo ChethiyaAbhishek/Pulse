@@ -20,7 +20,7 @@
         android:id="@+id/reg2_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="@dimen/value_15dp"
         android:gravity="center"
         android:paddingHorizontal="@dimen/padding_10"
         android:text="@string/reg2_title_text"
@@ -104,6 +104,18 @@
         app:layout_constraintTop_toBottomOf="@id/emailLabel" />
 
     <TextView
+        android:id="@+id/emailError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value_15dp"
+        android:layout_marginTop="@dimen/value_5dp"
+        android:text="* Email is required."
+        android:textColor="@color/emergency_button_bg"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/emailField" />
+
+    <TextView
         android:id="@+id/passwordLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -112,7 +124,7 @@
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/regular_size_16"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailField" />
+        app:layout_constraintTop_toBottomOf="@id/emailError" />
 
     <EditText
         android:id="@+id/passwordField"
@@ -124,12 +136,25 @@
         android:drawablePadding="@dimen/padding_10"
         android:hint="@string/password_field_hint_text"
         android:paddingStart="@dimen/value_15dp"
+        android:inputType="textPassword"
         android:paddingEnd="@dimen/value_15dp"
         android:textColor="?attr/color_text_75"
         android:textColorHint="?attr/color_text_75"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/passwordLabel" />
+
+    <TextView
+        android:id="@+id/passwordError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value_15dp"
+        android:layout_marginTop="@dimen/value_5dp"
+        android:text="* Password is required."
+        android:textColor="@color/emergency_button_bg"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/passwordField" />
 
     <TextView
         android:id="@+id/confirmPasswordLabel"
@@ -140,13 +165,14 @@
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/regular_size_16"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordField" />
+        app:layout_constraintTop_toBottomOf="@id/passwordError" />
 
     <EditText
         android:id="@+id/confirmPasswordField"
         android:layout_width="0dp"
         android:layout_height="@dimen/value_45dp"
         android:layout_marginTop="@dimen/value_8dp"
+        android:inputType="textPassword"
         android:background="@drawable/textfield_background"
         android:drawableStart="@drawable/lock_icon"
         android:drawablePadding="@dimen/padding_10"
@@ -159,9 +185,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/confirmPasswordLabel" />
 
+    <TextView
+        android:id="@+id/conPasswordError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value_15dp"
+        android:layout_marginTop="@dimen/value_5dp"
+        android:text="* Password confirmation is required."
+        android:textColor="@color/emergency_button_bg"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/confirmPasswordField" />
+
     <Button
         android:id="@+id/createAccountBtn"
-        android:layout_width="@dimen/btn_width"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/btn_height"
         android:layout_marginTop="40dp"
         android:text="@string/create_account_btn_text"
@@ -170,7 +208,7 @@
         app:layout_constraintBottom_toTopOf="@id/reg2_footer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/confirmPasswordField" />
+        app:layout_constraintTop_toBottomOf="@id/conPasswordError" />
 
     <TextView
         android:id="@+id/reg2_footer"
@@ -180,6 +218,7 @@
         android:text="@string/reg2_footer_text"
         android:textColor="?attr/colorAuthFooter"
         android:textSize="@dimen/size_14"
+        android:layout_marginTop="@dimen/value_15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

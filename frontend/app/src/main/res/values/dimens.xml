@@ -3,7 +3,6 @@
     <dimen name="activity_padding">30dp</dimen>
 
     <dimen name="btn_height">55dp</dimen>
-    <dimen name="btn_width">match_parent</dimen>
 
     <dimen name="value_5dp">5dp</dimen>
     <dimen name="value_8dp">8dp</dimen>

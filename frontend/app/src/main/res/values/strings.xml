@@ -21,7 +21,7 @@
     <string name="reg1_login_link_text">Login</string>
     <string name="dob_field_hint_text">Enter your date of birth</string>
     <string name="gender_field_hint_text">Select your gender</string>
-    <string name="reg2_title_text"><![CDATA[Set Up \n Email & Password]]></string>
+    <string name="reg2_title_text"><![CDATA[Set Up Email & Password]]></string>
     <string name="reg2_subtitle_text">This keeps your recovery data and doctor connections safe and private.</string>
     <string name="email_label_text">Email</string>
     <string name="email_field_hint">Enter your email</string>

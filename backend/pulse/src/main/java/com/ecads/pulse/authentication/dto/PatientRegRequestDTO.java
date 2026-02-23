@@ -3,6 +3,7 @@ package com.ecads.pulse.authentication.dto;
 import com.ecads.pulse.common.enums.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,13 +31,13 @@ public class PatientRegRequestDTO {
     @NotBlank(message = "Last name is required.")
     private String lastName;
 
-    @NotBlank(message = "Date of birth is required.")
+    @NotNull(message = "Date of birth is required.")
     private LocalDate dateOfBirth;
 
-    @NotBlank(message = "Gender is required.")
+    @NotNull(message = "Gender is required.")
     private Gender gender;
 
-    @NotBlank(message = "Stroke date is required.")
+    @NotNull(message = "Stroke date is required.")
     private LocalDate strokeDate;
 
     @NotBlank(message = "Caregiver's first name is required.")

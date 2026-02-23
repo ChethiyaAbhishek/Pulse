@@ -97,11 +97,25 @@
         android:hint="@string/dos_field_hint_text"
         android:paddingStart="@dimen/value_15dp"
         android:paddingEnd="@dimen/value_15dp"
+        android:focusable="false"
+        android:cursorVisible="false"
         android:textColor="?attr/color_text_75"
         android:textColorHint="?attr/color_text_75"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dateOfStrokeLabel" />
+
+    <TextView
+        android:id="@+id/dosError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value_15dp"
+        android:layout_marginTop="@dimen/value_5dp"
+        android:text="* Date of stroke is required."
+        android:textColor="@color/emergency_button_bg"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dateOfStrokeField" />
 
     <TextView
         android:id="@+id/cFnameLabel"
@@ -112,7 +126,7 @@
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/regular_size_16"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dateOfStrokeField" />
+        app:layout_constraintTop_toBottomOf="@id/dosError" />
 
     <EditText
         android:id="@+id/cFnameField"
@@ -132,6 +146,18 @@
         app:layout_constraintTop_toBottomOf="@id/cFnameLabel" />
 
     <TextView
+        android:id="@+id/cfnError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value_15dp"
+        android:layout_marginTop="@dimen/value_5dp"
+        android:text="* Caregiver's first name is required."
+        android:textColor="@color/emergency_button_bg"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cFnameField" />
+
+    <TextView
         android:id="@+id/cLnameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -140,7 +166,7 @@
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/regular_size_16"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cFnameField" />
+        app:layout_constraintTop_toBottomOf="@id/cfnError" />
 
     <EditText
         android:id="@+id/cLnameField"
@@ -160,6 +186,18 @@
         app:layout_constraintTop_toBottomOf="@id/cLnameLabel" />
 
     <TextView
+        android:id="@+id/clnError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value_15dp"
+        android:layout_marginTop="@dimen/value_5dp"
+        android:text="* Caregiver's last name is required."
+        android:textColor="@color/emergency_button_bg"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cLnameField" />
+
+    <TextView
         android:id="@+id/cContactLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -168,7 +206,7 @@
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/regular_size_16"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cLnameField" />
+        app:layout_constraintTop_toBottomOf="@id/clnError" />
 
     <EditText
         android:id="@+id/cContactField"
@@ -181,11 +219,24 @@
         android:hint="@string/cc_field_hint_text"
         android:paddingStart="@dimen/value_15dp"
         android:paddingEnd="@dimen/value_15dp"
+        android:inputType="phone"
         android:textColor="?attr/color_text_75"
         android:textColorHint="?attr/color_text_75"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cContactLabel" />
+
+    <TextView
+        android:id="@+id/cconError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value_15dp"
+        android:layout_marginTop="@dimen/value_5dp"
+        android:text="* Caregiver's contact number is required."
+        android:textColor="@color/emergency_button_bg"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cContactField" />
 
     <TextView
         android:id="@+id/eContactLabel"
@@ -196,13 +247,14 @@
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/regular_size_16"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cContactField" />
+        app:layout_constraintTop_toBottomOf="@id/cconError" />
 
     <EditText
         android:id="@+id/eContactField"
         android:layout_width="0dp"
         android:layout_height="@dimen/value_45dp"
         android:layout_marginTop="@dimen/value_8dp"
+        android:inputType="phone"
         android:background="@drawable/textfield_background"
         android:hint="@string/ec_field_hint_text"
         android:paddingStart="@dimen/value_15dp"
@@ -216,6 +268,18 @@
         app:layout_constraintTop_toBottomOf="@id/eContactLabel" />
 
     <TextView
+        android:id="@+id/econError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value_15dp"
+        android:layout_marginTop="@dimen/value_5dp"
+        android:text="* Caregiver's contact number is required."
+        android:textColor="@color/emergency_button_bg"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eContactField" />
+
+    <TextView
         android:id="@+id/ecHelperText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -224,11 +288,11 @@
         android:textColor="?attr/colorAuthFooter"
         android:textSize="@dimen/size_12"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eContactField" />
+        app:layout_constraintTop_toBottomOf="@id/econError" />
 
     <Button
         android:id="@+id/regFinalizeBtn"
-        android:layout_width="@dimen/btn_width"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/btn_height"
         android:layout_marginTop="40dp"
         android:text="@string/regf_btn_text"

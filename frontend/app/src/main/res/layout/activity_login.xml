@@ -8,15 +8,14 @@
     android:padding="@dimen/activity_padding"
     tools:context=".activity.LoginActivity">
 
-    <!-- Back Button -->
-    <ImageButton
-        android:id="@+id/backBtnLogin"
-        android:layout_width="@dimen/circular_btn"
-        android:layout_height="@dimen/circular_btn"
-        android:background="@drawable/circular_btn_shape"
-        android:src="@drawable/back_arrow"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/backBtnLogin"-->
+<!--        android:layout_width="@dimen/circular_btn"-->
+<!--        android:layout_height="@dimen/circular_btn"-->
+<!--        android:background="@drawable/circular_btn_shape"-->
+<!--        android:src="@drawable/back_arrow"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <Button
         android:id="@+id/emergencyBtnLogin"
@@ -37,7 +36,7 @@
         android:id="@+id/loginTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="@dimen/value_35dp"
         android:gravity="center"
         android:text="@string/login_title_text"
         android:textColor="?attr/colorOnSurface"
@@ -45,7 +44,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/backBtnLogin" />
+        app:layout_constraintTop_toBottomOf="@id/emergencyBtnLogin" />
 
     <TextView
         android:id="@+id/loginAppName"
@@ -103,6 +102,18 @@
         app:layout_constraintTop_toBottomOf="@id/loginEmailLabel" />
 
     <TextView
+        android:id="@+id/loginEmailError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value_15dp"
+        android:layout_marginTop="@dimen/value_5dp"
+        android:text="* Email is required."
+        android:textColor="@color/emergency_button_bg"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginEmailField" />
+
+    <TextView
         android:id="@+id/loginPasswordLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -111,7 +122,7 @@
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/regular_size_16"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginEmailField" />
+        app:layout_constraintTop_toBottomOf="@id/loginEmailError" />
 
     <EditText
         android:id="@+id/loginPasswordField"
@@ -132,6 +143,18 @@
         app:layout_constraintTop_toBottomOf="@id/loginPasswordLabel" />
 
     <TextView
+        android:id="@+id/loginPasswordError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value_15dp"
+        android:layout_marginTop="@dimen/value_5dp"
+        android:text="* Password is required."
+        android:textColor="@color/emergency_button_bg"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginPasswordField" />
+
+    <TextView
         android:id="@+id/loginForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -142,11 +165,11 @@
         android:textColor="?attr/color_text_75"
         android:textSize="@dimen/size_14"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginPasswordField" />
+        app:layout_constraintTop_toBottomOf="@id/loginPasswordError" />
 
     <Button
         android:id="@+id/signInBtn"
-        android:layout_width="@dimen/btn_width"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/btn_height"
         android:layout_marginTop="40dp"
         android:text="@string/sign_in_text"
@@ -156,33 +179,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginForgotPassword" />
 
-    <LinearLayout
-        android:id="@+id/biometrics"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/value_30dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/signInBtn">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/biometrics"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="@dimen/value_30dp"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/signInBtn">-->
 
-        <ImageView
-            android:id="@+id/fingerPrintAuth"
-            android:layout_width="@dimen/value_40dp"
-            android:layout_height="@dimen/value_40dp"
-            android:layout_marginEnd="@dimen/value_24dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/fingerprint_icon" />
+<!--        <ImageView-->
+<!--            android:id="@+id/fingerPrintAuth"-->
+<!--            android:layout_width="@dimen/value_40dp"-->
+<!--            android:layout_height="@dimen/value_40dp"-->
+<!--            android:layout_marginEnd="@dimen/value_24dp"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            android:src="@drawable/fingerprint_icon" />-->
 
-        <ImageView
-            android:id="@+id/faceRecognitionAuth"
-            android:layout_width="@dimen/value_40dp"
-            android:layout_height="@dimen/value_40dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/face_recog_icon" />
-    </LinearLayout>
+<!--        <ImageView-->
+<!--            android:id="@+id/faceRecognitionAuth"-->
+<!--            android:layout_width="@dimen/value_40dp"-->
+<!--            android:layout_height="@dimen/value_40dp"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            android:src="@drawable/face_recog_icon" />-->
+<!--    </LinearLayout>-->
 
     <TextView
         android:id="@+id/loginFooter"
@@ -195,7 +218,7 @@
         app:layout_constraintEnd_toStartOf="@id/login_reg_text"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/biometrics" />
+        app:layout_constraintTop_toBottomOf="@id/signInBtn" />
 
     <TextView
         android:id="@+id/login_reg_text"
