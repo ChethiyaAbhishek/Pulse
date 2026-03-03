@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingTop="@dimen/activity_padding"
+    android:paddingStart="@dimen/activity_padding"
+    android:paddingEnd="@dimen/activity_padding"
+    android:paddingBottom="@dimen/value_15dp"
+    tools:context=".fragment.ProfileFragment">
+
+    <LinearLayout
+        android:id="@+id/profileHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/value_24dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/profileHeaderName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kusal Senevirathna"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/size_24"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/profileHeaderEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value_5dp"
+            android:text="kusal@gmail.com"
+            android:textColor="?attr/color_text_75"
+            android:textSize="@dimen/size_14" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/value_5dp"
+            android:layout_marginTop="@dimen/value_15dp"
+            android:background="@drawable/progress_indicator_active" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/profileHeader"
+        android:layout_above="@id/profileChangesBtn">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_emergency_details_section_text"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/regular_size_16" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value_18dp"
+                android:text="@string/dos_label_text"
+                android:textColor="?attr/colorAuthSubtext1"
+                android:textSize="@dimen/size_14" />
+
+            <EditText
+                android:id="@+id/profileDosField"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/value_45dp"
+                android:layout_marginTop="@dimen/value_8dp"
+                android:layout_weight="1"
+                android:background="@drawable/textfield_background"
+                android:drawableStart="@drawable/calendar_icon"
+                android:drawablePadding="@dimen/padding_10"
+                android:inputType="none"
+                android:focusable="false"
+                android:cursorVisible="false"
+                android:paddingStart="@dimen/value_15dp"
+                android:paddingEnd="@dimen/value_15dp"
+                android:textColor="?attr/color_text_75"
+                android:textColorHint="?attr/color_text_75" />
+
+            <TextView
+                android:id="@+id/profileDosError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/value_15dp"
+                android:layout_marginTop="@dimen/value_5dp"
+                android:text="* Date of stroke is required."
+                android:textColor="@color/emergency_button_bg"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value_18dp"
+                android:text="@string/cfn_label_text"
+                android:textColor="?attr/colorAuthSubtext1"
+                android:textSize="@dimen/size_14" />
+
+            <EditText
+                android:id="@+id/profileCfnField"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/value_45dp"
+                android:layout_marginTop="@dimen/value_8dp"
+                android:layout_weight="1"
+                android:background="@drawable/textfield_background"
+                android:drawableStart="@drawable/user_icon"
+                android:drawablePadding="@dimen/padding_10"
+                android:inputType="text"
+                android:paddingStart="@dimen/value_15dp"
+                android:paddingEnd="@dimen/value_15dp"
+                android:textColor="?attr/color_text_75"
+                android:textColorHint="?attr/color_text_75" />
+
+            <TextView
+                android:id="@+id/profileCfnError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/value_15dp"
+                android:layout_marginTop="@dimen/value_5dp"
+                android:text="* Caregiver's first name is required."
+                android:textColor="@color/emergency_button_bg"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value_18dp"
+                android:text="@string/cln_label_text"
+                android:textColor="?attr/colorAuthSubtext1"
+                android:textSize="@dimen/size_14" />
+
+            <EditText
+                android:id="@+id/profileClnField"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/value_45dp"
+                android:layout_marginTop="@dimen/value_8dp"
+                android:layout_weight="1"
+                android:background="@drawable/textfield_background"
+                android:drawableStart="@drawable/user_icon"
+                android:drawablePadding="@dimen/padding_10"
+                android:inputType="text"
+                android:paddingStart="@dimen/value_15dp"
+                android:paddingEnd="@dimen/value_15dp"
+                android:textColor="?attr/color_text_75"
+                android:textColorHint="?attr/color_text_75" />
+
+            <TextView
+                android:id="@+id/profileClnError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/value_15dp"
+                android:layout_marginTop="@dimen/value_5dp"
+                android:text="* Caregiver's last name is required."
+                android:textColor="@color/emergency_button_bg"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value_18dp"
+                android:text="@string/ccontact_label_text"
+                android:textColor="?attr/colorAuthSubtext1"
+                android:textSize="@dimen/size_14" />
+
+            <EditText
+                android:id="@+id/profileCconField"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/value_45dp"
+                android:layout_marginTop="@dimen/value_8dp"
+                android:layout_weight="1"
+                android:background="@drawable/textfield_background"
+                android:drawableStart="@drawable/mobile_icon"
+                android:drawablePadding="@dimen/padding_10"
+                android:inputType="phone"
+                android:paddingStart="@dimen/value_15dp"
+                android:paddingEnd="@dimen/value_15dp"
+                android:textColor="?attr/color_text_75"
+                android:textColorHint="?attr/color_text_75" />
+
+            <TextView
+                android:id="@+id/profileCconError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/value_15dp"
+                android:layout_marginTop="@dimen/value_5dp"
+                android:text="* Caregiver's contact number is required."
+                android:textColor="@color/emergency_button_bg"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value_18dp"
+                android:text="@string/ec_label_text"
+                android:textColor="?attr/colorAuthSubtext1"
+                android:textSize="@dimen/size_14" />
+
+            <EditText
+                android:id="@+id/profileEcField"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/value_45dp"
+                android:layout_marginTop="@dimen/value_8dp"
+                android:layout_weight="1"
+                android:background="@drawable/textfield_background"
+                android:drawableStart="@drawable/mobile_icon"
+                android:drawablePadding="@dimen/padding_10"
+                android:inputType="phone"
+                android:paddingStart="@dimen/value_15dp"
+                android:paddingEnd="@dimen/value_15dp"
+                android:textColor="?attr/color_text_75"
+                android:textColorHint="?attr/color_text_75" />
+
+            <TextView
+                android:id="@+id/profileEcError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/value_15dp"
+                android:layout_marginTop="@dimen/value_5dp"
+                android:text="* Emergency contact number is required."
+                android:textColor="@color/emergency_button_bg"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value_8dp"
+                android:text="@string/ec_helper_text"
+                android:textColor="?attr/colorAuthFooter"
+                android:textSize="@dimen/size_12"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/profileChangesBtn"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/value_15dp"
+        android:layout_height="@dimen/btn_height"
+        android:text="Save Changes"
+        android:textSize="@dimen/size_17"
+        android:textStyle="bold"/>
+
+</RelativeLayout>

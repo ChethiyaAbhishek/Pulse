@@ -29,6 +29,8 @@ import com.ecads.pulse.android.activity.RegistrationActivity;
 import com.ecads.pulse.android.activity.SplashActivity;
 import com.ecads.pulse.android.databinding.FragmentReg02Binding;
 import com.ecads.pulse.android.model.User;
+import com.ecads.pulse.android.network.AuthApiService;
+import com.ecads.pulse.android.network.RetrofitClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,12 +39,19 @@ import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class Reg02Fragment extends Fragment {
 
@@ -167,94 +176,150 @@ public class Reg02Fragment extends Fragment {
                             editor.putString("uid", uid);
                             editor.putString("fname", dataBundle.getString("fname"));
 
-                            firebaseFirestore.collection("users")
-                                    .document(uid)
-                                    .set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Log.i("Firebase Firestore", "Data stored");
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-
-                                            Log.w("Firebase Firestore", "Data saving failed");
-
-                                            editor.putBoolean("tempDataAvailable", true);
-                                            editor.putString("lname", dataBundle.getString("lname"));
-                                            editor.putString("mobile", dataBundle.getString("mobile"));
-                                            editor.putString("dob", dataBundle.getString("dob"));
-                                            editor.putString("gender", dataBundle.getString("gender"));
-                                            editor.putString("email", email);
-                                        }
-                                    });
+                            saveOnFirestore(uid, user, editor);
 
                             editor.apply();
 
-                            Bundle transferBundle = new Bundle();
-                            transferBundle.putString("uid", uid);
+                            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-                            Reg03Fragment fragment = new Reg03Fragment();
-                            fragment.setArguments(transferBundle);
+                            if (currentUser != null) {
+                                currentUser.getIdToken(true)
+                                        .addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                                            @Override
+                                            public void onSuccess(GetTokenResult getTokenResult) {
+                                                Log.i("Firebase Auth", "Firebase Token retrieved");
+                                                updateServer(getTokenResult.getToken(), uid);
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.e("Firebase Auth", "Token retrieval failed: " + e.getMessage());
 
-                            getParentFragmentManager().beginTransaction()
-                                    .replace(R.id.regFragmentContainer, fragment)
-                                    .commit();
+                                            }
+                                        });
+                            } else {
+                                // exception
+                                Log.e("Firebase Auth", "No firebase auth user");
+                            }
 
                         } else {
                             // reg failure
                             Log.w("Firebase Auth", "Reg failure: " + task.getException());
-
-                            if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-
-                                // user exists
-                                Log.w("Firebase Auth", "Reg failure: User exists");
-
-                                new AlertDialog.Builder(requireActivity())
-                                        .setTitle("Registration Failed!")
-                                        .setMessage("A user with the same email address already exists. Please login.")
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                Intent intent = new Intent(requireActivity(), LoginActivity.class);
-                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                startActivity(intent);
-                                            }
-                                        })
-                                        .show();
-                                return;
-                            }
-
-                            if (task.getException() instanceof FirebaseNetworkException) {
-
-                                // network issue
-                                Log.w("Firebase Auth", "Reg failure: Network issue");
-
-                                new AlertDialog.Builder(requireActivity())
-                                        .setTitle("Registration Failed!")
-                                        .setMessage("Registration failed due to a network issue. Please check your connection and try again.")
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                binding.createAccountBtn.setEnabled(true);
-                                            }
-                                        })
-                                        .show();
-                                return;
-                            }
-
-                            new AlertDialog.Builder(requireActivity())
-                                    .setTitle("Registration Failed!")
-                                    .setMessage("An error occurred while registering.")
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            binding.createAccountBtn.setEnabled(true);
-                                        }
-                                    })
-                                    .show();
+                            regFailed(task.getException());
                         }
                     }
                 });
     }
+
+    private void saveOnFirestore(String uid, User user, SharedPreferences.Editor editor) {
+        firebaseFirestore.collection("users")
+                .document(uid)
+                .set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.i("Firebase Firestore", "Data stored");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        Log.w("Firebase Firestore", "Data saving failed");
+
+                        editor.putBoolean("tempDataAvailable", true);
+                        editor.putString("lname", dataBundle.getString("lname"));
+                        editor.putString("mobile", dataBundle.getString("mobile"));
+                        editor.putString("dob", dataBundle.getString("dob"));
+                        editor.putString("gender", dataBundle.getString("gender"));
+                        editor.putString("email", user.getEmail());
+                    }
+                });
+    }
+
+    private void updateServer(String firebaseToken, String uid) {
+        Retrofit retrofit = RetrofitClient.getInstance(firebaseToken);
+        AuthApiService apiService = retrofit.create(AuthApiService.class);
+
+        Call<Void> userAuth = apiService.userAuth();
+        userAuth.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.i("Firebase Auth", "Server: Response Received");
+
+                if (response.isSuccessful()) {
+                    Log.i("Firebase Auth", "Server: Success");
+
+                    Bundle transferBundle = new Bundle();
+                    transferBundle.putString("uid", uid);
+
+                    Reg03Fragment fragment = new Reg03Fragment();
+                    fragment.setArguments(transferBundle);
+
+                    getParentFragmentManager().beginTransaction()
+                            .replace(R.id.regFragmentContainer, fragment)
+                            .commit();
+                } else {
+                    Log.e("Firebase Auth", "Server: Failed " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable throwable) {
+                Log.e("Firebase Auth", "Server: Failed " + throwable.getMessage());
+            }
+        });
+    }
+
+    private void regFailed(Exception exception) {
+
+        if (exception instanceof FirebaseAuthUserCollisionException) {
+
+            // user exists
+            Log.w("Firebase Auth", "Reg failure: User exists");
+
+            new AlertDialog.Builder(requireActivity())
+                    .setTitle("Registration Failed!")
+                    .setMessage("A user with the same email address already exists. Please login.")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(requireActivity(), LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
+                    })
+                    .show();
+            return;
+        }
+
+        if (exception instanceof FirebaseNetworkException) {
+
+            // network issue
+            Log.w("Firebase Auth", "Reg failure: Network issue");
+
+            new AlertDialog.Builder(requireActivity())
+                    .setTitle("Registration Failed!")
+                    .setMessage("Registration failed due to a network issue. Please check your connection and try again.")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            binding.createAccountBtn.setEnabled(true);
+                        }
+                    })
+                    .show();
+            return;
+        }
+
+        new AlertDialog.Builder(requireActivity())
+                .setTitle("Registration Failed!")
+                .setMessage("An error occurred while registering.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        binding.createAccountBtn.setEnabled(true);
+                    }
+                })
+                .show();
+    }
+
 }

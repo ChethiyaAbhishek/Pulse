@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/card_section_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Section Header"
+        android:textSize="@dimen/regular_size_16"
+        android:textColor="?attr/colorAuthSubtext1"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/card_section_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value_15dp" />
+
+</LinearLayout>

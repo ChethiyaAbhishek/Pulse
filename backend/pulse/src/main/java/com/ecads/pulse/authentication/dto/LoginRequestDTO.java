@@ -12,9 +12,6 @@ import lombok.Setter;
 public class LoginRequestDTO {
 
     @NotBlank(message = "Email address is required.")
-    @Email(message = "Please enter a valid email address.")
-    private String email;
+    private String uid;
 
-    @NotBlank(message = "password is required.")
-    private String password;
 }

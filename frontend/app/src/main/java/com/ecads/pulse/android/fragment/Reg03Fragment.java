@@ -187,7 +187,7 @@ public class Reg03Fragment extends Fragment {
                         });
                 editor.apply();
 
-                // TODO: backend api calling reg user
+                // TODO: backend api calling: store stroke date
 
                 startActivity(new Intent(requireActivity(), MainActivity.class));
                 requireActivity().finish();

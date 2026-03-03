@@ -52,4 +52,7 @@
     <string name="sign_in_text">Sign In</string>
     <string name="login_footer_text">Don\'t have an account?</string>
     <string name="login_reg_text">Register</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="profile_emergency_details_section_text"><![CDATA[Health & Emergency Details]]></string>
 </resources>

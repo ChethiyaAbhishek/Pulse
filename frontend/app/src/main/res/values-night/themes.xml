@@ -27,6 +27,17 @@
         <item name="colorAuthSubtext1">@color/dark_text_85</item>
         <item name="colorAuthLink">@color/dark_text_green_95</item>
         <item name="colorAuthFooter">@color/dark_text_55</item>
+        <item name="colorBtmNavBg">@color/dark_bg_65</item>
+        <item name="colorBtmNavBgSelected">@color/dark_nav_bg_selected</item>
+        <item name="colorCardBg">@color/dark_card_bg</item>
+        <item name="colorAppointD">@color/dark_badge_bg_65</item>
+        <item name="colorGreenCard">@color/dark_green_70</item>
+        <item name="color70">@color/dark_text_70</item>
+        <item name="colorAppointCardBtnBg">@color/dark_badge_bg_35</item>
+        <item name="colorGreen30">@color/dark_green_30</item>
+        <item name="colorWhiteChipBg">@color/dark_badge_bg_white_15</item>
+        <item name="color40">@color/dark_text_40</item>
+
 
         <!-- Error stays the same (red is universal) -->
         <item name="colorError">@color/emergency_button_bg</item>

@@ -24,17 +24,29 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.databinding.ActivityLoginBinding;
+import com.ecads.pulse.android.fragment.Reg03Fragment;
+import com.ecads.pulse.android.network.AuthApiService;
+import com.ecads.pulse.android.network.RetrofitClient;
 import com.ecads.pulse.android.utils.Permissions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 
 import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -130,9 +142,35 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
+                                // Sign in success
                                 Log.i("Firebase Auth", "User logged in");
-                                redirectToMain();
+
+                                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+                                if (currentUser != null) {
+                                    currentUser.getIdToken(true)
+                                            .addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                                                @Override
+                                                public void onSuccess(GetTokenResult getTokenResult) {
+                                                    Log.i("Firebase Auth", "Firebase Token retrieved");
+                                                    notifyServer(getTokenResult.getToken());
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.e("Firebase Auth", "Token retrieval failed: " + e.getMessage());
+                                                    binding.signInBtn.setEnabled(true);
+                                                    binding.signInBtn.setAlpha(1f);
+                                                }
+                                            });
+                                } else {
+                                    // exception
+                                    Log.e("Firebase Auth", "No firebase auth user");
+                                    binding.signInBtn.setEnabled(true);
+                                    binding.signInBtn.setAlpha(1f);
+                                }
+
                             } else {
                                 Log.w("Firebase Auth", "User login failed: " + task.getException().getMessage());
 
@@ -180,8 +218,39 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // TODO: forgot password process
-        binding.loginForgotPassword.setOnClickListener(view -> {});
+        binding.loginForgotPassword.setOnClickListener(view -> {
+        });
 
+    }
+
+    private void notifyServer(String firebaseToken){
+        Retrofit retrofit = RetrofitClient.getInstance(firebaseToken);
+        AuthApiService apiService = retrofit.create(AuthApiService.class);
+
+        Call<Void> userAuth = apiService.userAuth();
+        userAuth.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.i("Firebase Auth", "Server: Response Received");
+
+                if (response.isSuccessful()) {
+                    Log.i("Firebase Auth", "Server: Success");
+                    redirectToMain();
+                } else {
+                    Log.e("Firebase Auth", "Server: Failed " + response.code());
+                    Toast.makeText(LoginActivity.this, "An error occurred. Please try again shortly.", Toast.LENGTH_SHORT).show();
+                    binding.signInBtn.setEnabled(true);
+                    binding.signInBtn.setAlpha(1f);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable throwable) {
+                Log.e("Firebase Auth", "Server: Failed " + throwable.getMessage());
+                binding.signInBtn.setEnabled(true);
+                binding.signInBtn.setAlpha(1f);
+            }
+        });
     }
 
     private void makeEmergencyCall() {

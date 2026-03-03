@@ -1,8 +1,6 @@
 package com.ecads.pulse.common.exception;
 
-import com.ecads.pulse.authentication.exception.InvalidCredentialsException;
-import com.ecads.pulse.authentication.exception.UserAlreadyExistsException;
-import com.ecads.pulse.authentication.exception.UserNotFoundException;
+import com.ecads.pulse.authentication.exception.FirebaseAuthFailedException;
 import com.ecads.pulse.common.dto.ExceptionResponseDTO;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -17,36 +15,15 @@ import org.springframework.web.context.request.WebRequest;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Object> userNotFoundHandler(@NonNull UserNotFoundException ex, @NonNull WebRequest request) {
-        log.error(ex.getMessage());
-        ExceptionResponseDTO responseDTO = new ExceptionResponseDTO(
-                HttpStatus.NOT_FOUND.value(),
-                ex.getMessage(),
-                request.getDescription(false)
-        );
-        return new ResponseEntity<>(responseDTO, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<Object> invalidPasswordHandler(@NonNull InvalidCredentialsException ex, @NonNull WebRequest request) {
+    @ExceptionHandler(FirebaseAuthFailedException.class)
+    public ResponseEntity<Object> firebaseAuthHandler(FirebaseAuthFailedException ex, @NonNull WebRequest request) {
         log.error(ex.getMessage());
         ExceptionResponseDTO responseDTO = new ExceptionResponseDTO(
                 HttpStatus.UNAUTHORIZED.value(),
                 ex.getMessage(),
                 request.getDescription(false)
         );
-        return new ResponseEntity<>(responseDTO, HttpStatus.UNAUTHORIZED);
-    }
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<Object> alreadyExistingUserHandler(@NonNull UserAlreadyExistsException ex, @NonNull WebRequest request) {
-        log.error(ex.getMessage());
-        ExceptionResponseDTO responseDTO = new ExceptionResponseDTO(
-                HttpStatus.UNAUTHORIZED.value(),
-                ex.getMessage(),
-                request.getDescription(false)
-        );
         return new ResponseEntity<>(responseDTO, HttpStatus.UNAUTHORIZED);
     }
 
@@ -60,6 +37,18 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(responseDTO, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FirebaseInitializationFailedException.class)
+    public ResponseEntity<Object> firebaseInitializationHandler(FirebaseInitializationFailedException ex, @NonNull WebRequest request) {
+        log.error(ex.getMessage());
+        ExceptionResponseDTO responseDTO = new ExceptionResponseDTO(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // MethodArgumentNotValidException -> validations

@@ -7,32 +7,33 @@ import com.ecads.pulse.authentication.service.UserAuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @Validated
 @RequiredArgsConstructor
 public class UserAuthenticationController {
 
     private final UserAuthenticationService service;
 
-    @PostMapping("/login/patient")
-    public ResponseEntity<JwtTokenDTO> authPatient(@RequestBody LoginRequestDTO requestDTO) {
-        return service.authenticateUser(requestDTO);
+    private static final String AUTHORIZATION = "Authorization";
+
+    @PostMapping("/patient")
+    public ResponseEntity<Void> authPatient(@RequestHeader(AUTHORIZATION) String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        return service.authenticatePatient(token);
+    }
+
+    @PostMapping("/patient/logout")
+    public ResponseEntity<Void> patientLogout(@RequestHeader(AUTHORIZATION) String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        return service.patientLogout(token);
     }
 
     @PostMapping("/login/userRole")
     public ResponseEntity<RoleBasedDTO> authUserRole(@RequestBody LoginRequestDTO requestDTO) {
-        return service.authenticateUserRole(requestDTO);
+//        return service.authenticateUserRole(requestDTO);
+        return null;
     }
-
-    @PostMapping("/refresh")
-    public ResponseEntity<JwtTokenDTO> reNewAccessToken(@RequestBody JwtTokenDTO tokenDTO) {
-        return service.newAccessToken(tokenDTO);
-    }
-
 }

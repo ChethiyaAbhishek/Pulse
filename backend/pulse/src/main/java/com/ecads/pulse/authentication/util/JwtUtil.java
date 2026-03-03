@@ -14,18 +14,18 @@ public class JwtUtil {
     private static final long TOKEN_EXPIRATION = 5 * 60 * 1000;
     private static final long REFRESH_TOKEN_EXPIRATION = 24 * 60 * 60 * 1000;
 
-    public static String generateToken(String email) {
+    public static String generateToken(String firebaseToken) {
         return Jwts.builder()
-                .subject(email)
+                .subject(firebaseToken)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION))
                 .signWith(HMAC_KEY)
                 .compact();
     }
 
-    public static String generateRefreshToken(String email) {
+    public static String generateRefreshToken(String firebaseToken) {
         return Jwts.builder()
-                .subject(email)
+                .subject(firebaseToken)
                 .expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
                 .signWith(HMAC_KEY)
                 .compact();

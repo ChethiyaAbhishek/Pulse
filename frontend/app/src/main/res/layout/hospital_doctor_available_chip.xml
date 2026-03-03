@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorWhiteChipBg"
+    android:padding="@dimen/value_5dp">
+
+    <TextView
+        android:id="@+id/doctor_chip_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value_8dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="Dr Isuru Gallage"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="@dimen/size_11" />
+
+    <TextView
+        android:layout_width="@dimen/value_18dp"
+        android:layout_height="@dimen/value_18dp"
+        android:layout_marginStart="@dimen/value_8dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textAlignment="center"
+        android:gravity="center_vertical"
+        android:background="@drawable/appointment_card_btn_bg"
+        android:text="5"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="@dimen/size_10" />
+
+</LinearLayout>

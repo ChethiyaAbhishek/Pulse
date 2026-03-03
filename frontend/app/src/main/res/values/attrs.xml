@@ -9,4 +9,14 @@
     <attr name="colorAuthSubtext1" format="color"/>
     <attr name="colorAuthLink" format="color"/>
     <attr name="colorAuthFooter" format="color"/>
+    <attr name="colorBtmNavBg" format="color"/>
+    <attr name="colorBtmNavBgSelected" format="color"/>
+    <attr name="colorCardBg" format="color"/>
+    <attr name="colorAppointD" format="color"/>
+    <attr name="colorGreenCard" format="color"/>
+    <attr name="color70" format="color"/>
+    <attr name="colorAppointCardBtnBg" format="color"/>
+    <attr name="colorGreen30" format="color"/>
+    <attr name="colorWhiteChipBg" format="color"/>
+    <attr name="color40" format="color"/>
 </resources>

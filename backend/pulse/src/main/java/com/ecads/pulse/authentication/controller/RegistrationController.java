@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/reg")
+@RequestMapping("/api/v1/reg")
 @Validated
 @RequiredArgsConstructor
 public class RegistrationController {

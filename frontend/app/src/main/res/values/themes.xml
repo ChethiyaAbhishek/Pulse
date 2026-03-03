@@ -21,7 +21,7 @@
         <item name="colorOnSurfaceVariant">@color/light_text_sub</item>
 
         <!--    Custom Colors    -->
-        <item name="colorCopyright">@color/dark_text_copyright</item>
+        <item name="colorCopyright">@color/light_text_copyright</item>
         <item name="color_text_75">@color/light_text_75</item>
         <item name="colorBg65">@color/light_bg_75</item>
         <item name="progressIndicatorActive">@color/light_green_80</item>
@@ -30,6 +30,17 @@
         <item name="colorAuthSubtext1">@color/light_text_85</item>
         <item name="colorAuthLink">@color/light_text_green_95</item>
         <item name="colorAuthFooter">@color/light_text_55</item>
+        <item name="colorBtmNavBg">@color/light_bottom_nav_bg</item>
+        <item name="colorBtmNavBgSelected">@color/light_nav_bg_selected</item>
+        <item name="colorCardBg">@color/light_card_bg</item>
+        <item name="colorAppointD">@color/light_badge_bg_25</item>
+        <item name="colorGreenCard">@color/light_green_65</item>
+        <item name="color70">@color/light_text_70</item>
+        <item name="colorAppointCardBtnBg">@color/light_badge_bg_15</item>
+        <item name="colorGreen30">@color/light_green_30</item>
+        <item name="colorWhiteChipBg">@color/light_badge_bg_white_65</item>
+        <item name="color40">@color/light_text_40</item>
+
 
         <!-- Error / emergency -->
         <item name="colorError">@color/emergency_button_bg</item>
