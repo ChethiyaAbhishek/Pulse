@@ -1,15 +1,20 @@
 package com.ecads.pulse.android.fragment;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,41 +24,60 @@ import android.widget.Toast;
 
 import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.activity.AppointmentActivity;
+import com.ecads.pulse.android.adapter.AvailableConsultantsAdapter;
 import com.ecads.pulse.android.adapter.ExistingAppointmentsAdapter;
 import com.ecads.pulse.android.adapter.HospitalAdapter;
-import com.ecads.pulse.android.databinding.CardSectionBinding;
 import com.ecads.pulse.android.databinding.FragmentChannelBinding;
+import com.ecads.pulse.android.dto.AvailableConsultantDto;
+import com.ecads.pulse.android.dto.HospitalDto;
+import com.ecads.pulse.android.dto.LocationDto;
 import com.ecads.pulse.android.listener.CallBack;
-import com.ecads.pulse.android.model.Appointment;
+import com.ecads.pulse.android.model.AppointmentDto;
 import com.ecads.pulse.android.model.Hospital;
+import com.ecads.pulse.android.network.ChannelingApiService;
+import com.ecads.pulse.android.network.RetrofitClient;
 import com.ecads.pulse.android.utils.Helper;
+import com.ecads.pulse.android.utils.Permissions;
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryBounds;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class ChannelFragment extends Fragment {
 
     private FragmentChannelBinding binding;
     private FirebaseFirestore firestore;
+    private FirebaseAuth firebaseAuth;
     private GeoLocation currentLocation;
-
+    private List<Hospital> placesApiList;
     private final double radiusInM;
+    private ActivityResultLauncher<String[]> launcher;
+    private FusedLocationProviderClient fusedLocationClient;
+    private String firebaseToken;
+    private Retrofit retrofit;
 
     public ChannelFragment() {
         //within 50km
@@ -64,7 +88,26 @@ public class ChannelFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firestore = FirebaseFirestore.getInstance();
-        fetchCurrentLocation();
+        firebaseAuth = FirebaseAuth.getInstance();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+
+        launcher = registerForActivityResult(
+                new ActivityResultContracts.RequestMultiplePermissions(),
+                result -> {
+                    if (result != null) {
+                        boolean locationPermissionGranted = result.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false);
+//                        boolean messagingPermissionGranted = result.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false);
+//                        boolean messagingPermissionGranted = result.getOrDefault(Manifest.permission.ACCESS_BACKGROUND_LOCATION, false);
+                        if (!locationPermissionGranted) {
+                            currentLocation = null;
+                            Toast.makeText(requireActivity(), "Please enable permissions for current location fetching for better experience.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            checkAndRequest();
+                        }
+                    }
+                });
+
+        checkAndRequest();
     }
 
     @Override
@@ -77,23 +120,165 @@ public class ChannelFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadBody(binding.channelBody);
+        retrieveToken(instantiated -> {
+            if (instantiated) {
+                loadBody(binding.channelBody);
+            }
+        });
+    }
+
+    private void checkAndRequest() {
+        if (!Permissions.permissionEnabled(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+            currentLocation = null;
+            launcher.launch(new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            });
+        } else {
+            fetchCurrentLocation(geoLocation -> {
+                currentLocation = geoLocation;
+            });
+        }
+    }
+
+    private void retrieveToken(CallBack<Boolean> instantiated) {
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if (currentUser != null) {
+            currentUser.getIdToken(true)
+                    .addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                        @Override
+                        public void onSuccess(GetTokenResult getTokenResult) {
+                            Log.i("Firebase Auth", "Firebase Token retrieved");
+                            firebaseToken = getTokenResult.getToken();
+                            retrofit = RetrofitClient.getInstance(getTokenResult.getToken());
+                            instantiated.callBack(true);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("Firebase Auth", "Token retrieval failed: " + e.getMessage());
+                        }
+                    });
+        } else {
+            // exception
+            Log.e("Firebase Auth", "No firebase auth user");
+        }
     }
 
     private void loadBody(LinearLayout layout) {
+
+        checkAndRequest();
+
         LayoutInflater inflater = LayoutInflater.from(requireContext());
-        getAppointmentList(inflater, layout);
-        attachHospitalSection(inflater, layout);
-        attachAvailableConsultants(inflater, layout);
+        getAppointmentList(inflater, layout, data -> {
+            if (data) {
+                attachHospitalSection(inflater, layout);
+                attachAvailableConsultants(inflater, layout);
+            }
+        });
     }
 
     private void attachAvailableConsultants(LayoutInflater inflater, LinearLayout parent) {
 
+        View section = inflater.inflate(R.layout.card_section, parent, false);
+        TextView sectionTitle = section.findViewById(R.id.card_section_title);
+        RecyclerView container = section.findViewById(R.id.card_section_container);
+
+        sectionTitle.setText("Today Available Slots");
+        container.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        List<GeoQueryBounds> bounds = null;
+        retrieveHospitalList(bounds, this.placesApiList, results -> {
+            List<Hospital> hospitals = results;
+            List<HospitalDto> dtoList = new ArrayList<>();
+
+            for(Hospital hospital: hospitals){
+                HospitalDto hospitalDto = new HospitalDto(
+                        hospital.getPlaceId(),
+                        hospital.getImageUrl(),
+                        hospital.getName(),
+                        hospital.getLowerName(),
+                        hospital.getAddress(),
+                        hospital.getContact(),
+                        hospital.getEmail(),
+                        new LocationDto(hospital.getLocation().getLatitude(), hospital.getLocation().getLongitude()),
+                        hospital.getGeohash(),
+                        hospital.getMapUrl()
+                );
+                dtoList.add(hospitalDto);
+            }
+
+            fetchConsultantsWithAvailableSlotsForHospitals(dtoList, availableConsultantList -> {
+                if (!availableConsultantList.isEmpty()) {
+
+                    AvailableConsultantsAdapter adapter = new AvailableConsultantsAdapter(availableConsultantList, availableConsultantDto -> {
+                        Intent intent = new Intent(requireActivity(), AppointmentActivity.class);
+                        intent.putExtra("type", Helper.CONSULTANT);
+                        intent.putExtra("data", availableConsultantDto.getConsultant().getUid());
+                        if (firebaseToken != null) {
+                            intent.putExtra("authToken", firebaseToken);
+                        }
+                        startActivity(intent);
+                    });
+
+                    container.setAdapter(adapter);
+                    parent.addView(section);
+                }
+            });
+        });
+    }
+
+    private void fetchConsultantsWithAvailableSlotsForHospitals(List<HospitalDto> hospitals, CallBack<List<AvailableConsultantDto>> callBack) {
+        ChannelingApiService apiService = retrofit.create(ChannelingApiService.class);
+
+        Call<List<AvailableConsultantDto>> results = apiService.consultantsForHospitalList(hospitals);
+        results.enqueue(new Callback<List<AvailableConsultantDto>>() {
+            @Override
+            public void onResponse(Call<List<AvailableConsultantDto>> call, Response<List<AvailableConsultantDto>> response) {
+                if (response.isSuccessful()) {
+                    callBack.callBack(response.body());
+                } else {
+                    Log.d("ChannelFragment", "Consultant available slots retrieving failed: " + response.message());
+                    Toast.makeText(requireActivity(), "Available consultant slots retrieve failed: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AvailableConsultantDto>> call, Throwable throwable) {
+                Log.d("ChannelFragment", "Consultant available slots retrieving failed: " + throwable);
+                Toast.makeText(requireActivity(), "Available consultant slots retrieve failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fetchAvailableSlots() {
+//        Retrofit retrofit = RetrofitClient.getInstance(firebaseToken);
+//        ConsultantApiService apiService = retrofit.create(ConsultantApiService.class);
+//
+//        Call<Void> userAuth = apiService.publicSlots();
+//        userAuth.enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//                Log.i("Firebase Auth", "Server: Response Received");
+//
+//                if (response.isSuccessful()) {
+//
+//                } else {
+//                    Log.e("Firebase Auth", "Server: Failed " + response.code());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable throwable) {
+//                Log.e("Firebase Auth", "Server: Failed " + throwable.getMessage());
+//            }
+//        });
     }
 
     private void attachHospitalSection(LayoutInflater inflater, LinearLayout parent) {
-        //TODO: Fetch the nearest hospital list[Google Map] & check for hospital existence in firestore
-        List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(currentLocation, radiusInM);
+        //TODO: Fetch the nearest hospitals list[Google Places Api]
+
+        Log.i("Channel Fragment", "Hospital section attachment started");
 
         View section = inflater.inflate(R.layout.card_section, parent, false);
         TextView sectionTitle = section.findViewById(R.id.card_section_title);
@@ -102,17 +287,29 @@ public class ChannelFragment extends Fragment {
         sectionTitle.setText("Hospitals near you");
         container.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        //TODO: Data type
-        List<Hospital> placesApiList = retrieveNearHospitalsFromPlacesApi();
-        retrieveHospitalList(bounds, placesApiList, results -> {
+        List<GeoQueryBounds> bounds = null;
+
+        // TODO: Implement places api and test
+//        if (currentLocation != null) {
+//            Log.i("Channel Fragment", "Fetching bounds for the current location");
+//
+//            bounds = GeoFireUtils.getGeoHashQueryBounds(currentLocation, radiusInM);
+//            //TODO: Data type
+//            this.placesApiList = retrieveNearHospitalsFromPlacesApi();
+//        }
+
+        retrieveHospitalList(bounds, this.placesApiList, results -> {
+
+            Log.i("Channel Fragment", "Hospital section attached");
 
             List<Hospital> hospitals = results;
             HospitalAdapter adapter = new HospitalAdapter(results, hospital -> {
-                // on click of the hospital card
-                //TODO: Navigate to the appointment booking fragment
                 Intent intent = new Intent(requireActivity(), AppointmentActivity.class);
                 intent.putExtra("type", Helper.HOSPITAL);
                 intent.putExtra("data", hospital.getPlaceId());
+                if (firebaseToken != null) {
+                    intent.putExtra("authToken", firebaseToken);
+                }
                 startActivity(intent);
             });
 
@@ -124,49 +321,85 @@ public class ChannelFragment extends Fragment {
     private void retrieveHospitalList(
             List<GeoQueryBounds> bounds, List<Hospital> placesApiList, CallBack<List<Hospital>> callBack) {
 
-        List<Task<QuerySnapshot>> tasks = new ArrayList<>();
+        if (bounds != null) {
+            Log.i("Channel Fragment", "Hospitals retrieving started for bounds");
 
-        for (GeoQueryBounds b : bounds) {
-            Query q = firestore.collection("hospitals")
-                    .orderBy("geohash")
-                    .startAt(b.startHash)
-                    .endAt(b.endHash);
+            List<Task<QuerySnapshot>> tasks = new ArrayList<>();
 
-            tasks.add(q.get());
-        }
+            for (GeoQueryBounds b : bounds) {
+                Query q = firestore.collection("hospitals")
+                        .limit(6)
+                        .orderBy("geohash")
+                        .startAt(b.startHash)
+                        .endAt(b.endHash);
 
-        Tasks.whenAllComplete(tasks)
-                .addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
-                    @Override
-                    public void onComplete(@NonNull Task<List<Task<?>>> t) {
-                        List<Hospital> hospitalList = new ArrayList<>();
+                tasks.add(q.get());
+            }
 
-                        for (Task<QuerySnapshot> task : tasks) {
-                            QuerySnapshot snap = task.getResult();
-                            for (DocumentSnapshot doc : snap.getDocuments()) {
+            Tasks.whenAllComplete(tasks)
+                    .addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
+                        @Override
+                        public void onComplete(@NonNull Task<List<Task<?>>> t) {
+                            List<Hospital> hospitalList = new ArrayList<>();
 
-                                GeoPoint geoPoint = doc.getGeoPoint("location");
+                            for (Task<QuerySnapshot> task : tasks) {
+                                QuerySnapshot snap = task.getResult();
+                                for (DocumentSnapshot doc : snap.getDocuments()) {
 
-                                if (geoPoint != null) {
-                                    double lat = geoPoint.getLatitude();
-                                    double lng = geoPoint.getLongitude();
+                                    GeoPoint geoPoint = doc.getGeoPoint("location");
 
-                                    // filter false matches
-                                    GeoLocation docLocation = new GeoLocation(lat, lng);
-                                    double distanceInM = GeoFireUtils.getDistanceBetween(docLocation, currentLocation);
-                                    if (distanceInM <= radiusInM) {
-                                        hospitalList.add(doc.toObject(Hospital.class));
+                                    if (geoPoint != null) {
+                                        double lat = geoPoint.getLatitude();
+                                        double lng = geoPoint.getLongitude();
+
+                                        // filter false matches
+                                        GeoLocation docLocation = new GeoLocation(lat, lng);
+                                        double distanceInM = GeoFireUtils.getDistanceBetween(docLocation, currentLocation);
+                                        if (distanceInM <= radiusInM) {
+                                            if (hospitalList.size() <= 6) {
+                                                hospitalList.add(doc.toObject(Hospital.class));
+                                            } else {
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        for (Hospital hospital : placesApiList) {
-                            if (!hospitalList.contains(hospital)) {
+                            for (Hospital hospital : placesApiList) {
+                                if (!hospitalList.contains(hospital)) {
+                                    hospitalList.add(hospital);
+                                }
+                            }
+                            callBack.callBack(hospitalList);
+                        }
+                    });
+        } else {
+            Log.i("Channel Fragment", "Following backup hospitals");
+
+            backupHospitalList(callBack);
+        }
+    }
+
+    private void backupHospitalList(CallBack<List<Hospital>> callBack) {
+        firestore.collection("hospitals")
+                .limit(6).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot qds) {
+                        List<Hospital> hospitalList = new ArrayList<>();
+                        if (qds != null) {
+                            for (Hospital hospital : qds.toObjects(Hospital.class)) {
                                 hospitalList.add(hospital);
                             }
                         }
                         callBack.callBack(hospitalList);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callBack.callBack(null);
                     }
                 });
     }
@@ -175,49 +408,68 @@ public class ChannelFragment extends Fragment {
         return null;
     }
 
-    private void fetchCurrentLocation() {
-        //TODO: Fetch location from map api
-        currentLocation = new GeoLocation(6.194806, 80.094667);
+    private void fetchCurrentLocation(CallBack<GeoLocation> callBack) {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            launcher.launch(new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            });
+            return;
+        }
+
+        fusedLocationClient.getCurrentLocation(
+                        Priority.PRIORITY_HIGH_ACCURACY, null)
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        callBack.callBack(
+                                new GeoLocation(location.getLatitude(), location.getLongitude())
+                        );
+                    }
+                });
     }
 
-    private void getAppointmentList(LayoutInflater inflater, LinearLayout parent) {
+    private void getAppointmentList(LayoutInflater inflater, LinearLayout parent, CallBack<Boolean> callBack) {
+        ChannelingApiService apiService = retrofit.create(ChannelingApiService.class);
 
-        //TODO:Firebase user and backend data fetch
-        List<Appointment> appointments = new ArrayList<>();
+        Call<List<AppointmentDto>> result = apiService.retrieveAppointments(firebaseAuth.getUid());
+        result.enqueue(new Callback<List<AppointmentDto>>() {
+            @Override
+            public void onResponse(Call<List<AppointmentDto>> call, Response<List<AppointmentDto>> response) {
+                if (response.isSuccessful()) {
 
-        Appointment a1 = new Appointment("Dr. Darshani Dharmadasa",
-                "10.00 PM - 10.30 PM",
-                "National Hospital, Colombo",
-                "25-02-2026",
-                "https://maps.app.goo.gl/RbNGMRBtjeCau5wPA",
-                "");
+                    List<AppointmentDto> appointments = response.body();
+                    if (appointments != null && !appointments.isEmpty()) {
+                        View section = inflater.inflate(R.layout.card_section, parent, false);
+                        TextView sectionTitle = section.findViewById(R.id.card_section_title);
+                        RecyclerView container = section.findViewById(R.id.card_section_container);
 
-        Appointment a2 = new Appointment("Dr. Sahan Wikramathunga",
-                "07.00 PM - 07.30 PM",
-                "Durdans Hospital, Colombo",
-                "28-02-2026",
-                "https://maps.app.goo.gl/RbNGMRBtjeCau5wPA",
-                "");
+                        sectionTitle.setText("My Appointments");
 
-//        appointments.add(a1);
-//        appointments.add(a2);
+                        Log.d("Appointments", "Appointment 01: " + appointments.get(0));
 
-        if (!appointments.isEmpty()) {
-            View section = inflater.inflate(R.layout.card_section, parent, false);
-            TextView sectionTitle = section.findViewById(R.id.card_section_title);
-            RecyclerView container = section.findViewById(R.id.card_section_container);
+                        container.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                        ExistingAppointmentsAdapter adapter = new ExistingAppointmentsAdapter(appointments, appointmentDto -> {
+                            // onclick listener
+                            Toast.makeText(requireContext(), "Appointment Onclick", Toast.LENGTH_SHORT).show();
+                        });
+                        container.setAdapter(adapter);
 
-            sectionTitle.setText("My Appointments");
+                        parent.addView(section);
+                    } else {
+                        Log.d("ChannelFragment", "No appointments scheduled");
+                    }
 
-            container.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-            ExistingAppointmentsAdapter adapter = new ExistingAppointmentsAdapter(appointments, appointment -> {
-                // onclick listener
-                Toast.makeText(requireContext(), "Appointment Onclick", Toast.LENGTH_SHORT).show();
-            });
-            container.setAdapter(adapter);
+                    callBack.callBack(true);
+                } else {
+                    Log.d("ChannelFragment", "onResponse: Appointments fetching failed");
+                }
+            }
 
-            parent.addView(section);
-        }
+            @Override
+            public void onFailure(Call<List<AppointmentDto>> call, Throwable throwable) {
+                Log.d("ChannelFragment", "Appointments fetching failed: " + throwable);
+            }
+        });
     }
 
 }

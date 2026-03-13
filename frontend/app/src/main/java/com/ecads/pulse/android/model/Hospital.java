@@ -1,5 +1,7 @@
 package com.ecads.pulse.android.model;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -15,10 +17,11 @@ public class Hospital {
     private String placeId;
     private String imageUrl;
     private String name;
+    private String lowerName;
     private String address;
     private String contact;
     private String email;
-    private String[] location;
+    private GeoPoint location;
     private String geohash;
     private String mapUrl;
 }

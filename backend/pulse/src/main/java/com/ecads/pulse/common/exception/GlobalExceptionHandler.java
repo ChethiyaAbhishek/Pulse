@@ -51,11 +51,35 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(FirebaseFirestoreException.class)
+    public ResponseEntity<Object> firebaseInitializationHandler(FirebaseFirestoreException ex, @NonNull WebRequest request) {
+        log.error(ex.getMessage());
+        ExceptionResponseDTO responseDTO = new ExceptionResponseDTO(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ShowErrorException.class)
+    public ResponseEntity<Object> showErrorHandler(ShowErrorException ex, @NonNull WebRequest request) {
+        log.error(ex.getMessage());
+        ExceptionResponseDTO responseDTO = new ExceptionResponseDTO(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
     // MethodArgumentNotValidException -> validations
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> genericHandler(@NonNull Exception ex, @NonNull WebRequest request) {
-        log.error(ex.getMessage());
+        log.error(ex.toString());
         ExceptionResponseDTO responseDTO = new ExceptionResponseDTO(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "An unexpected error occurred.",

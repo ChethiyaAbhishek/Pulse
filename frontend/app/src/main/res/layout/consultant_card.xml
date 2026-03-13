@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/value_8dp"
+    android:layout_marginEnd="@dimen/value_8dp"
     app:cardCornerRadius="@dimen/value_15dp">
 
     <LinearLayout
+        android:id="@+id/consultantCardLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -63,9 +64,10 @@
         </LinearLayout>
 
         <com.google.android.material.chip.ChipGroup
+            android:layout_gravity="center"
             android:id="@+id/consultant_card_container"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/value_30dp">
 
             <LinearLayout
@@ -74,6 +76,7 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/consultantCardSlot1"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:padding="0dp"
@@ -81,6 +84,7 @@
                     android:textSize="@dimen/size_11" />
 
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/consultantCardSlot2"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:padding="0dp"

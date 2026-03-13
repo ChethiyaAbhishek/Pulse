@@ -28,5 +28,6 @@
     <dimen name="size_11">11sp</dimen>
     <dimen name="value_18dp">18dp</dimen>
     <dimen name="size_10">10sp</dimen>
+    <dimen name="size_13">13sp</dimen>
 
 </resources>

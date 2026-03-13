@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/value_8dp">
+
+    <LinearLayout
+        android:id="@+id/customHosChip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_bg"
+        android:orientation="vertical"
+        android:padding="@dimen/value_8dp"
+        android:paddingStart="@dimen/value_15dp"
+        android:paddingEnd="@dimen/value_15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/customHosChipName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nawaloka Hospitals PLC"
+            android:textColor="?attr/color_text_75" />
+
+        <TextView
+            android:id="@+id/customHosChipAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/size_12"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="432, Main Road, Colombo 05"
+            android:textColor="?attr/color40" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/value_8dp"
+    android:layout_marginEnd="@dimen/value_8dp"
     app:cardCornerRadius="@dimen/value_15dp">
 
     <LinearLayout
@@ -12,12 +12,13 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorCardBg"
         android:orientation="vertical"
-        android:padding="@dimen/padding_10">
+        android:padding="@dimen/value_5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="@dimen/value_8dp">
 
             <ImageView
                 android:id="@+id/hospital_card_img"
@@ -25,13 +26,19 @@
                 android:layout_height="95dp"
                 android:scaleType="centerInside" />
 
-            <TableLayout
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/padding_10">
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <TableRow>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/value_8dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/hospital_card_name"
@@ -44,18 +51,6 @@
                         android:textSize="@dimen/regular_size_16"
                         android:textStyle="bold" />
 
-                    <ImageButton
-                        android:id="@+id/hospital_card_call_btn"
-                        android:layout_width="@dimen/value_30dp"
-                        android:layout_height="@dimen/value_30dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/appointment_card_btn_bg"
-                        android:src="@drawable/call_icon" />
-
-                </TableRow>
-
-                <TableRow>
-
                     <TextView
                         android:id="@+id/hospital_card_address"
                         android:layout_width="128dp"
@@ -65,23 +60,33 @@
                         android:text="123, Ollcot Lane, Colombo 05."
                         android:textColor="?attr/color70"
                         android:textSize="@dimen/size_12" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/value_8dp"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/hospital_card_call_btn"
+                        android:layout_width="@dimen/value_35dp"
+                        android:layout_height="@dimen/value_35dp"
+                        android:background="@drawable/appointment_card_btn_bg"
+                        android:src="@drawable/call_icon" />
 
                     <ImageButton
                         android:id="@+id/hospital_card_location_btn"
-                        android:layout_width="@dimen/value_30dp"
-                        android:layout_height="@dimen/value_30dp"
-                        android:layout_gravity="center_vertical"
+                        android:layout_width="@dimen/value_35dp"
+                        android:layout_height="@dimen/value_35dp"
+                        android:layout_marginTop="@dimen/value_24dp"
                         android:background="@drawable/appointment_card_btn_bg"
                         android:src="@drawable/location_icon" />
-
-                </TableRow>
-
-            </TableLayout>
-
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <TextView
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/value_8dp"
@@ -89,14 +94,15 @@
             android:maxLines="3"
             android:text="Available Doctors (TODAY)"
             android:textColor="?attr/color_text_75"
-            android:textSize="@dimen/size_11" />
+            android:textSize="@dimen/size_11"
+            android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:visibility="gone"
             android:id="@+id/hospital_card_doc_availability_container"
-            android:layout_marginTop="@dimen/value_8dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value_8dp"
+            android:visibility="gone" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.HospitalAppointmentFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/hosAppointmentHospitalName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nawaloka Hospitals PLC"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/size_24"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/hosAppointmentAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="23 Deshamanya H.K. Dharmadasa Mawatha, Colombo"
+            android:textColor="?attr/color_text_75"
+            android:textSize="@dimen/size_14" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/hosAppointmentImgContainer"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginTop="16dp"
+            android:background="@mipmap/ic_launcher">
+
+            <ImageButton
+                android:id="@+id/hosAppointmentLocationBtn"
+                android:layout_width="@dimen/value_45dp"
+                android:layout_height="@dimen/value_45dp"
+                android:layout_margin="16dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/circular_btn_shape"
+                android:src="@drawable/location_icon_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/hosAppointmentCallBtn"
+                android:layout_width="@dimen/value_45dp"
+                android:layout_height="@dimen/value_45dp"
+                android:layout_margin="16dp"
+                android:background="@drawable/circular_btn_shape"
+                android:src="@drawable/call_icon_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Doctor"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/regular_size_16" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value_8dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/hosAppointmentSearchField"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/value_35dp"
+                android:layout_weight="1"
+                android:background="@drawable/card_bg"
+                android:drawableEnd="@drawable/audio_icon"
+                android:drawablePadding="@dimen/padding_10"
+                android:hint="Search Doctor"
+                android:inputType="text"
+                android:padding="@dimen/padding_10"
+                android:textColor="?attr/color_text_75"
+                android:textColorHint="?attr/color_text_75"
+                android:textSize="@dimen/size_14" />
+
+            <ImageButton
+                android:id="@+id/hosAppointmentSearchBtn"
+                android:layout_width="@dimen/value_35dp"
+                android:layout_height="@dimen/value_35dp"
+                android:layout_marginStart="@dimen/value_5dp"
+                android:background="@drawable/circular_btn_shape"
+                android:src="@drawable/search_icon" />
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="0dp">
+
+            <AutoCompleteTextView
+                android:id="@+id/hosAppointmentSearchFilter"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/value_35dp"
+                android:background="@drawable/card_bg"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:inputType="none"
+                android:paddingStart="@dimen/padding_10"
+                android:paddingTop="0dp"
+                android:paddingEnd="@dimen/padding_10"
+                android:paddingBottom="0dp"
+                android:textColor="?attr/color_text_75"
+                android:textColorHint="?attr/color_text_75"
+                android:textSize="@dimen/size_14" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/hosAppointmentDocRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value_8dp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/consultantError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/value_15dp"
+            android:layout_marginTop="@dimen/value_5dp"
+            android:text="Select a consultant"
+            android:textColor="@color/emergency_button_bg"
+            android:visibility="gone" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipDocNotFound"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/value_8dp"
+            android:paddingEnd="@dimen/value_8dp"
+            android:visibility="gone"
+            android:text="No Consultants Found  "
+            android:textColor="?attr/color_text_75"
+            app:checkedIconVisible="false"
+            app:chipBackgroundColor="?attr/colorCardBg" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value_24dp"
+            android:text="Appointment Date"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/regular_size_16" />
+
+        <TextView
+            android:id="@+id/hosAppointmentAvaiDays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text=""
+            android:textColor="?attr/color70"
+            android:textSize="@dimen/size_12" />
+
+        <CalendarView
+            android:id="@+id/hosAppointmentCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weekDayTextAppearance="@style/TextAppearance.AppCompat.Small"
+            />
+
+        <TextView
+            android:id="@+id/calendarError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/value_15dp"
+            android:layout_marginBottom="@dimen/value_5dp"
+            android:text="Select an appointment date"
+            android:textColor="@color/emergency_button_bg"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Appointment Time"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/regular_size_16" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/hosAppointmentSlotsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value_8dp" />
+
+        <TextView
+            android:id="@+id/slotError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/value_15dp"
+            android:layout_marginTop="@dimen/value_5dp"
+            android:text="Select an appointment slot"
+            android:textColor="@color/emergency_button_bg"
+            android:visibility="gone" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/slotsUnavailableChip"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/value_15dp"
+            android:paddingEnd="@dimen/value_15dp"
+            android:visibility="gone"
+            android:text="No available slots  "
+            android:textColor="?attr/color_text_75"
+            app:checkedIconVisible="false"
+            app:chipBackgroundColor="?attr/colorCardBg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value_24dp"
+            android:text="Appointment Mode"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/regular_size_16" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/hosAppointmentchipGroupMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value_8dp"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/hosAppointmentchipOnsite"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Onsite "
+                android:paddingStart="@dimen/value_15dp"
+                android:paddingEnd="@dimen/value_15dp"
+                android:textColor="?attr/color_text_75"
+                app:checkedIconVisible="false"
+                android:background="@drawable/chip_background" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/hosAppointmentchipOnline"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Online "
+                android:paddingStart="@dimen/value_15dp"
+                android:paddingEnd="@dimen/value_15dp"
+                android:textColor="?attr/color_text_75"
+                app:checkedIconVisible="false"
+                android:background="@drawable/chip_background" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <TextView
+            android:id="@+id/modeError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/value_15dp"
+            android:layout_marginTop="@dimen/value_5dp"
+            android:text="Select an appointment mode"
+            android:textColor="@color/emergency_button_bg"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value_24dp"
+            android:text="Payment"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/regular_size_16" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value_8dp"
+            android:layout_marginBottom="@dimen/value_15dp"
+            android:background="@drawable/card_bg"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Consultant Charges"
+                    android:textColor="?attr/color_text_75"
+                    android:textSize="@dimen/size_14" />
+
+                <TextView
+                    android:id="@+id/hosAppointmentConsultantFee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LKR 6000.0"
+                    android:textColor="?attr/color_text_75"
+                    android:textSize="@dimen/size_14" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value_8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Hospital Charges"
+                    android:textColor="?attr/color_text_75"
+                    android:textSize="@dimen/size_14" />
+
+                <TextView
+                    android:id="@+id/hosAppointmentHospitalFee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LKR 1000.0"
+                    android:textColor="?attr/color_text_75"
+                    android:textSize="@dimen/size_14" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value_8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Platform Charges"
+                    android:textColor="?attr/color_text_75"
+                    android:textSize="@dimen/size_14" />
+
+                <TextView
+                    android:id="@+id/hosAppointmentPlatformFee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LKR 500.0"
+                    android:textColor="?attr/color_text_75"
+                    android:textSize="@dimen/size_14" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="?attr/color_text_75" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value_15dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Total Amount"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="@dimen/regular_size_16"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/hosAppointmentTotalAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LKR 7500.0"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="@dimen/regular_size_16"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/hosAppointmentPaymentBtn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_height"
+                android:layout_marginTop="@dimen/value_24dp"
+                android:text="Pay &amp; Book Now"
+                android:textSize="@dimen/size_17"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -2,12 +2,6 @@ package com.ecads.pulse.authentication.service;
 
 import com.ecads.pulse.authentication.dto.JwtTokenDTO;
 import com.ecads.pulse.authentication.dto.PatientRegRequestDTO;
-import com.ecads.pulse.authentication.entity.User;
-import com.ecads.pulse.authentication.repository.UserRepository;
-import com.ecads.pulse.authentication.util.JwtUtil;
-import com.ecads.pulse.common.enums.UserRole;
-import com.ecads.pulse.patient.entity.Patient;
-import com.ecads.pulse.patient.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
@@ -19,9 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 public class RegistrationService {
-
-    private final UserRepository userRepository;
-    private final PatientRepository patientRepository;
 
     @Transactional
     public ResponseEntity<JwtTokenDTO> registerPatient(@NonNull PatientRegRequestDTO requestDTO) {

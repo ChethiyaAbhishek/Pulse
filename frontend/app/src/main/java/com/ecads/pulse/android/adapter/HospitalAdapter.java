@@ -5,19 +5,19 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.ecads.pulse.android.R;
-import com.ecads.pulse.android.model.Appointment;
 import com.ecads.pulse.android.model.Hospital;
-import com.ecads.pulse.android.utils.Helper;
 
 import java.util.List;
 
@@ -49,6 +49,11 @@ public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.ViewHo
             holder.hospitalAddress.setText(hospital.getAddress());
             holder.hospitalImg.setImageURI(Uri.parse(hospital.getImageUrl()));
 
+            Glide.with(holder.hospitalImg.getContext())
+                    .load(hospital.getImageUrl())
+                    .centerCrop()
+                    .into(holder.hospitalImg);
+
             holder.contactBtn.setOnClickListener(view -> {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + hospital.getContact()));
@@ -59,6 +64,17 @@ public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.ViewHo
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(hospital.getMapUrl()));
                 view.getContext().startActivity(intent);
+            });
+
+            holder.hospitalCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Animation animation = AnimationUtils.loadAnimation(view.getContext(), R.anim.click_animation);
+                    view.startAnimation(animation);
+                    if (clickListener != null) {
+                        clickListener.onCardClick(hospital);
+                    }
+                }
             });
 
 //            RecyclerView recyclerView = holder.consultantView;
@@ -80,6 +96,7 @@ public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.ViewHo
         private ImageButton contactBtn;
         private ImageButton locationBtn;
         private RecyclerView consultantView;
+        private LinearLayout hospitalCard;
 
         public ViewHolder(@NonNull View cardView) {
             super(cardView);
@@ -90,6 +107,7 @@ public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.ViewHo
             contactBtn = cardView.findViewById(R.id.hospital_card_call_btn);
             locationBtn = cardView.findViewById(R.id.hospital_card_location_btn);
             consultantView = cardView.findViewById(R.id.hospital_card_doc_availability_container);
+            hospitalCard = cardView.findViewById(R.id.hospital_card_layout);
         }
     }
 

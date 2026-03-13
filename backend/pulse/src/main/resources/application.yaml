@@ -16,3 +16,7 @@ spring:
       hibernate:
         format_sql: true
     database-platform: org.hibernate.dialect.MySQLDialect
+
+payhere:
+  merchant-id: 1224658
+  merchant-secret: NjU2MjMwMzEzMTkxNjA2MjE5NDE2NDIyNDg4MzIyODc4MjgxMTY0

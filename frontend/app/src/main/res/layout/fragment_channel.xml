@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:padding="@dimen/activity_padding"
+    android:paddingTop="@dimen/activity_padding"
+    android:paddingLeft="@dimen/activity_padding"
+    android:paddingBottom="@dimen/value_8dp"
     tools:context=".fragment.ChannelFragment">
 
         <LinearLayout
@@ -14,12 +16,14 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingRight="@dimen/activity_padding"
                 android:text="Find a Doctor"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="@dimen/size_24"
                 android:textStyle="bold" />
 
             <TextView
+                android:paddingRight="@dimen/activity_padding"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Book instantly and track follow-ups in Pulse."
@@ -27,6 +31,7 @@
                 android:textSize="@dimen/size_14" />
 
             <LinearLayout
+                android:paddingRight="@dimen/activity_padding"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/value_24dp"
@@ -59,6 +64,7 @@
 
             <com.google.android.material.chip.ChipGroup
                 android:layout_width="match_parent"
+                android:paddingRight="@dimen/activity_padding"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.chip.Chip
@@ -80,9 +86,7 @@
                 android:id="@+id/channel_body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="@dimen/value_24dp"/>
-
+                android:orientation="vertical"/>
         </LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
+</ScrollView>

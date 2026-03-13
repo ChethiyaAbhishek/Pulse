@@ -26,7 +26,7 @@ public class UserAuthenticationService {
     private final UserRepository repository;
     private final FirebaseTokenVerification tokenVerification;
 
-    private FirebaseToken authUser(String token) {
+    public FirebaseToken authUser(String token) {
         try {
             log.info("User authentication started");
             return tokenVerification.verify(token);

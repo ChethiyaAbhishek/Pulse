@@ -13,17 +13,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ecads.pulse.android.R;
-import com.ecads.pulse.android.model.Appointment;
+import com.ecads.pulse.android.model.AppointmentDto;
 import com.ecads.pulse.android.utils.Helper;
 
 import java.util.List;
 
 public class ExistingAppointmentsAdapter extends RecyclerView.Adapter<ExistingAppointmentsAdapter.ViewHolder> {
 
-    private List<Appointment> appointments;
+    private List<AppointmentDto> appointments;
     private OnAppointmentClickListener clickListener;
 
-    public ExistingAppointmentsAdapter(List<Appointment> appointments, OnAppointmentClickListener clickListener) {
+    public ExistingAppointmentsAdapter(List<AppointmentDto> appointments, OnAppointmentClickListener clickListener) {
         this.appointments = appointments;
         this.clickListener = clickListener;
     }
@@ -39,13 +39,13 @@ public class ExistingAppointmentsAdapter extends RecyclerView.Adapter<ExistingAp
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        Appointment appointment = appointments.get(position);
+        AppointmentDto appointmentDto = appointments.get(position);
 
-        holder.therapistName.setText(appointment.getTherapistName());
-        holder.scheduledTime.setText(appointment.getScheduledTime());
-        holder.hospital.setText(appointment.getHospital());
+        holder.therapistName.setText(appointmentDto.getTherapistName());
+        holder.scheduledTime.setText(appointmentDto.getScheduledTime().toUpperCase());
+        holder.hospital.setText(appointmentDto.getHospital());
 
-        String date = Helper.formatDate(appointment.getDate());
+        String date = Helper.formatDate(appointmentDto.getDate());
 
         if (date.equals("Today")) {
 //            holder.cardLayout.setBackground(?attr/colorGreenCard);
@@ -55,11 +55,11 @@ public class ExistingAppointmentsAdapter extends RecyclerView.Adapter<ExistingAp
 
         holder.locationBtn.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(appointment.getLocationLink()));
+            intent.setData(Uri.parse(appointmentDto.getLocationLink()));
             view.getContext().startActivity(intent);
         });
 
-        if (appointment.getVideoLink().isEmpty()) {
+        if (appointmentDto.getVideoLink() == null || appointmentDto.getVideoLink().isEmpty()) {
             holder.videoCallBtn.setEnabled(false);
             holder.videoCallBtn.setAlpha(0.5f);
         } else {
@@ -67,6 +67,13 @@ public class ExistingAppointmentsAdapter extends RecyclerView.Adapter<ExistingAp
 
             });
         }
+
+        holder.cardLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickListener.onAppointmentClick(appointmentDto);
+            }
+        });
 
     }
 
@@ -99,7 +106,7 @@ public class ExistingAppointmentsAdapter extends RecyclerView.Adapter<ExistingAp
     }
 
     public interface OnAppointmentClickListener {
-        void onAppointmentClick(Appointment appointment);
+        void onAppointmentClick(AppointmentDto appointmentDto);
     }
 
 }

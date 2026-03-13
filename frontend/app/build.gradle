@@ -1,11 +1,20 @@
 plugins {
     alias(libs.plugins.android.application)
     id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
+
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
     namespace 'com.ecads.pulse.android'
     compileSdk 36
+
+    buildFeatures {
+        buildConfig true
+        viewBinding true
+    }
 
     defaultConfig {
         applicationId "com.ecads.pulse.android"
@@ -15,6 +24,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "PUBLIC_URL", "\"${localProperties['PUBLIC_URL']}\""
     }
 
     buildTypes {
@@ -27,9 +37,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-    buildFeatures{
-        viewBinding true
-    }
 }
 
 dependencies {
@@ -39,17 +46,31 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
     implementation libs.fragment
+    implementation libs.play.services.location
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     compileOnly("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.projectlombok:lombok:1.18.42")
+    implementation 'com.github.bumptech.glide:glide:5.0.5'
+
+    // Firebase
     implementation platform('com.google.firebase:firebase-bom:34.9.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+    implementation 'com.firebase:geofire-android-common:3.1.0'
+
+    // Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.11.0"
     implementation "com.squareup.retrofit2:converter-gson:2.11.0"
     implementation "com.squareup.okhttp3:logging-interceptor:4.12.0"
-    implementation 'com.firebase:geofire-android-common:3.1.0'
+
+    // Payhere SDK
+    implementation 'com.github.PayHereDevs:payhere-android-sdk:v3.0.18'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'com.google.code.gson:gson:2.8.0'
+
+    // Maps SDK
+    implementation libs.play.services.maps
 }
