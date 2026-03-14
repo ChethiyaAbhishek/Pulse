@@ -14,8 +14,6 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 public interface ChannelingApiService {
-    @POST("channelling/publicSlots")
-    Call<Void> publicSlots();
 
     @POST("channelling/upComingAppointments")
     Call<List<AppointmentDto>> retrieveAppointments(

@@ -45,7 +45,7 @@
                     android:background="@drawable/card_bg"
                     android:drawableEnd="@drawable/audio_icon"
                     android:drawablePadding="@dimen/padding_10"
-                    android:hint="Search by name, speciality or hospital"
+                    android:hint="Search by consultant or hospital"
                     android:inputType="text"
                     android:padding="@dimen/padding_10"
                     android:textColor="?attr/color_text_75"
@@ -78,6 +78,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/value_40dp"
                     android:text="Physiotherapy"
+                    android:textSize="@dimen/size_12" />
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/value_40dp"
+                    android:text="Clear Search"
                     android:textSize="@dimen/size_12" />
 
             </com.google.android.material.chip.ChipGroup>

@@ -19,4 +19,5 @@
     <attr name="colorGreen30" format="color"/>
     <attr name="colorWhiteChipBg" format="color"/>
     <attr name="color40" format="color"/>
+    <attr name="colorBg80" format="color"/>
 </resources>

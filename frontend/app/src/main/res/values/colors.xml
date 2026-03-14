@@ -8,6 +8,7 @@
     <color name="light_text_copyright">#7d837d</color>     <!-- edited -->
     <color name="light_primary_green">#82E03A</color>
     <color name="light_green_45">#82E03A73</color>           <!-- ~45% -->
+    <color name="light_green_80_home">#eaf6e1</color>           <!-- edited -->
     <color name="light_green_80">#99e55f</color>           <!-- edited -->
     <color name="light_green_20">#def3cf</color>           <!-- edited -->
     <color name="light_green_75">#82E03ABF</color>           <!-- 75% -->
@@ -38,6 +39,7 @@
     <color name="dark_text_copyright">#808c7c</color>      <!-- 50% edited -->
     <color name="dark_primary_green">#90E04A</color>
     <color name="dark_green_45">#90E04A73</color>
+    <color name="dark_green_80">#1c2e15</color> <!--  edited  -->
     <color name="dark_green_50">#4f7d2c</color> <!--  edited  -->
     <color name="dark_green_15">#223818</color> <!--  edited  -->
     <color name="dark_green_70">#6da83c</color> <!--  edited  -->

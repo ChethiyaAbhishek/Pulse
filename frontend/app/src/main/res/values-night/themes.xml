@@ -37,6 +37,7 @@
         <item name="colorGreen30">@color/dark_green_30</item>
         <item name="colorWhiteChipBg">@color/dark_badge_bg_white_15</item>
         <item name="color40">@color/dark_text_40</item>
+        <item name="colorBg80">@color/dark_green_80</item>
 
 
         <!-- Error stays the same (red is universal) -->
@@ -70,6 +71,11 @@
 
     <style name="AppButtonText" parent="TextAppearance.Material3.LabelLarge">
         <item name="fontFamily">@font/inter_family</item>
+    </style>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Pulse" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
 
 </resources>

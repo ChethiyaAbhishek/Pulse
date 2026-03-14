@@ -7,25 +7,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.databinding.ActivityMainBinding;
 import com.ecads.pulse.android.databinding.SideNavigationHeaderBinding;
 import com.ecads.pulse.android.fragment.ChannelFragment;
+import com.ecads.pulse.android.fragment.HomeFragment;
 import com.ecads.pulse.android.fragment.ProfileFragment;
 import com.ecads.pulse.android.network.AuthApiService;
 import com.ecads.pulse.android.network.RetrofitClient;
@@ -137,8 +132,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         if (itemId == R.id.bn_home) {
-            //TODO: Load home fragment
-//            loadFragment(new ChannelFragment());
+            loadFragment(new HomeFragment());
             bottomMenu.findItem(R.id.bn_home).setChecked(true);
 
         } else if (itemId == R.id.bn_exercise) {
@@ -160,9 +154,9 @@ public class MainActivity extends AppCompatActivity implements
             bottomMenu.findItem(R.id.bn_profile).setChecked(true);
 
         } else if (itemId == R.id.sn_channel_history) {
-            // TODO: Load channel history fragment
-//            loadFragment(new ChannelFragment());
-            sideMenu.findItem(R.id.sn_channel_history).setChecked(true);
+            Intent intent = new Intent(MainActivity.this, PreviousAppointmentsActivity.class);
+            startActivity(intent);
+//            sideMenu.findItem(R.id.sn_channel_history).setChecked(true);
 
         } else if (itemId == R.id.sn_prescriptions) {
             //TODO: Load prescription fragment

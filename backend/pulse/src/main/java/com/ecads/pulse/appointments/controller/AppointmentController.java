@@ -1,7 +1,10 @@
 package com.ecads.pulse.appointments.controller;
 
 import com.ecads.pulse.appointments.dto.AppointmentStatusNotifyDto;
+import com.ecads.pulse.appointments.dto.PatientUidRequestDto;
+import com.ecads.pulse.appointments.dto.PreviousAppointmentsDto;
 import com.ecads.pulse.appointments.service.AppointmentService;
+import com.ecads.pulse.common.dto.SingleRequestDataDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -36,5 +40,17 @@ public class AppointmentController {
     public ResponseEntity<Void> confirmAppointment(
             @RequestBody AppointmentStatusNotifyDto requestData) {
         return service.confirmAppointment(requestData);
+    }
+
+    @PostMapping("/cancelConfirmedAppointment")
+    public ResponseEntity<Void> cancelConfirmedAppointment(
+            @RequestBody SingleRequestDataDto requestData) {
+        return service.cancelConfirmedAppointment(requestData);
+    }
+
+    @PostMapping("/retrieveAppointmentList")
+    public ResponseEntity<List<PreviousAppointmentsDto>> retrieveAppointmentList(
+            @RequestBody PatientUidRequestDto requestDto) {
+        return service.fetchAppointmentList(requestDto.getPatientUid());
     }
 }

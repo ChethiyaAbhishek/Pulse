@@ -1,7 +1,11 @@
 package com.ecads.pulse.android.network;
 
 import com.ecads.pulse.android.dto.AppointmentStatusNotifyDto;
+import com.ecads.pulse.android.dto.PatientUidRequestDto;
+import com.ecads.pulse.android.dto.PreviousAppointmentDto;
+import com.ecads.pulse.android.dto.SingleRequestDataDto;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -24,5 +28,17 @@ public interface AppointmentApiService {
     Call<Void> confirmAppointment(
             @Body AppointmentStatusNotifyDto notifyDto
     );
+
+    @POST("appointment/cancelConfirmedAppointment")
+    Call<Void> cancelConfirmedAppointment(
+            @Body SingleRequestDataDto requestData
+    );
+
+    @POST("appointment/retrieveAppointmentList")
+    Call<List<PreviousAppointmentDto>> retrieveAppointmentList(
+            @Body PatientUidRequestDto requestDto
+    );
+
+
 
 }

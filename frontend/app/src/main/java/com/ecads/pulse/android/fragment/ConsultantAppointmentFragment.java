@@ -1,8 +1,10 @@
 package com.ecads.pulse.android.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +13,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +35,7 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.ecads.pulse.android.BuildConfig;
 import com.ecads.pulse.android.R;
+import com.ecads.pulse.android.activity.SplashActivity;
 import com.ecads.pulse.android.adapter.AvailableSlotsAdapter;
 import com.ecads.pulse.android.adapter.ConsultantBasedHospitalsAdapter;
 import com.ecads.pulse.android.adapter.HospitalChannellingConsultantsAdapter;
@@ -48,6 +54,7 @@ import com.ecads.pulse.android.network.AppointmentApiService;
 import com.ecads.pulse.android.network.ChannelingApiService;
 import com.ecads.pulse.android.network.PaymentApiService;
 import com.ecads.pulse.android.network.RetrofitClient;
+import com.ecads.pulse.android.utils.Permissions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -87,7 +94,7 @@ public class ConsultantAppointmentFragment extends Fragment {
     private String authToken;
     private String publicUrl;
     private String[] days;
-
+    private ActivityResultLauncher<String> launcher;
     private String selectedConsultantName;
 
     private HospitalDto selectedHospital;
@@ -109,6 +116,15 @@ public class ConsultantAppointmentFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         publicUrl = BuildConfig.PUBLIC_URL;
+
+        launcher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(), isGranted -> {
+                    if (!isGranted) {
+                        Toast.makeText(requireActivity(), "Permissions for notifications are not granted", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        checkAndRequestPermission();
     }
 
     @Override
@@ -309,7 +325,7 @@ public class ConsultantAppointmentFragment extends Fragment {
             });
         } else {
             updateAvailableSlots(new ArrayList<String>());
-            binding.conAppointmentAvaiDays.setText("Select a consultant");
+            binding.conAppointmentAvaiDays.setText("Select a hospital");
         }
     }
 
@@ -694,9 +710,21 @@ public class ConsultantAppointmentFragment extends Fragment {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Log.d("ConsultantAppointmentFragment", "Payhere [APPOINTMENT_CANCEL: SUCCESS ]: " + response.code());
+
+                    // NOTIFICATION
+                    checkAndRequestPermission();
+                    sendNotification("Appointment Cancelled", "Your appointment for " +
+                            selectedConsultantName
+                            + " on " + selectedAppointmentDate + " has been cancelled.");
                 } else {
                     Log.d("ConsultantAppointmentFragment", "Payhere [APPOINTMENT_CANCEL: FAILED ]: " + response.code());
                     Toast.makeText(requireActivity(), "Appointment cancel failed", Toast.LENGTH_SHORT).show();
+
+                    // NOTIFICATION
+                    checkAndRequestPermission();
+                    sendNotification("Appointment Cancellation Failed", "Your appointment cancellation for " +
+                            selectedConsultantName
+                            + " on " + selectedAppointmentDate + " has been failed.");
                 }
             }
 
@@ -704,6 +732,12 @@ public class ConsultantAppointmentFragment extends Fragment {
             public void onFailure(Call<Void> call, Throwable throwable) {
                 Log.e("ConsultantAppointmentFragment", "Payhere [APPOINTMENT_CANCEL: FAILED ]: " + throwable);
                 Toast.makeText(requireActivity(), "Appointment cancel failed", Toast.LENGTH_SHORT).show();
+
+                // NOTIFICATION
+                checkAndRequestPermission();
+                sendNotification("Appointment Cancellation Failed", "Your appointment cancellation for " +
+                        selectedConsultantName
+                        + " on " + selectedAppointmentDate + " has been failed.");
             }
         });
     }
@@ -720,6 +754,12 @@ public class ConsultantAppointmentFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Log.d("ConsultantAppointmentFragment", "Payhere [APPOINTMENT_CONFIRMATION: SUCCESS ]: " + response.code());
                     Toast.makeText(requireActivity(), "Appointment confirmed", Toast.LENGTH_SHORT).show();
+
+                    // NOTIFICATION
+                    checkAndRequestPermission();
+                    sendNotification("Appointment Confirmed", "Your appointment for " +
+                            selectedConsultantName
+                            + " on " + selectedAppointmentDate + " has been confirmed.");
 
                     BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
                     View view = getLayoutInflater()
@@ -755,6 +795,12 @@ public class ConsultantAppointmentFragment extends Fragment {
                 } else {
                     Log.d("ConsultantAppointmentFragment", "Payhere [APPOINTMENT_CONFIRMATION: FAILED ]: " + response.code());
                     Toast.makeText(requireActivity(), "Appointment confirmation failed", Toast.LENGTH_SHORT).show();
+
+                    // NOTIFICATION
+                    checkAndRequestPermission();
+                    sendNotification("Appointment Confirmation Failed", "Your appointment confirmation for " +
+                            selectedConsultantName
+                            + " on " + selectedAppointmentDate + " has been failed.");
                 }
             }
 
@@ -762,6 +808,12 @@ public class ConsultantAppointmentFragment extends Fragment {
             public void onFailure(Call<Void> call, Throwable throwable) {
                 Log.e("ConsultantAppointmentFragment", "Payhere [APPOINTMENT_CONFIRMATION: FAILED ]: " + throwable);
                 Toast.makeText(requireActivity(), "Appointment confirmation failed", Toast.LENGTH_SHORT).show();
+
+                // NOTIFICATION
+                checkAndRequestPermission();
+                sendNotification("Appointment Confirmation Failed", "Your appointment confirmation for " +
+                        selectedConsultantName
+                        + " on " + selectedAppointmentDate + " has been failed.");
             }
         });
     }
@@ -790,6 +842,30 @@ public class ConsultantAppointmentFragment extends Fragment {
             instantiated.callBack(false);
             Log.e("Firebase Auth", "[232] No firebase auth user");
             requireActivity().finish();
+        }
+    }
+
+    private void sendNotification(String title, String msg) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(requireActivity(), SplashActivity.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(msg)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(requireActivity());
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED) {
+            int notificationId = 1;
+            notificationManager.notify(notificationId, builder.build());
+        } else {
+            checkAndRequestPermission();
+        }
+    }
+
+    private void checkAndRequestPermission() {
+        if (!Permissions.permissionEnabled(requireContext(), Manifest.permission.POST_NOTIFICATIONS)) {
+            launcher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
     }
 }

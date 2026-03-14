@@ -40,6 +40,7 @@
         <item name="colorGreen30">@color/light_green_30</item>
         <item name="colorWhiteChipBg">@color/light_badge_bg_white_65</item>
         <item name="color40">@color/light_text_40</item>
+        <item name="colorBg80">@color/light_green_80_home</item>
 
 
         <!-- Error / emergency -->
@@ -57,7 +58,8 @@
         <item name="android:fontFamily">@font/inter_family</item>
         <item name="fontFamily">@font/inter_family</item>
 
-        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Material3.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Material3.HeadlineLarge
+        </item>
         <item name="android:textColorPrimary">@color/light_text_primary</item>
         <item name="android:textColorSecondary">@color/light_text_sub</item>
 
@@ -75,6 +77,11 @@
 
     <style name="AppButtonText" parent="TextAppearance.Material3.LabelLarge">
         <item name="fontFamily">@font/inter_family</item>
+    </style>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Pulse" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
 

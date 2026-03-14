@@ -1,6 +1,7 @@
 package com.ecads.pulse.android.fragment;
 
 import android.Manifest;
+import android.app.SearchableInfo;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -27,10 +28,12 @@ import com.ecads.pulse.android.activity.AppointmentActivity;
 import com.ecads.pulse.android.adapter.AvailableConsultantsAdapter;
 import com.ecads.pulse.android.adapter.ExistingAppointmentsAdapter;
 import com.ecads.pulse.android.adapter.HospitalAdapter;
+import com.ecads.pulse.android.adapter.SearchResultsAdapter;
 import com.ecads.pulse.android.databinding.FragmentChannelBinding;
 import com.ecads.pulse.android.dto.AvailableConsultantDto;
 import com.ecads.pulse.android.dto.HospitalDto;
 import com.ecads.pulse.android.dto.LocationDto;
+import com.ecads.pulse.android.dto.SearchResultDto;
 import com.ecads.pulse.android.listener.CallBack;
 import com.ecads.pulse.android.model.AppointmentDto;
 import com.ecads.pulse.android.model.Hospital;
@@ -176,6 +179,17 @@ public class ChannelFragment extends Fragment {
                 attachAvailableConsultants(inflater, layout);
             }
         });
+
+        binding.channelSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String searchText = binding.channelSearchField.getText().toString().trim();
+
+                if (!searchText.isEmpty()) {
+//                    fetchChannelSearchResults(searchText);
+                }
+            }
+        });
     }
 
     private void attachAvailableConsultants(LayoutInflater inflater, LinearLayout parent) {
@@ -192,7 +206,7 @@ public class ChannelFragment extends Fragment {
             List<Hospital> hospitals = results;
             List<HospitalDto> dtoList = new ArrayList<>();
 
-            for(Hospital hospital: hospitals){
+            for (Hospital hospital : hospitals) {
                 HospitalDto hospitalDto = new HospitalDto(
                         hospital.getPlaceId(),
                         hospital.getImageUrl(),
@@ -251,30 +265,6 @@ public class ChannelFragment extends Fragment {
         });
     }
 
-    private void fetchAvailableSlots() {
-//        Retrofit retrofit = RetrofitClient.getInstance(firebaseToken);
-//        ConsultantApiService apiService = retrofit.create(ConsultantApiService.class);
-//
-//        Call<Void> userAuth = apiService.publicSlots();
-//        userAuth.enqueue(new Callback<Void>() {
-//            @Override
-//            public void onResponse(Call<Void> call, Response<Void> response) {
-//                Log.i("Firebase Auth", "Server: Response Received");
-//
-//                if (response.isSuccessful()) {
-//
-//                } else {
-//                    Log.e("Firebase Auth", "Server: Failed " + response.code());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Void> call, Throwable throwable) {
-//                Log.e("Firebase Auth", "Server: Failed " + throwable.getMessage());
-//            }
-//        });
-    }
-
     private void attachHospitalSection(LayoutInflater inflater, LinearLayout parent) {
         //TODO: Fetch the nearest hospitals list[Google Places Api]
 
@@ -302,7 +292,6 @@ public class ChannelFragment extends Fragment {
 
             Log.i("Channel Fragment", "Hospital section attached");
 
-            List<Hospital> hospitals = results;
             HospitalAdapter adapter = new HospitalAdapter(results, hospital -> {
                 Intent intent = new Intent(requireActivity(), AppointmentActivity.class);
                 intent.putExtra("type", Helper.HOSPITAL);
@@ -470,6 +459,90 @@ public class ChannelFragment extends Fragment {
                 Log.d("ChannelFragment", "Appointments fetching failed: " + throwable);
             }
         });
+    }
+
+    private void fetchChannelSearchResults(String searchText, LayoutInflater inflater, LinearLayout parent) {
+//        if (searchText != null && !searchText.isEmpty()) {
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//            ChannelingApiService apiService = retrofit.create(ChannelingApiService.class);
+//
+//            apiService.searchResult(searchText);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//            View section = inflater.inflate(R.layout.card_section, parent, false);
+//            TextView sectionTitle = section.findViewById(R.id.card_section_title);
+//            RecyclerView container = section.findViewById(R.id.card_section_container);
+//
+//            sectionTitle.setText("Search results for “" + searchText + "” ");
+//            container.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+//
+//            List<GeoQueryBounds> bounds = null;
+//            retrieveHospitalList(bounds, this.placesApiList, results -> {
+//                List<Hospital> hospitals = results;
+//                List<HospitalDto> dtoList = new ArrayList<>();
+//                List<SearchResultDto> searchResultDtos = new ArrayList<>();
+//
+//                for (Hospital hospital : hospitals) {
+//                    HospitalDto hospitalDto = new HospitalDto(
+//                            hospital.getPlaceId(),
+//                            hospital.getImageUrl(),
+//                            hospital.getName(),
+//                            hospital.getLowerName(),
+//                            hospital.getAddress(),
+//                            hospital.getContact(),
+//                            hospital.getEmail(),
+//                            new LocationDto(hospital.getLocation().getLatitude(), hospital.getLocation().getLongitude()),
+//                            hospital.getGeohash(),
+//                            hospital.getMapUrl()
+//                    );
+//                    dtoList.add(hospitalDto);
+//                    searchResultDtos.add(new SearchResultDto(null, hospitalDto));
+//                }
+//
+//                fetchConsultantsWithAvailableSlotsForHospitals(dtoList, availableConsultantList -> {
+//                    if (!availableConsultantList.isEmpty()) {
+//
+//                        for (AvailableConsultantDto consultantDto : availableConsultantList) {
+//                            searchResultDtos.add(new SearchResultDto(consultantDto, null));
+//                        }
+//
+//                        SearchResultsAdapter adapter = new SearchResultsAdapter(searchResultDtos, searchResultDto -> {
+//                            Intent intent = new Intent(requireActivity(), AppointmentActivity.class);
+//                            if (searchResultDto.getConsultantDto() != null) {
+//                                intent.putExtra("type", Helper.CONSULTANT);
+//                                intent.putExtra("data", searchResultDto.getConsultantDto().getConsultant().getUid());
+//                            } else {
+//                                intent.putExtra("type", Helper.HOSPITAL);
+//                                intent.putExtra("data", searchResultDto.getHospital().getPlaceId());
+//                            }
+//                            if (firebaseToken != null) {
+//                                intent.putExtra("authToken", firebaseToken);
+//                            }
+//                            startActivity(intent);
+//                        });
+//
+//                        container.setAdapter(adapter);
+//                        parent.addView(section);
+//                    }
+//                });
+//            });
+//
+//        }
     }
 
 }

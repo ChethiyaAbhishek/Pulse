@@ -1,17 +1,26 @@
 package com.ecads.pulse.appointments.service;
 
 import com.ecads.pulse.appointments.dto.AppointmentStatusNotifyDto;
+import com.ecads.pulse.appointments.dto.PreviousAppointmentsDto;
 import com.ecads.pulse.appointments.entity.Appointment;
 import com.ecads.pulse.appointments.enums.AppointmentMode;
 import com.ecads.pulse.appointments.enums.AppointmentStatus;
 import com.ecads.pulse.appointments.repository.AppointmentRepository;
 import com.ecads.pulse.authentication.service.UserAuthenticationService;
+import com.ecads.pulse.channeling.dto.ConsultantDTO;
 import com.ecads.pulse.channeling.entity.ConsultantChannelingHospital;
 import com.ecads.pulse.channeling.repository.ConsultantChannelingHospitalRepository;
+import com.ecads.pulse.common.dto.SingleRequestDataDto;
+import com.ecads.pulse.common.exception.FirebaseFirestoreException;
 import com.ecads.pulse.common.exception.ShowErrorException;
+import com.ecads.pulse.hospital.dto.HospitalApiDto;
+import com.ecads.pulse.hospital.dto.HospitalDto;
+import com.ecads.pulse.hospital.dto.LocationDto;
 import com.ecads.pulse.payment.entity.AppointmentPayment;
 import com.ecads.pulse.payment.enums.PaymentStatus;
 import com.ecads.pulse.payment.repository.AppointmentPaymentsRepository;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 @Service
 @Slf4j
@@ -35,6 +43,7 @@ public class AppointmentService {
     private final UserAuthenticationService authenticationService;
     private final ConsultantChannelingHospitalRepository channellingHospitalRepository;
     private final AppointmentPaymentsRepository paymentsRepository;
+    private final Firestore firestore;
 
     @Transactional
     public ResponseEntity<Map<String, String>> createPendingAppointment(
@@ -154,11 +163,11 @@ public class AppointmentService {
                     throw new ShowErrorException("Appointment payment confirmation failed");
                 }
             } else {
-                if(payment.getPaymentStatus() == PaymentStatus.PAID){
-                    if(appointment.getAppointmentStatus() != AppointmentStatus.CONFIRMED){
+                if (payment.getPaymentStatus() == PaymentStatus.PAID) {
+                    if (appointment.getAppointmentStatus() != AppointmentStatus.CONFIRMED) {
                         log.debug("Appointment confirming logic error. Appointment Status: {} [Expected: {}]",
                                 appointment.getAppointmentStatus(), AppointmentStatus.CONFIRMED);
-                    }else if(appointment.getPaymentStatus() != PaymentStatus.PAID){
+                    } else if (appointment.getPaymentStatus() != PaymentStatus.PAID) {
                         log.debug("Appointment confirming logic error. Payment Status: {} [Expected: {}]",
                                 appointment.getPaymentStatus(), PaymentStatus.PAID);
                     }
@@ -171,6 +180,134 @@ public class AppointmentService {
         } else {
             throw new ShowErrorException("No appointment found");
         }
+    }
+
+    @Transactional
+    public ResponseEntity<Void> cancelConfirmedAppointment(
+            SingleRequestDataDto cancelDto) {
+        if (cancelDto == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Appointment appointment = appointmentRepository.
+                getAppointmentById(Long.valueOf(cancelDto.getData()));
+
+        if (appointment != null) {
+
+            AppointmentPayment payment = paymentsRepository
+                    .getAppointmentPaymentByAppointmentId(appointment.getId());
+
+            if (payment != null) {
+
+                appointment.setAppointmentStatus(AppointmentStatus.CANCELLED);
+                appointment.setPaymentStatus(PaymentStatus.CANCELLED);
+
+                // TODO: Payhere refund
+                
+                payment.setPaymentStatus(PaymentStatus.REFUNDED);
+
+                return ResponseEntity.ok().build();
+
+            }else{
+                throw new ShowErrorException("No payments found for the appointment");
+            }
+
+        } else {
+            throw new ShowErrorException("No appointment found");
+        }
+    }
+
+    public ResponseEntity<List<PreviousAppointmentsDto>> fetchAppointmentList(String patientUid) {
+
+        if (patientUid == null || patientUid.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<Appointment> appointmentList = appointmentRepository.getAllByPatientUidAndPaymentStatusIsNot(patientUid.trim(), PaymentStatus.CANCELLED);
+        Map<String, ConsultantDTO> consultantMap = new HashMap<>();
+        Map<String, HospitalApiDto> hospitalMap = new HashMap<>();
+
+        Set<String> consultantUids = new HashSet<>();
+        Set<String> hospitalPlaceIds = new HashSet<>();
+
+        List<PreviousAppointmentsDto> resultsList = new ArrayList<>();
+
+        if (appointmentList != null && !appointmentList.isEmpty()) {
+            for (Appointment appointment : appointmentList) {
+                consultantUids.add(appointment.getConsultantChannelingHospital().getConsultantUid());
+                hospitalPlaceIds.add(appointment.getConsultantChannelingHospital().getHospitalPlaceId());
+            }
+
+            try {
+                QuerySnapshot querySnapshot = firestore.collection("consultants")
+                        .whereIn("uid", consultantUids.stream().toList()).get().get();
+
+                if (!querySnapshot.isEmpty()) {
+                    List<ConsultantDTO> consultantDTOS = querySnapshot.toObjects(ConsultantDTO.class);
+                    for (ConsultantDTO dto : consultantDTOS) {
+                        consultantMap.put(dto.getUid(), dto);
+                    }
+                } else {
+                    log.warn("Received consultant querySnapshot is empty");
+                    throw new ShowErrorException("Firestore error: Received consultant querySnapshot is empty");
+                }
+
+                QuerySnapshot hospitalQuerySnapshot = firestore.collection("hospitals")
+                        .whereIn("placeId", hospitalPlaceIds.stream().toList()).get().get();
+
+                if (!hospitalQuerySnapshot.isEmpty()) {
+                    List<HospitalDto> dtoList = hospitalQuerySnapshot.toObjects(HospitalDto.class);
+
+                    for (HospitalDto hospitalDto : dtoList) {
+                        HospitalApiDto apiDto = new HospitalApiDto(
+                                hospitalDto.getPlaceId(),
+                                hospitalDto.getImageUrl(),
+                                hospitalDto.getName(),
+                                hospitalDto.getLowerName(),
+                                hospitalDto.getAddress(),
+                                hospitalDto.getContact(),
+                                hospitalDto.getEmail(),
+                                new LocationDto(hospitalDto.getLocation().getLatitude(), hospitalDto.getLocation().getLongitude()),
+                                hospitalDto.getGeohash(),
+                                hospitalDto.getMapUrl()
+                        );
+                        hospitalMap.put(hospitalDto.getPlaceId(), apiDto);
+                    }
+                } else {
+                    log.warn("Received hospital querySnapshot is empty");
+                    throw new ShowErrorException("Firestore error: Received hospital querySnapshot is empty");
+                }
+
+                DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+
+                for (Appointment appointment : appointmentList) {
+                    HospitalApiDto hospital = hospitalMap.get(appointment.getConsultantChannelingHospital().getHospitalPlaceId());
+                    ConsultantDTO consultant = consultantMap.get(appointment.getConsultantChannelingHospital().getConsultantUid());
+
+                    PreviousAppointmentsDto appointmentsDto = new PreviousAppointmentsDto(
+                            appointment.getId().toString(),
+                            hospital.getName(),
+                            consultant.getTitle() + " " + consultant.getName(),
+                            consultant.getSpeciality(),
+                            consultant.getBaseHospital(),
+                            hospital.getMapUrl(),
+                            appointment.getMeetingLink(),
+                            appointment.getAppointmentStartsAt().format(timeFormatter),
+                            appointment.getAppointmentDate().toString()
+                    );
+                    resultsList.add(appointmentsDto);
+                }
+
+
+            } catch (InterruptedException e) {
+                log.error("Firestore data retrieval interrupted: {}", e.getMessage());
+                throw new FirebaseFirestoreException("An error occurred while fetching data");
+            } catch (ExecutionException e) {
+                log.error("Firestore data retrieval failed: {}", e.getMessage());
+                throw new FirebaseFirestoreException("An error occurred while fetching data");
+            }
+        }
+        return ResponseEntity.ok(resultsList);
     }
 
 }

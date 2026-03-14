@@ -21,11 +21,6 @@ public class ChannellingController {
 
     private final ChannellingService service;
 
-//    @GetMapping("/publicSlots")
-//    public ResponseEntity<> retrieveAvailableSlots(int limit, GeoQueryBounds){
-//        return null;
-//    }
-
     @PostMapping("/upComingAppointments")
     public ResponseEntity<List<UpComingAppointmentsDto>> retrieveUpComingAppointments(
             @RequestBody String patientUid) {

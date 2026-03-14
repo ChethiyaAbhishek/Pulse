@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/value_8dp"
+    app:cardCornerRadius="@dimen/value_15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="?attr/colorCardBg"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_10">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/preAppointmentChannelHospital"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/appointment_date_bg"
+                android:gravity="center"
+                android:paddingVertical="@dimen/value_5dp"
+                android:paddingStart="@dimen/padding_10"
+                android:paddingEnd="@dimen/padding_10"
+                android:text="Nawaloka Hospitals PLC"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/size_11" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/preAppointmentSlot"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:padding="0dp"
+                android:text="10.00 PM - 13 Jan [30M]"
+                android:textSize="@dimen/size_11" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/preAppointmentConsultantName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Dr Isuru Gallage"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="@dimen/size_20"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/preAppointmentConsultantSpecialty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Neurologist"
+                    android:textColor="?attr/color_text_75"
+                    android:textSize="@dimen/size_12" />
+
+                <TextView
+                    android:id="@+id/preAppointmentConsultantBaseHosAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="National Hospital Colombo"
+                    android:textColor="?attr/color40"
+                    android:textSize="@dimen/size_12" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/value_8dp"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/preAppointmentLocationBtn"
+                        android:layout_width="@dimen/value_40dp"
+                        android:layout_height="@dimen/value_40dp"
+                        android:background="@drawable/appointment_card_btn_bg"
+                        android:src="@drawable/location_icon" />
+
+                    <ImageButton
+                        android:id="@+id/preAppointmentVideoBtn"
+                        android:layout_width="@dimen/value_40dp"
+                        android:layout_height="@dimen/value_40dp"
+                        android:layout_marginStart="@dimen/value_5dp"
+                        android:background="@drawable/appointment_card_btn_bg"
+                        android:src="@drawable/video_icon" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/preAppointmentInvoiceBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/value_40dp"
+                    android:backgroundTint="?attr/colorWhiteChipBg"
+                    android:paddingStart="@dimen/value_35dp"
+                    android:paddingEnd="@dimen/value_35dp"
+                    android:text="INVOICE"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="@dimen/size_11" />
+
+                <Button
+                    android:id="@+id/preAppointmentCancelBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/value_40dp"
+                    android:layout_marginTop="@dimen/value_5dp"
+                    android:backgroundTint="#c0392b"
+                    android:paddingStart="@dimen/value_35dp"
+                    android:paddingEnd="@dimen/value_35dp"
+                    android:text="Cancel"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size_11" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
