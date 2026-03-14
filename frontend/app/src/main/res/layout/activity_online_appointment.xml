@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.OnlineAppointmentActivity">
+
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/onlineAppointmentBtnBack"-->
+<!--            android:layout_width="@dimen/circular_btn"-->
+<!--            android:layout_height="@dimen/circular_btn"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:background="@drawable/circular_btn_shape"-->
+<!--            android:src="@drawable/back_arrow" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/onlineAppointmentBtnEmergency"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="@dimen/btn_height"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:background="@drawable/emergency_btn_bg"-->
+<!--            android:paddingStart="@dimen/value_15dp"-->
+<!--            android:paddingEnd="@dimen/value_15dp"-->
+<!--            android:text="@string/emergency_btn_text"-->
+<!--            android:textColor="@color/light_button_text"-->
+<!--            android:textSize="@dimen/regular_size_16"-->
+<!--            android:textStyle="bold"-->
+<!--            app:backgroundTint="@null" />-->
+<!--    </RelativeLayout>-->
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/onlineAppointmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

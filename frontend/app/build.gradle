@@ -73,4 +73,7 @@ dependencies {
 
     // Maps SDK
     implementation libs.play.services.maps
+
+    //Agora Video SDK
+    implementation 'io.agora.rtc:full-sdk:4.6.3'
 }

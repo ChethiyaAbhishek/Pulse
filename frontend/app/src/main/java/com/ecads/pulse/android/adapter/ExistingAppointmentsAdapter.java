@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ecads.pulse.android.R;
+import com.ecads.pulse.android.activity.OnlineAppointmentActivity;
 import com.ecads.pulse.android.model.AppointmentDto;
 import com.ecads.pulse.android.utils.Helper;
 
@@ -64,7 +65,8 @@ public class ExistingAppointmentsAdapter extends RecyclerView.Adapter<ExistingAp
             holder.videoCallBtn.setAlpha(0.5f);
         } else {
             holder.videoCallBtn.setOnClickListener(view -> {
-
+                Intent intent = new Intent(holder.videoCallBtn.getContext(), OnlineAppointmentActivity.class);
+                holder.videoCallBtn.getContext().startActivity(intent);
             });
         }
 

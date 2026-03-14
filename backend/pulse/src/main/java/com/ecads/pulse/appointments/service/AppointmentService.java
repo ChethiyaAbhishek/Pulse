@@ -203,7 +203,7 @@ public class AppointmentService {
                 appointment.setPaymentStatus(PaymentStatus.CANCELLED);
 
                 // TODO: Payhere refund
-                
+
                 payment.setPaymentStatus(PaymentStatus.REFUNDED);
 
                 return ResponseEntity.ok().build();

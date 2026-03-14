@@ -29,5 +29,7 @@
     <dimen name="value_18dp">18dp</dimen>
     <dimen name="size_10">10sp</dimen>
     <dimen name="size_13">13sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="size_36">36sp</dimen>
 
 </resources>
