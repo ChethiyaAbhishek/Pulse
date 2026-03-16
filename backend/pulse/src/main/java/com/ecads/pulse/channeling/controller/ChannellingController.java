@@ -1,10 +1,10 @@
 package com.ecads.pulse.channeling.controller;
 
-import com.ecads.pulse.channeling.dto.AvailableConsultantDto;
-import com.ecads.pulse.channeling.dto.ConsultantDTO;
-import com.ecads.pulse.channeling.dto.UpComingAppointmentsDto;
+import com.ecads.pulse.channeling.dto.*;
 import com.ecads.pulse.channeling.service.ChannellingService;
+import com.ecads.pulse.common.dto.SingleRequestDataDto;
 import com.ecads.pulse.hospital.dto.HospitalApiDto;
+import com.ecads.pulse.telemedicine.dto.ChannelNameAndTokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,8 +23,8 @@ public class ChannellingController {
 
     @PostMapping("/upComingAppointments")
     public ResponseEntity<List<UpComingAppointmentsDto>> retrieveUpComingAppointments(
-            @RequestBody String patientUid) {
-        return service.fetchUpComingAppointments(patientUid);
+            @RequestBody SingleRequestDataDto requestData) {
+        return service.fetchUpComingAppointments(requestData);
     }
 
     @PostMapping("/consultantsForHospitalList")
@@ -63,4 +63,15 @@ public class ChannellingController {
         return service.fetchPricingDetails(requestData);
     }
 
+    @PostMapping("/telemedChannelAndToken")
+    public ResponseEntity<ChannelNameAndTokenDto> retrieveTeleMedChannelAndToken(
+            @RequestBody TeleMedTokenReqDto requestData) {
+        return service.fetchTeleMedChannelAndToken(requestData);
+    }
+
+    @PostMapping("/searchConsultantOrHospital")
+    public ResponseEntity<SearchResultsDto> retrieveSearchResults(
+            @RequestBody SingleRequestDataDto requestData) {
+        return service.fetchSearchResults(requestData);
+    }
 }

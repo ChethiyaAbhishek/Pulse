@@ -1,6 +1,7 @@
 package com.ecads.pulse.appointments.service;
 
 import com.ecads.pulse.appointments.dto.AppointmentStatusNotifyDto;
+import com.ecads.pulse.appointments.dto.AppointmentStatusUpdateDto;
 import com.ecads.pulse.appointments.dto.PreviousAppointmentsDto;
 import com.ecads.pulse.appointments.entity.Appointment;
 import com.ecads.pulse.appointments.enums.AppointmentMode;
@@ -19,11 +20,14 @@ import com.ecads.pulse.hospital.dto.LocationDto;
 import com.ecads.pulse.payment.entity.AppointmentPayment;
 import com.ecads.pulse.payment.enums.PaymentStatus;
 import com.ecads.pulse.payment.repository.AppointmentPaymentsRepository;
+import com.ecads.pulse.telemedicine.util.TeleMedicineHelper;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +48,7 @@ public class AppointmentService {
     private final ConsultantChannelingHospitalRepository channellingHospitalRepository;
     private final AppointmentPaymentsRepository paymentsRepository;
     private final Firestore firestore;
+    private final TeleMedicineHelper teleMedicineHelper;
 
     @Transactional
     public ResponseEntity<Map<String, String>> createPendingAppointment(
@@ -103,7 +108,7 @@ public class AppointmentService {
         appointment.setPaymentStatus(PaymentStatus.PENDING);
 
         if (appointmentMode.equals(AppointmentMode.ONLINE)) {
-            // channel name [agora]
+            //temp
             appointment.setMeetingLink("channelName");
         }
 
@@ -152,10 +157,19 @@ public class AppointmentService {
             AppointmentPayment payment = paymentsRepository
                     .getAppointmentPaymentByAppointmentId(appointment.getId());
 
+            if (payment == null) {
+                throw new ShowErrorException("Payment record not found");
+            }
+
             if (appointment.getAppointmentStatus() == AppointmentStatus.CONFIRMED
                     && appointment.getPaymentStatus() == PaymentStatus.PAID) {
 
                 if (payment.getPaymentStatus() == PaymentStatus.PAID) {
+
+                    if (appointment.getAppointmentMode() == AppointmentMode.ONLINE) {
+                        appointment.setMeetingLink(teleMedicineHelper.generateAgoraChannelName(String.valueOf(appointment.getId())));
+                    }
+
                     return ResponseEntity.ok().build();
                 } else {
                     log.debug("Appointment payment confirmation failed. Payment Status: {} [Expected: {}]",
@@ -200,7 +214,7 @@ public class AppointmentService {
             if (payment != null) {
 
                 appointment.setAppointmentStatus(AppointmentStatus.CANCELLED);
-                appointment.setPaymentStatus(PaymentStatus.CANCELLED);
+                appointment.setPaymentStatus(PaymentStatus.REFUNDED);
 
                 // TODO: Payhere refund
 
@@ -208,7 +222,7 @@ public class AppointmentService {
 
                 return ResponseEntity.ok().build();
 
-            }else{
+            } else {
                 throw new ShowErrorException("No payments found for the appointment");
             }
 
@@ -217,13 +231,14 @@ public class AppointmentService {
         }
     }
 
-    public ResponseEntity<List<PreviousAppointmentsDto>> fetchAppointmentList(String patientUid) {
+    public ResponseEntity<List<PreviousAppointmentsDto>> fetchAppointmentList(
+            String patientUid) {
 
         if (patientUid == null || patientUid.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
-        List<Appointment> appointmentList = appointmentRepository.getAllByPatientUidAndPaymentStatusIsNot(patientUid.trim(), PaymentStatus.CANCELLED);
+        List<Appointment> appointmentList = appointmentRepository.getAllByPatientUidAndPaymentStatusIsNot(patientUid.trim(), PaymentStatus.CANCELLED, Sort.by(Sort.Direction.DESC, "appointmentDate"));
         Map<String, ConsultantDTO> consultantMap = new HashMap<>();
         Map<String, HospitalApiDto> hospitalMap = new HashMap<>();
 
@@ -293,7 +308,9 @@ public class AppointmentService {
                             hospital.getMapUrl(),
                             appointment.getMeetingLink(),
                             appointment.getAppointmentStartsAt().format(timeFormatter),
-                            appointment.getAppointmentDate().toString()
+                            appointment.getAppointmentDate().toString(),
+                            appointment.getPaymentStatus(),
+                            appointment.getAppointmentEndsAt().format(timeFormatter)
                     );
                     resultsList.add(appointmentsDto);
                 }
@@ -310,4 +327,27 @@ public class AppointmentService {
         return ResponseEntity.ok(resultsList);
     }
 
+    @Transactional
+    public ResponseEntity<Void> updateOnlineAppointmentStatus(
+            AppointmentStatusUpdateDto updateDto) {
+
+        if (updateDto == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Appointment appointment = appointmentRepository
+                .getAppointmentById(Long.valueOf(updateDto.getAppointmentId()));
+
+        if (appointment == null) {
+            throw new ShowErrorException("Appointment not found");
+        }
+
+        if(updateDto.getStatusId() == 0){
+            appointment.setAppointmentStatus(AppointmentStatus.COMPLETED);
+        } else if(updateDto.getStatusId() == 1){
+            appointment.setAppointmentStatus(AppointmentStatus.DISCONNECTED);
+        }
+
+        return ResponseEntity.ok().build();
+    }
 }

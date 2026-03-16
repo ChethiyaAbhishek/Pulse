@@ -15,15 +15,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ecads.pulse.android.R;
+import com.ecads.pulse.android.activity.OnlineAppointmentActivity;
 import com.ecads.pulse.android.dto.HospitalDto;
 import com.ecads.pulse.android.dto.PreviousAppointmentDto;
+import com.ecads.pulse.android.enums.AppointmentStatus;
+import com.ecads.pulse.android.enums.PaymentStatus;
 import com.ecads.pulse.android.model.AppointmentDto;
 import com.ecads.pulse.android.model.Consultant;
 import com.ecads.pulse.android.utils.Helper;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class PreviousAppointmentsAdapter extends RecyclerView.Adapter<PreviousAppointmentsAdapter.ViewHolder> {
@@ -74,9 +79,25 @@ public class PreviousAppointmentsAdapter extends RecyclerView.Adapter<PreviousAp
             holder.videoCallBtn.setEnabled(false);
             holder.videoCallBtn.setAlpha(0.5f);
         } else {
-            holder.videoCallBtn.setOnClickListener(view -> {
 
-            });
+            LocalTime endsAt = LocalTime.parse(appointmentDto.getEndsAt().toUpperCase(), DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH));
+
+            if (LocalTime.now().isAfter(endsAt)
+                    || appointmentDto.getPaymentStatus() == PaymentStatus.REFUNDED) {
+                holder.videoCallBtn.setEnabled(false);
+                holder.videoCallBtn.setAlpha(0.5f);
+            } else {
+
+                holder.videoCallBtn.setOnClickListener(view -> {
+                    Intent intent = new Intent(holder.videoCallBtn.getContext(), OnlineAppointmentActivity.class);
+                    intent.putExtra("appointmentId", appointmentDto.getAppointmentId());
+                    intent.putExtra("name", appointmentDto.getConsultantName());
+                    intent.putExtra("session", appointmentDto.getSlot() + " - " + appointmentDto.getEndsAt());
+                    intent.putExtra("hospital", appointmentDto.getChannelingHospital());
+                    intent.putExtra("date", appointmentDto.getDate());
+                    holder.videoCallBtn.getContext().startActivity(intent);
+                });
+            }
         }
 
         holder.invoiceBtn.setOnClickListener(new View.OnClickListener() {
@@ -86,19 +107,30 @@ public class PreviousAppointmentsAdapter extends RecyclerView.Adapter<PreviousAp
             }
         });
 
+        holder.invoiceBtn.setVisibility(View.GONE);
         holder.cancelBtn.setEnabled(true);
         holder.cancelBtn.setAlpha(1f);
 
-        if (localDate.isAfter(LocalDate.now())) {
-            holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onCancelBtnClickListener.onCancelBtnClick(appointmentDto);
-                }
-            });
-        } else {
+        if (appointmentDto.getPaymentStatus() == PaymentStatus.REFUNDED) {
+            holder.cancelBtn.setText("Cancelled");
+
+            holder.invoiceBtn.setText("REFUNDED");
+            holder.invoiceBtn.setVisibility(View.VISIBLE);
+
             holder.cancelBtn.setEnabled(false);
             holder.cancelBtn.setAlpha(0.5f);
+        } else {
+            if (localDate.isAfter(LocalDate.now())) {
+                holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onCancelBtnClickListener.onCancelBtnClick(appointmentDto);
+                    }
+                });
+            } else {
+                holder.cancelBtn.setEnabled(false);
+                holder.cancelBtn.setAlpha(0.5f);
+            }
         }
 
     }

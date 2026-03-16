@@ -10,13 +10,19 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.databinding.FragmentProfileBinding;
@@ -29,10 +35,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
 
@@ -70,6 +78,96 @@ public class ProfileFragment extends Fragment {
         });
 
         setUserData();
+
+        binding.profileChangesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateData();
+            }
+        });
+
+        binding.profileDosField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                binding.profileDosError.setVisibility(GONE);
+            }
+        });
+
+        binding.profileCfnField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                binding.profileCfnError.setVisibility(GONE);
+            }
+        });
+
+        binding.profileClnField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                binding.profileClnError.setVisibility(GONE);
+            }
+        });
+
+        binding.profileCconField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                binding.profileCconError.setVisibility(GONE);
+            }
+        });
+
+        binding.profileEcField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                binding.profileEcError.setVisibility(GONE);
+            }
+        });
 
     }
 
@@ -193,17 +291,68 @@ public class ProfileFragment extends Fragment {
             return;
         }
 
-        if(!existingData.isEmpty()){
+        if (existingData.isEmpty()) {
+            Patient patient = new Patient();
+            patient.setStrokeDate(dateOfStoke);
+            patient.setCgiverFname(cFname);
+            patient.setCgiverLname(cLname);
+            patient.setCgiverContact(cContact);
+            patient.setEmerContact(emerContact);
 
-            if(dateOfStoke.equals(existingData.get("dos"))){
+            firebaseFirestore.collection("patients")
+                    .document("PA_" + firebaseAuth.getUid())
+                    .set(patient).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(requireActivity(), "Profile details saved", Toast.LENGTH_SHORT).show();
+                            loadFragment(new ProfileFragment());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(requireActivity(), "Profile details saving failed", Toast.LENGTH_SHORT).show();
+                            Log.e("ProfileFragment", "Profile details saving failed: " + e.getMessage());
+                        }
+                    });
+        } else {
+            Map<String, Object> dataToUpdate = new HashMap<>();
 
+            if (!dateOfStoke.equals(existingData.get("dos"))) {
+                dataToUpdate.put("strokeDate", dateOfStoke);
             }
 
-            //TODO: Complete profile fragment
+            if (!cFname.equals(existingData.get("cfn"))) {
+                dataToUpdate.put("cgiverFname", cFname);
+            }
 
+            if (!cLname.equals(existingData.get("cln"))) {
+                dataToUpdate.put("cgiverLname", cLname);
+            }
+
+            if (!cContact.equals(existingData.get("ccon"))) {
+                dataToUpdate.put("cgiverContact", cContact);
+            }
+
+            if (!emerContact.equals(existingData.get("econ"))) {
+                dataToUpdate.put("emerContact", emerContact);
+            }
+
+            firebaseFirestore.collection("patients")
+                    .document("PA_" + firebaseAuth.getUid())
+                    .update(dataToUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(requireActivity(), "Profile details updated", Toast.LENGTH_SHORT).show();
+                            loadFragment(new ProfileFragment());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(requireActivity(), "Profile details updating failed", Toast.LENGTH_SHORT).show();
+                            Log.e("ProfileFragment", "Profile details updating failed: " + e.getMessage());
+                        }
+                    });
         }
-
-
     }
 
     private void checkTypingFields() {
@@ -223,5 +372,11 @@ public class ProfileFragment extends Fragment {
                     }
                 })
                 .show();
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, fragment);
+        transaction.commit();
     }
 }

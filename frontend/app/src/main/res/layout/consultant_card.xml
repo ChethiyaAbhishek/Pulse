@@ -4,6 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/value_8dp"
+    android:layout_marginBottom="@dimen/value_8dp"
     app:cardCornerRadius="@dimen/value_15dp">
 
     <LinearLayout

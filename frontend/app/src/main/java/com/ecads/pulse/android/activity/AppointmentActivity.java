@@ -23,6 +23,7 @@ import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.databinding.ActivityAppointmentBinding;
 import com.ecads.pulse.android.fragment.ConsultantAppointmentFragment;
 import com.ecads.pulse.android.fragment.HospitalAppointmentFragment;
+import com.ecads.pulse.android.utils.EmergencyActions;
 import com.ecads.pulse.android.utils.Helper;
 import com.ecads.pulse.android.utils.Permissions;
 
@@ -32,8 +33,8 @@ import java.util.List;
 public class AppointmentActivity extends AppCompatActivity {
 
     private ActivityAppointmentBinding binding;
-    private SharedPreferences preferences;
     private ActivityResultLauncher<String[]> launcher;
+    private EmergencyActions emergencyActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class AppointmentActivity extends AppCompatActivity {
         binding = ActivityAppointmentBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        preferences = getSharedPreferences(SplashActivity.APP_DATA, MODE_PRIVATE);
+        emergencyActions = new EmergencyActions(this);
 
         launcher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
@@ -52,7 +53,7 @@ public class AppointmentActivity extends AppCompatActivity {
                         boolean messagingPermissionGranted = result.getOrDefault(Manifest.permission.SEND_SMS, false);
 
                         if (callingPermissionGranted) {
-                            makeEmergencyCall();
+                            emergencyActions.makeCall();
                         } else {
                             new AlertDialog.Builder(this)
                                     .setTitle("Emergency call forwarding failed!")
@@ -62,22 +63,19 @@ public class AppointmentActivity extends AppCompatActivity {
                         }
 
                         if (messagingPermissionGranted) {
-                            sendSMS();
+                            emergencyActions.sendSMS();
                         } else {
                             Toast.makeText(this, "Emergency text message sending failed. Please enable the permissions.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
 
-        // 1990 emergency call & send SMS
         binding.appointmentBtnEmergency.setOnClickListener(view -> {
             if (Permissions.permissionEnabled(this, Manifest.permission.CALL_PHONE) &&
                     Permissions.permissionEnabled(this, Manifest.permission.SEND_SMS)) {
-                // make call & SMS
-                makeEmergencyCall();
-                sendSMS();
+                emergencyActions.makeCall();
+                emergencyActions.sendSMS();
             } else {
-                // request and continue
                 launcher.launch(new String[]{
                         Manifest.permission.CALL_PHONE,
                         Manifest.permission.SEND_SMS
@@ -131,27 +129,6 @@ public class AppointmentActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.appointmentContainer, fragment);
         transaction.commit();
-    }
-
-    private void makeEmergencyCall() {
-        Intent callingIntent = new Intent(Intent.ACTION_CALL);
-        callingIntent.setData(Uri.parse("tel:0740971467"));
-        startActivity(callingIntent);
-    }
-
-    private void sendSMS() {
-        // TODO: get current location and attach it
-        String message = "Pulse: EMERGENCY! \n " + preferences.getString("fname", "") + " needs your help. \n Currect Location: {location}";
-        List<String> contactList = Arrays.asList(preferences.getString("cgiverContact", null),
-                preferences.getString("emergencyContact", null));
-
-        SmsManager manager = SmsManager.getDefault();
-
-        for (String contact : contactList) {
-            if (contact != null) {
-                manager.sendTextMessage(contact, null, message, null, null);
-            }
-        }
     }
 
 }

@@ -169,7 +169,6 @@ public class Reg03Fragment extends Fragment {
                                 Log.i("Firebase Firestore", "Patient data stored");
                                 editor.putBoolean("profileDetailsAvailable", true);
 
-                                //for emergency purposes
                                 editor.putString("cgiverContact", cgiverContact);
                                 editor.putString("emergencyContact", emContact);
 

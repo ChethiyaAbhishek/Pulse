@@ -3,13 +3,13 @@ package com.ecads.pulse.channeling.service;
 import com.ecads.pulse.appointments.entity.Appointment;
 import com.ecads.pulse.appointments.enums.AppointmentStatus;
 import com.ecads.pulse.appointments.repository.AppointmentRepository;
-import com.ecads.pulse.channeling.dto.AvailableConsultantDto;
-import com.ecads.pulse.channeling.dto.ConsultantDTO;
-import com.ecads.pulse.channeling.dto.UpComingAppointmentsDto;
+import com.ecads.pulse.channeling.dto.*;
 import com.ecads.pulse.channeling.entity.AvailableChannelingDays;
 import com.ecads.pulse.channeling.entity.ConsultantChannelingHospital;
 import com.ecads.pulse.channeling.repository.AvailableChannelingDaysRepository;
 import com.ecads.pulse.channeling.repository.ConsultantChannelingHospitalRepository;
+import com.ecads.pulse.common.dto.SingleRequestDataDto;
+import com.ecads.pulse.common.enums.UserRole;
 import com.ecads.pulse.common.exception.FirebaseFirestoreException;
 import com.ecads.pulse.common.exception.ShowErrorException;
 import com.ecads.pulse.hospital.dto.HospitalApiDto;
@@ -17,6 +17,8 @@ import com.ecads.pulse.hospital.dto.HospitalDto;
 import com.ecads.pulse.hospital.dto.LocationDto;
 import com.ecads.pulse.platform.entity.PlatformFees;
 import com.ecads.pulse.platform.repository.PlatformFeesRepository;
+import com.ecads.pulse.telemedicine.dto.ChannelNameAndTokenDto;
+import com.ecads.pulse.telemedicine.util.TeleMedicineHelper;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -43,6 +45,7 @@ public class ChannellingService {
     private final PlatformFeesRepository feesRepository;
     private final AppointmentRepository appointmentRepository;
     private final Firestore firestore;
+    private final TeleMedicineHelper teleMedicineHelper;
 
     public ResponseEntity<List<ConsultantDTO>> fetchConsultants(
             Map<String, String> requestData) {
@@ -288,12 +291,13 @@ public class ChannellingService {
         }
     }
 
-    public ResponseEntity<List<UpComingAppointmentsDto>> fetchUpComingAppointments(String patientUid) {
-        if (patientUid == null) {
+    public ResponseEntity<List<UpComingAppointmentsDto>> fetchUpComingAppointments(
+            SingleRequestDataDto requestData) {
+        if (requestData.getData() == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        List<Appointment> appointmentList = appointmentRepository.getAllByAppointmentStatus(AppointmentStatus.CONFIRMED);
+        List<Appointment> appointmentList = appointmentRepository.getAllByPatientUidAndAppointmentStatus(requestData.getData(), AppointmentStatus.CONFIRMED);
 
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -315,6 +319,7 @@ public class ChannellingService {
             }
 
             UpComingAppointmentsDto appointments = new UpComingAppointmentsDto(
+                    String.valueOf(appointment.getId()),
                     consultant.getTitle() + " " + consultant.getName(),
                     appointment.getAppointmentStartsAt().format(timeFormatter) + " - " + appointment.getAppointmentEndsAt().format(timeFormatter),
                     hospital.getName(),
@@ -328,6 +333,116 @@ public class ChannellingService {
 
         return ResponseEntity.ok(dtoList);
     }
+
+    public ResponseEntity<ChannelNameAndTokenDto> fetchTeleMedChannelAndToken(
+            TeleMedTokenReqDto requestData) {
+        if (requestData.getPatientUid() == null || requestData.getAppointmentId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Appointment appointment = appointmentRepository.getAppointmentById(Long.valueOf(requestData.getAppointmentId()));
+        if (appointment == null) {
+            throw new ShowErrorException("No such appointment found");
+        }
+
+        if (appointment.getPatientUid().equals(requestData.getPatientUid())) {
+            ChannelNameAndTokenDto tokenDto = new ChannelNameAndTokenDto();
+
+            if (appointment.getAppointmentDate().equals(LocalDate.now())
+                    && !LocalTime.now().isBefore(appointment.getAppointmentStartsAt().minusMinutes(15))
+                    && LocalTime.now().isBefore(appointment.getAppointmentEndsAt())) {
+
+                String channelName = appointment.getMeetingLink();
+                String channelToken = teleMedicineHelper.generateAgoraChannelToken(channelName, UserRole.PATIENT);
+
+                tokenDto.setChannelName(channelName);
+                tokenDto.setChannelToken(channelToken);
+            }
+
+            return ResponseEntity.ok(tokenDto);
+        } else {
+            throw new ShowErrorException("Patient id does not match");
+        }
+    }
+
+    public ResponseEntity<SearchResultsDto> fetchSearchResults(
+            SingleRequestDataDto requestData) {
+        if (requestData == null || requestData.getData().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        //CONSULTANT SEARCH RESULTS
+        List<ConsultantDTO> consultantList = searchConsultantByName(requestData.getData());
+
+        List<AvailableConsultantDto> availableConsultants = new ArrayList<>();
+        List<ConsultantDTO> selectedConsultants = new ArrayList<>();
+
+        if (consultantList != null && !consultantList.isEmpty()) {
+            Map<String, List<ConsultantChannelingHospital>> consultantRecords = new HashMap<>();
+            Map<String, ConsultantDTO> consultantMap = new HashMap<>();
+
+            for (ConsultantDTO consultant : consultantList) {
+                List<ConsultantChannelingHospital> consultantBasesHospitals =
+                        channellingHospitalRepository.getAllByConsultantUid(consultant.getUid());
+                consultantRecords.put(consultant.getUid(), consultantBasesHospitals);
+                consultantMap.put(consultant.getUid(), consultant);
+            }
+
+            for (Map.Entry<String, List<ConsultantChannelingHospital>> records : consultantRecords.entrySet()) {
+
+                if (!selectedConsultants.contains(consultantMap.get(records.getKey())) && records.getValue() != null) {
+                    for (ConsultantChannelingHospital channelingRecord : records.getValue()) {
+
+                        List<String> availableSlots = getAvailableSlotsForConsultant(channelingRecord,
+                                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+                        if (!availableSlots.isEmpty()) {
+
+                            HospitalDto hospital = getHospitalByPlaceId(channelingRecord.getHospitalPlaceId());
+                            if (hospital != null) {
+                                HospitalApiDto apiDto = new HospitalApiDto(
+                                        hospital.getPlaceId(),
+                                        hospital.getImageUrl(),
+                                        hospital.getName(),
+                                        hospital.getLowerName(),
+                                        hospital.getAddress(),
+                                        hospital.getContact(),
+                                        hospital.getEmail(),
+                                        new LocationDto(hospital.getLocation().getLatitude(), hospital.getLocation().getLongitude()),
+                                        hospital.getGeohash(),
+                                        hospital.getMapUrl()
+                                );
+
+                                availableConsultants.add(new AvailableConsultantDto(
+                                        consultantMap.get(records.getKey()),
+                                        apiDto,
+                                        availableSlots
+                                ));
+                                selectedConsultants.add(consultantMap.get(records.getKey()));
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //HOSPITAL SEARCH RESULTS
+        List<HospitalDto> hospitalList = searchHospitalsByName(requestData.getData());
+        List<HospitalApiDto> hospitalApiDtos = new ArrayList<>();
+
+        if (hospitalList != null && !hospitalList.isEmpty()) {
+            hospitalApiDtos = convertHospitalsToApiDto(hospitalList);
+        }
+
+        SearchResultsDto resultsDto = new SearchResultsDto(
+                availableConsultants,
+                hospitalApiDtos
+        );
+
+        return ResponseEntity.ok(resultsDto);
+    }
+
 
 
     private List<ConsultantDTO> searchConsultantByName(String searchText) {
@@ -344,7 +459,7 @@ public class ChannellingService {
                 if (!querySnapshot.isEmpty()) {
                     return querySnapshot.toObjects(ConsultantDTO.class);
                 } else {
-                    log.warn("Received querySnapshot is empty [112]");
+                    log.warn("Received querySnapshot for consultant search by name is empty");
                     return null;
                 }
             } catch (InterruptedException e) {
@@ -355,7 +470,7 @@ public class ChannellingService {
                 throw new FirebaseFirestoreException("An error occurred while fetching data");
             }
         } else {
-            log.warn("Search Text is empty [123]");
+            log.warn("Search Text is empty");
             return null;
         }
     }
@@ -606,8 +721,7 @@ public class ChannellingService {
             List<LocalTime> bookedSlots = new ArrayList<>();
 
             for (Appointment appointment : existingAppointments) {
-                if (appointment.getAppointmentStatus() == AppointmentStatus.CONFIRMED ||
-                        appointment.getAppointmentStatus() == AppointmentStatus.PENDING) {
+                if (appointment.getAppointmentStatus() != AppointmentStatus.CANCELLED) {
                     if (!bookedSlots.contains(appointment.getAppointmentStartsAt())) {
                         bookedSlots.add(appointment.getAppointmentStartsAt());
                     }

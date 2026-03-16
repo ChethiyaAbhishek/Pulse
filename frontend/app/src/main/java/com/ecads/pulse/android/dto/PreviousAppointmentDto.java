@@ -1,5 +1,10 @@
 package com.ecads.pulse.android.dto;
 
+import com.ecads.pulse.android.enums.AppointmentStatus;
+import com.ecads.pulse.android.enums.PaymentStatus;
+
+import java.time.LocalTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,4 +23,6 @@ public class PreviousAppointmentDto {
     private String onlineChannelLink;
     private String slot;
     private String date;
+    private PaymentStatus paymentStatus;
+    private String endsAt;
 }

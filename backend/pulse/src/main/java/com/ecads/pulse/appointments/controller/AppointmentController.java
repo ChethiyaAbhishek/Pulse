@@ -1,6 +1,7 @@
 package com.ecads.pulse.appointments.controller;
 
 import com.ecads.pulse.appointments.dto.AppointmentStatusNotifyDto;
+import com.ecads.pulse.appointments.dto.AppointmentStatusUpdateDto;
 import com.ecads.pulse.appointments.dto.PatientUidRequestDto;
 import com.ecads.pulse.appointments.dto.PreviousAppointmentsDto;
 import com.ecads.pulse.appointments.service.AppointmentService;
@@ -52,5 +53,11 @@ public class AppointmentController {
     public ResponseEntity<List<PreviousAppointmentsDto>> retrieveAppointmentList(
             @RequestBody PatientUidRequestDto requestDto) {
         return service.fetchAppointmentList(requestDto.getPatientUid());
+    }
+
+    @PostMapping("/updateOnlineAppointmentStatus")
+    public ResponseEntity<Void> updateOnlineAppointmentStatus(
+            @RequestBody AppointmentStatusUpdateDto requestData) {
+        return service.updateOnlineAppointmentStatus(requestData);
     }
 }

@@ -2,8 +2,10 @@ package com.ecads.pulse.android.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -15,9 +17,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.adapter.PreviousAppointmentsAdapter;
 import com.ecads.pulse.android.databinding.ActivityPreviousAppointmentsBinding;
 import com.ecads.pulse.android.dto.AppointmentStatusNotifyDto;
@@ -28,6 +34,7 @@ import com.ecads.pulse.android.enums.PaymentStatus;
 import com.ecads.pulse.android.listener.CallBack;
 import com.ecads.pulse.android.network.AppointmentApiService;
 import com.ecads.pulse.android.network.RetrofitClient;
+import com.ecads.pulse.android.utils.EmergencyActions;
 import com.ecads.pulse.android.utils.Permissions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,8 +53,8 @@ import retrofit2.Retrofit;
 public class PreviousAppointmentsActivity extends AppCompatActivity {
 
     private ActivityPreviousAppointmentsBinding binding;
-    private SharedPreferences preferences;
     private ActivityResultLauncher<String[]> launcher;
+    private EmergencyActions emergencyActions;
     private FirebaseAuth firebaseAuth;
     private Retrofit retrofit;
 
@@ -59,46 +66,27 @@ public class PreviousAppointmentsActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        preferences = getSharedPreferences(SplashActivity.APP_DATA, MODE_PRIVATE);
+        checkAndRequestPermission();
+        binding.preAppointmentsRecycler.setVisibility(View.GONE);
+        binding.preAppointmentLoading.setVisibility(View.VISIBLE);
+
+        emergencyActions = new EmergencyActions(this);
 
         launcher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
                 result -> {
                     if (result != null) {
-                        boolean callingPermissionGranted = result.getOrDefault(Manifest.permission.CALL_PHONE, false);
-                        boolean messagingPermissionGranted = result.getOrDefault(Manifest.permission.SEND_SMS, false);
-
-                        if (callingPermissionGranted) {
-                            makeEmergencyCall();
-                        } else {
-                            new AlertDialog.Builder(this)
-                                    .setTitle("Emergency call forwarding failed!")
-                                    .setMessage("Please enable permissions for calling to use this feature.")
-                                    .setPositiveButton("OK", null)
-                                    .show();
-                        }
-
-                        if (messagingPermissionGranted) {
-                            sendSMS();
-                        } else {
-                            Toast.makeText(this, "Emergency text message sending failed. Please enable the permissions.", Toast.LENGTH_SHORT).show();
-                        }
                     }
                 });
 
-        // 1990 emergency call & send SMS
+
         binding.preAppointmentBtnEmergency.setOnClickListener(view -> {
             if (Permissions.permissionEnabled(this, Manifest.permission.CALL_PHONE) &&
                     Permissions.permissionEnabled(this, Manifest.permission.SEND_SMS)) {
-                // make call & SMS
-                makeEmergencyCall();
-                sendSMS();
+                emergencyActions.makeCall();
+                emergencyActions.sendSMS();
             } else {
-                // request and continue
-                launcher.launch(new String[]{
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.SEND_SMS
-                });
+                checkAndRequestPermission();
             }
         });
 
@@ -108,6 +96,7 @@ public class PreviousAppointmentsActivity extends AppCompatActivity {
 
         if (firebaseAuth.getCurrentUser() == null) {
             Toast.makeText(this, "No user found", Toast.LENGTH_SHORT).show();
+            Log.e(PreviousAppointmentsActivity.class.getSimpleName(), "No user found");
             finish();
         }
 
@@ -148,6 +137,8 @@ public class PreviousAppointmentsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         binding.noPreAppointmentsCard.setVisibility(View.GONE);
+        binding.preAppointmentsRecycler.setVisibility(View.VISIBLE);
+        binding.preAppointmentLoading.setVisibility(View.GONE);
 
         fetchAppointmentsForUser(firebaseAuth.getUid(), previousAppointmentList -> {
             if (!previousAppointmentList.isEmpty()) {
@@ -156,7 +147,17 @@ public class PreviousAppointmentsActivity extends AppCompatActivity {
                         onInvoiceClick -> {
 
                         }, onCancelClick -> {
-                    cancelConfirmedAppointment(onCancelClick.getAppointmentId());
+                    new AlertDialog.Builder(this)
+                            .setTitle("Cancel Appointment")
+                            .setMessage("\n Do you want to cancel the appointment? \n\n Consultant: " + onCancelClick.getConsultantName() + " \n Session: " + onCancelClick.getSlot() + " - " + onCancelClick.getEndsAt() + " \n Date: " + onCancelClick.getDate())
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    cancelConfirmedAppointment(onCancelClick.getAppointmentId());
+                                }
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
                 });
                 recyclerView.setAdapter(adapter);
             } else {
@@ -165,6 +166,7 @@ public class PreviousAppointmentsActivity extends AppCompatActivity {
                 binding.noPreAppointmentsCard.setVisibility(View.VISIBLE);
             }
         });
+
     }
 
     private void fetchAppointmentsForUser(
@@ -186,7 +188,7 @@ public class PreviousAppointmentsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<PreviousAppointmentDto>> call, Throwable throwable) {
-                Log.d("PreviousAppointmentsActivity", "Appointment list retrieving failed: " + throwable);
+                Log.e("PreviousAppointmentsActivity", "Appointment list retrieving failed: " + throwable.getMessage());
                 Toast.makeText(PreviousAppointmentsActivity.this, "Appointment list retrieving failed", Toast.LENGTH_SHORT).show();
             }
         });
@@ -200,58 +202,60 @@ public class PreviousAppointmentsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    Log.d("HospitalAppointmentFragment", "Payhere [APPOINTMENT_CANCEL: SUCCESS ]: " + response.code());
+                    Log.d(PreviousAppointmentsActivity.class.getSimpleName(), "[APPOINTMENT_CANCEL: SUCCESS ]: " + response.code());
 
-//                    // NOTIFICATION
-//                    checkAndRequestPermission();
-//                    sendNotification("Appointment Cancelled", "Your appointment for " +
-//                            selectedConsultant.getTitle() + " " + selectedConsultant.getName()
-//                            + " on " + selectedAppointmentDate + " has been cancelled.");
+                    // NOTIFICATION
+                    checkAndRequestPermission();
+                    sendNotification("Appointment Cancelled", "Your appointment has been cancelled.");
 
                 } else {
-                    Log.d("HospitalAppointmentFragment", "Payhere [APPOINTMENT_CANCEL: FAILED ]: " + response.code());
-//                    Toast.makeText(requireActivity(), "Appointment cancel failed", Toast.LENGTH_SHORT).show();
-//
-//                    // NOTIFICATION
-//                    checkAndRequestPermission();
-//                    sendNotification("Appointment Cancellation Failed", "Your appointment cancellation for " +
-//                            selectedConsultant.getTitle() + " " + selectedConsultant.getName()
-//                            + " on " + selectedAppointmentDate + " has been failed.");
+                    Log.d(PreviousAppointmentsActivity.class.getSimpleName(), "[APPOINTMENT_CANCEL: FAILED ]: " + response.code());
+
+                    // NOTIFICATION
+                    checkAndRequestPermission();
+                    sendNotification("Appointment Cancellation Failed", "Your appointment cancellation has been failed.");
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable throwable) {
-                Log.e("HospitalAppointmentFragment", "Payhere [APPOINTMENT_CANCEL: FAILED ]: " + throwable);
-//                Toast.makeText(requireActivity(), "Appointment cancel failed", Toast.LENGTH_SHORT).show();
-//
-//                // NOTIFICATION
-//                checkAndRequestPermission();
-//                sendNotification("Appointment Cancellation Failed", "Your appointment cancellation for " +
-//                        selectedConsultant.getTitle() + " " + selectedConsultant.getName()
-//                        + " on " + selectedAppointmentDate + " has been failed.");
+                Log.e(PreviousAppointmentsActivity.class.getSimpleName(), "[APPOINTMENT_CANCEL: FAILED ]: " + throwable);
+
+                // NOTIFICATION
+                checkAndRequestPermission();
+                sendNotification("Appointment Cancellation Failed", "Your appointment cancellation has been failed.");
             }
         });
     }
 
-    private void makeEmergencyCall() {
-        Intent callingIntent = new Intent(Intent.ACTION_CALL);
-        callingIntent.setData(Uri.parse("tel:0740971467"));
-        startActivity(callingIntent);
+    private void sendNotification(String title, String msg) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, SplashActivity.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(msg)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED) {
+            int notificationId = 1;
+            notificationManager.notify(notificationId, builder.build());
+        } else {
+            checkAndRequestPermission();
+        }
     }
 
-    private void sendSMS() {
-        // TODO: get current location and attach it
-        String message = "Pulse: EMERGENCY! \n " + preferences.getString("fname", "") + " needs your help. \n Currect Location: {location}";
-        List<String> contactList = Arrays.asList(preferences.getString("cgiverContact", null),
-                preferences.getString("emergencyContact", null));
+    private void checkAndRequestPermission() {
+        if (!Permissions.permissionEnabled(this, Manifest.permission.POST_NOTIFICATIONS)
+                || !Permissions.permissionEnabled(this, Manifest.permission.CALL_PHONE)
+                || !Permissions.permissionEnabled(this, Manifest.permission.SEND_SMS)) {
 
-        SmsManager manager = SmsManager.getDefault();
-
-        for (String contact : contactList) {
-            if (contact != null) {
-                manager.sendTextMessage(contact, null, message, null, null);
-            }
+            launcher.launch(new String[]{
+                    Manifest.permission.CALL_PHONE,
+                    Manifest.permission.SEND_SMS,
+                    Manifest.permission.POST_NOTIFICATIONS
+            });
         }
     }
 }

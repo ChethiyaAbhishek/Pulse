@@ -17,6 +17,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -788,6 +789,9 @@ public class ConsultantAppointmentFragment extends Fragment {
                         @Override
                         public void onCancel(DialogInterface dialogInterface) {
                             requireActivity().finish();
+                            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.fragmentContainer, new ChannelFragment());
+                            transaction.commit();
                         }
                     });
                     dialog.show();

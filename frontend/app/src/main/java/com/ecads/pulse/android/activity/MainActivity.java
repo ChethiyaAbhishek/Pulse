@@ -1,13 +1,21 @@
 package com.ecads.pulse.android.activity;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +30,12 @@ import com.ecads.pulse.android.databinding.SideNavigationHeaderBinding;
 import com.ecads.pulse.android.fragment.ChannelFragment;
 import com.ecads.pulse.android.fragment.HomeFragment;
 import com.ecads.pulse.android.fragment.ProfileFragment;
+import com.ecads.pulse.android.model.Hospital;
+import com.ecads.pulse.android.model.Patient;
 import com.ecads.pulse.android.network.AuthApiService;
 import com.ecads.pulse.android.network.RetrofitClient;
+import com.ecads.pulse.android.utils.EmergencyActions;
+import com.ecads.pulse.android.utils.Permissions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -33,6 +45,13 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements
     private MaterialToolbar sideNavTopBar;
 
     private FirebaseAuth firebaseAuth;
-
+    private ActivityResultLauncher<String[]> launcher;
+    private EmergencyActions emergencyActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +81,32 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(binding.getRoot());
 
         firebaseAuth = FirebaseAuth.getInstance();
+        emergencyActions = new EmergencyActions(this);
+
+        launcher = registerForActivityResult(
+                new ActivityResultContracts.RequestMultiplePermissions(),
+                result -> {
+                    if (result != null) {
+                        boolean callingPermissionGranted = result.getOrDefault(Manifest.permission.CALL_PHONE, false);
+                        boolean messagingPermissionGranted = result.getOrDefault(Manifest.permission.SEND_SMS, false);
+
+                        if (callingPermissionGranted) {
+                            emergencyActions.makeCall();
+                        } else {
+                            new AlertDialog.Builder(this)
+                                    .setTitle("Emergency call forwarding failed!")
+                                    .setMessage("Please enable permissions for calling to use this feature.")
+                                    .setPositiveButton("OK", null)
+                                    .show();
+                        }
+
+                        if (messagingPermissionGranted) {
+                            emergencyActions.sendSMS();
+                        } else {
+                            Toast.makeText(this, "Emergency text message sending failed. Please enable the permissions.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
         bottomNavigationView = binding.bottomNavigationView;
         sideNavigationView = binding.sideNavigationView;
@@ -108,10 +154,22 @@ public class MainActivity extends AppCompatActivity implements
         bottomNavigationView.setOnItemSelectedListener(this);
 
         if (savedInstanceState == null) {
-            //TODO: Load home fragment
-//            loadFragment(new HomeFragment());
+            loadFragment(new HomeFragment());
             bottomNavigationView.getMenu().findItem(R.id.bn_home).setChecked(true);
         }
+
+        binding.emergencyBtnMain.setOnClickListener(view -> {
+            if (Permissions.permissionEnabled(this, Manifest.permission.CALL_PHONE) &&
+                    Permissions.permissionEnabled(this, Manifest.permission.SEND_SMS)) {
+                emergencyActions.makeCall();
+                emergencyActions.sendSMS();
+            } else {
+                launcher.launch(new String[]{
+                        Manifest.permission.CALL_PHONE,
+                        Manifest.permission.SEND_SMS
+                });
+            }
+        });
 
     }
 

@@ -36,7 +36,7 @@
                 android:src="@drawable/notification_icon" />
 
             <Button
-                android:id="@+id/emergencyBtnLogin"
+                android:id="@+id/emergencyBtnMain"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/btn_height"
                 android:layout_gravity="end"

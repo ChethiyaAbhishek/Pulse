@@ -2,6 +2,7 @@ package com.ecads.pulse.android.adapter;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,11 @@ import com.ecads.pulse.android.activity.OnlineAppointmentActivity;
 import com.ecads.pulse.android.model.AppointmentDto;
 import com.ecads.pulse.android.utils.Helper;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 public class ExistingAppointmentsAdapter extends RecyclerView.Adapter<ExistingAppointmentsAdapter.ViewHolder> {
 
@@ -60,12 +65,24 @@ public class ExistingAppointmentsAdapter extends RecyclerView.Adapter<ExistingAp
             view.getContext().startActivity(intent);
         });
 
-        if (appointmentDto.getVideoLink() == null || appointmentDto.getVideoLink().isEmpty()) {
+        String endsAt = appointmentDto.getScheduledTime().substring(11, 19);
+        System.out.println("time:"+endsAt+";");
+        LocalTime localEndAt = LocalTime.parse(endsAt.toUpperCase(), DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH));
+
+        if (appointmentDto.getVideoLink() == null
+                || appointmentDto.getVideoLink().isEmpty()
+                || LocalTime.now().isAfter(localEndAt)) {
+
             holder.videoCallBtn.setEnabled(false);
             holder.videoCallBtn.setAlpha(0.5f);
         } else {
             holder.videoCallBtn.setOnClickListener(view -> {
                 Intent intent = new Intent(holder.videoCallBtn.getContext(), OnlineAppointmentActivity.class);
+                intent.putExtra("appointmentId", appointmentDto.getAppointmentId());
+                intent.putExtra("name", appointmentDto.getTherapistName());
+                intent.putExtra("session", appointmentDto.getScheduledTime());
+                intent.putExtra("hospital", appointmentDto.getHospital());
+                intent.putExtra("date", appointmentDto.getDate());
                 holder.videoCallBtn.getContext().startActivity(intent);
             });
         }

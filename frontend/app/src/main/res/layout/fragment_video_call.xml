@@ -1,243 +1,330 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".fragment.VideoCallFragment">
 
-    <FrameLayout
-        android:id="@+id/remote_video_view_container"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/videoCallContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:visibility="visible"
-        android:background="@android:color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/remoteVideoOffView"
-        android:visibility="gone"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/remote_video_view_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:visibility="visible"
+            android:background="@android:color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-            <TextView
+        <FrameLayout
+            android:id="@+id/remoteVideoOffView"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Dr Isuru Perera"
-                android:textAlignment="center"
-                android:textSize="@dimen/size_36"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:textColor="?attr/colorOnSurface"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
+                <TextView
+                    android:id="@+id/remoteVideoOffViewName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Dr Isuru Perera"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/size_36"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Consultant"
+                    android:textAllCaps="true"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/size_14"
+                    android:textColor="?attr/color70"/>
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/local_video_view_container"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="@dimen/value_15dp"
+            android:layout_marginEnd="@dimen/value_15dp"
+            android:background="@drawable/card_bg"
+            android:clipToOutline="true"
+            android:elevation="6dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/localVideoOffView"
+            android:visibility="gone"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="@dimen/value_15dp"
+            android:layout_marginEnd="@dimen/value_15dp"
+            android:background="@drawable/card_bg"
+            android:clipToOutline="true"
+            android:elevation="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Consultant"
-                android:textAllCaps="true"
-                android:textAlignment="center"
-                android:textSize="@dimen/size_14"
-                android:textColor="?attr/color70"/>
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-    </FrameLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="You"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/size_36"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textStyle="bold" />
 
-    <FrameLayout
-        android:id="@+id/local_video_view_container"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_marginTop="@dimen/value_15dp"
-        android:layout_marginEnd="@dimen/value_15dp"
-        android:background="@drawable/card_bg"
-        android:clipToOutline="true"
-        android:elevation="6dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+        </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/localVideoOffView"
-        android:visibility="gone"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_marginTop="@dimen/value_15dp"
-        android:layout_marginEnd="@dimen/value_15dp"
-        android:background="@drawable/card_bg"
-        android:clipToOutline="true"
-        android:elevation="6dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="You"
-                android:textAlignment="center"
-                android:textSize="@dimen/size_36"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:textColor="?attr/colorOnSurface"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-    </FrameLayout>
-
-    <FrameLayout
-        android:elevation="6dp"
-        android:id="@+id/videoCallHeartRateDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/value_15dp"
-        android:layout_marginTop="@dimen/value_15dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/consultantCardSlot1"
+        <FrameLayout
+            android:elevation="6dp"
+            android:id="@+id/videoCallHeartRateDisplay"
             android:layout_width="wrap_content"
-            android:layout_height="55dp"
-            android:layout_marginEnd="@dimen/value_8dp"
-            android:padding="0dp"
-            android:text="Bpm: 24/Hz"
-            android:textSize="@dimen/size_14" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/value_15dp"
+            android:layout_marginTop="@dimen/value_15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </FrameLayout>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/consultantCardSlot1"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:layout_marginEnd="@dimen/value_8dp"
+                android:padding="0dp"
+                android:text="Bpm: 24/Hz"
+                android:textSize="@dimen/size_14" />
 
-    <FrameLayout
-        android:id="@+id/videoPanel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/value_15dp"
-        android:layout_marginEnd="@dimen/value_15dp"
-        android:layout_marginBottom="@dimen/value_15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        </FrameLayout>
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/videoPanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-<!--            <com.google.android.material.card.MaterialCardView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginVertical="@dimen/value_15dp"-->
-<!--                app:strokeColor="?attr/colorPrimary"-->
-<!--                app:strokeWidth="2dp">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:background="@drawable/card_bg"-->
-<!--                    android:textColor="?attr/colorOnSurface"-->
-<!--                    android:text="Heres the speaking text scripts"-->
-<!--                    android:padding="@dimen/padding_10"-->
-<!--                    android:textSize="@dimen/size_14"-->
-<!--                    />-->
-<!--            </com.google.android.material.card.MaterialCardView>-->
-
-            <LinearLayout
-                android:padding="@dimen/value_8dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:elevation="6dp"
-                    android:id="@+id/videoCallMicBtn"
-                    android:layout_width="@dimen/circular_btn"
-                    android:layout_height="@dimen/circular_btn"
-                    android:layout_marginEnd="@dimen/value_15dp"
-                    android:background="@drawable/circular_btn_shape"
-                    android:padding="@dimen/value_15dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/audio_icon" />
-
-                <ImageButton
-                    android:elevation="6dp"
-                    android:id="@+id/videoCallVideoBtn"
-                    android:layout_width="@dimen/circular_btn"
-                    android:layout_height="@dimen/circular_btn"
-                    android:layout_marginEnd="@dimen/value_15dp"
-                    android:background="@drawable/circular_btn_shape"
-                    android:padding="@dimen/value_15dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/video_icon" />
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/appointmentBtnBack"-->
-<!--                    android:layout_width="@dimen/circular_btn"-->
-<!--                    android:layout_height="@dimen/circular_btn"-->
-<!--                    android:layout_marginEnd="@dimen/value_8dp"-->
-<!--                    android:padding="10dp"-->
-<!--                    android:scaleType="fitCenter"-->
-<!--                    android:background="@drawable/circular_btn_shape"-->
-<!--                    android:src="@drawable/closed_caption_icon" />-->
-
-                <ImageButton
-                    android:elevation="6dp"
-                    android:id="@+id/videoCallHangUpBtn"
-                    android:layout_width="@dimen/circular_btn"
-                    android:layout_height="@dimen/circular_btn"
-                    android:layout_marginEnd="@dimen/value_15dp"
-                    android:background="@drawable/emergency_btn_bg"
-                    android:src="@drawable/call_end_icon" />
-
-            </LinearLayout>
+            android:layout_marginStart="@dimen/value_15dp"
+            android:layout_marginEnd="@dimen/value_15dp"
+            android:layout_marginBottom="@dimen/value_15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/consultantConnectionLost"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/value_15dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/card_bg"
+                        android:textColor="?attr/colorOnSurface"
+                        android:paddingVertical="@dimen/value_5dp"
+                        android:textAlignment="center"
+                        android:text="Consultant connection lost  attempting to reconnect..."
+                        android:paddingHorizontal="@dimen/value_24dp"
+                        android:textSize="@dimen/size_14"
+                        />
+                </com.google.android.material.card.MaterialCardView>
+
+<!--                            <com.google.android.material.card.MaterialCardView-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginVertical="@dimen/value_15dp"-->
+<!--                                app:strokeColor="?attr/colorPrimary"-->
+<!--                                app:strokeWidth="2dp">-->
+
+<!--                                <TextView-->
+<!--                                    android:layout_width="match_parent"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:background="@drawable/card_bg"-->
+<!--                                    android:textColor="?attr/colorOnSurface"-->
+<!--                                    android:text="Heres the speaking text scripts"-->
+<!--                                    android:padding="@dimen/padding_10"-->
+<!--                                    android:textSize="@dimen/size_14"-->
+<!--                                    />-->
+<!--                            </com.google.android.material.card.MaterialCardView>-->
+
+                <LinearLayout
+                    android:padding="@dimen/value_8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:elevation="6dp"
+                        android:id="@+id/videoCallMicBtn"
+                        android:layout_width="@dimen/circular_btn"
+                        android:layout_height="@dimen/circular_btn"
+                        android:layout_marginEnd="@dimen/value_15dp"
+                        android:background="@drawable/circular_btn_shape"
+                        android:padding="@dimen/value_15dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/audio_icon" />
+
+                    <ImageButton
+                        android:elevation="6dp"
+                        android:id="@+id/videoCallVideoBtn"
+                        android:layout_width="@dimen/circular_btn"
+                        android:layout_height="@dimen/circular_btn"
+                        android:layout_marginEnd="@dimen/value_15dp"
+                        android:background="@drawable/circular_btn_shape"
+                        android:padding="@dimen/value_15dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/video_icon" />
+
+                    <!--                <ImageButton-->
+                    <!--                    android:id="@+id/appointmentBtnBack"-->
+                    <!--                    android:layout_width="@dimen/circular_btn"-->
+                    <!--                    android:layout_height="@dimen/circular_btn"-->
+                    <!--                    android:layout_marginEnd="@dimen/value_8dp"-->
+                    <!--                    android:padding="10dp"-->
+                    <!--                    android:scaleType="fitCenter"-->
+                    <!--                    android:background="@drawable/circular_btn_shape"-->
+                    <!--                    android:src="@drawable/closed_caption_icon" />-->
+
+                    <ImageButton
+                        android:elevation="6dp"
+                        android:id="@+id/videoCallHangUpBtn"
+                        android:layout_width="@dimen/circular_btn"
+                        android:layout_height="@dimen/circular_btn"
+                        android:layout_marginEnd="@dimen/value_15dp"
+                        android:background="@drawable/emergency_btn_bg"
+                        android:src="@drawable/call_end_icon" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/videoCallHeartRateCheck"
+                        android:elevation="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="55dp"
+                        android:layout_marginEnd="@dimen/value_8dp"
+                        android:padding="0dp"
+                        android:text="Check Heart Rate"
+                        android:textSize="@dimen/size_14" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/videoCallTextToSpeech"
+                        android:layout_width="wrap_content"
+                        android:elevation="6dp"
+                        android:layout_height="55dp"
+                        android:layout_marginEnd="@dimen/value_8dp"
+                        android:padding="0dp"
+                        android:text="Speech to Text"
+                        android:textSize="@dimen/size_14" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/waitingRoomContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:padding="@dimen/value_24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/value_24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Waiting Room"
+                android:textAlignment="center"
+                android:textColor="?attr/color70"
+                android:textSize="@dimen/size_20"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/videoCallHeartRateCheck"
-                    android:elevation="6dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="55dp"
-                    android:layout_marginEnd="@dimen/value_8dp"
-                    android:padding="0dp"
-                    android:text="Check Heart Rate"
-                    android:textSize="@dimen/size_14" />
+                <TextView
+                    android:id="@+id/waitingRoomConsultantName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="Prof Kamal Gunasekara"
+                    android:textAlignment="center"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="@dimen/size_32"
+                    android:textStyle="bold" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/videoCallTextToSpeech"
-                    android:layout_width="wrap_content"
-                    android:elevation="6dp"
-                    android:layout_height="55dp"
-                    android:layout_marginEnd="@dimen/value_8dp"
-                    android:padding="0dp"
-                    android:text="Speech to Text"
-                    android:textSize="@dimen/size_14" />
-
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/value_15dp"
+                    android:text="Waiting for consultant to join..."
+                    android:textAlignment="center"
+                    android:textColor="?attr/color_text_75"
+                    android:textSize="@dimen/size_17" />
             </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="The call will start automatically when they joined."
+                android:textAlignment="center"
+                android:textColor="?attr/color40"
+                android:textSize="@dimen/size_14" />
         </LinearLayout>
-
-    </FrameLayout>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</LinearLayout>

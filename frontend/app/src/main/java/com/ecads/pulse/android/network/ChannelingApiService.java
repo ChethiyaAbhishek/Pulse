@@ -1,7 +1,11 @@
 package com.ecads.pulse.android.network;
 
 import com.ecads.pulse.android.dto.AvailableConsultantDto;
+import com.ecads.pulse.android.dto.ChannelNameAndTokenDto;
 import com.ecads.pulse.android.dto.HospitalDto;
+import com.ecads.pulse.android.dto.SearchResultDto;
+import com.ecads.pulse.android.dto.SingleRequestDataDto;
+import com.ecads.pulse.android.dto.TeleMedTokenReqDto;
 import com.ecads.pulse.android.model.AppointmentDto;
 import com.ecads.pulse.android.model.Consultant;
 import com.ecads.pulse.android.model.Hospital;
@@ -17,7 +21,7 @@ public interface ChannelingApiService {
 
     @POST("channelling/upComingAppointments")
     Call<List<AppointmentDto>> retrieveAppointments(
-            @Body String patientUid
+            @Body SingleRequestDataDto requestData
     );
 
     @POST("channelling/consultantsForHospitalList")
@@ -50,6 +54,14 @@ public interface ChannelingApiService {
             @Body Map<String, String> requestData
     );
 
+    @POST("channelling/telemedChannelAndToken")
+    Call<ChannelNameAndTokenDto> retrieveTeleMedChannelAndToken(
+            @Body TeleMedTokenReqDto requestData
+    );
 
+    @POST("channelling/searchConsultantOrHospital")
+    Call<SearchResultDto> retrieveSearchResults(
+            @Body SingleRequestDataDto requestData
+    );
 
 }

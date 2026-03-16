@@ -4,6 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/value_8dp"
+    android:layout_marginBottom="@dimen/value_8dp"
     app:cardCornerRadius="@dimen/value_15dp">
 
     <LinearLayout
@@ -24,6 +25,8 @@
                 android:id="@+id/hospital_card_img"
                 android:layout_width="95dp"
                 android:layout_height="95dp"
+                android:background="@drawable/card_bg"
+                android:clipToOutline="true"
                 android:scaleType="centerInside" />
 
             <LinearLayout

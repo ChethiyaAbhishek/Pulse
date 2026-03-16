@@ -1,6 +1,7 @@
 package com.ecads.pulse.android.network;
 
 import com.ecads.pulse.android.dto.AppointmentStatusNotifyDto;
+import com.ecads.pulse.android.dto.AppointmentStatusUpdateDto;
 import com.ecads.pulse.android.dto.PatientUidRequestDto;
 import com.ecads.pulse.android.dto.PreviousAppointmentDto;
 import com.ecads.pulse.android.dto.SingleRequestDataDto;
@@ -37,6 +38,11 @@ public interface AppointmentApiService {
     @POST("appointment/retrieveAppointmentList")
     Call<List<PreviousAppointmentDto>> retrieveAppointmentList(
             @Body PatientUidRequestDto requestDto
+    );
+
+    @POST("appointment/updateOnlineAppointmentStatus")
+    Call<Void> updateOnlineAppointmentStatus(
+            @Body AppointmentStatusUpdateDto requestDto
     );
 
 

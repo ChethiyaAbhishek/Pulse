@@ -27,6 +27,7 @@ import com.ecads.pulse.android.databinding.ActivityLoginBinding;
 import com.ecads.pulse.android.fragment.Reg03Fragment;
 import com.ecads.pulse.android.network.AuthApiService;
 import com.ecads.pulse.android.network.RetrofitClient;
+import com.ecads.pulse.android.utils.EmergencyActions;
 import com.ecads.pulse.android.utils.Permissions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -53,8 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private FirebaseAuth firebaseAuth;
     private ActivityResultLauncher<String[]> launcher;
-
-    private SharedPreferences preferences;
+    private EmergencyActions emergencyActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         firebaseAuth = FirebaseAuth.getInstance();
-
-        preferences = getSharedPreferences(SplashActivity.APP_DATA, MODE_PRIVATE);
+        emergencyActions = new EmergencyActions(this);
 
         launcher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
@@ -77,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                         boolean messagingPermissionGranted = result.getOrDefault(Manifest.permission.SEND_SMS, false);
 
                         if (callingPermissionGranted) {
-                            makeEmergencyCall();
+                            emergencyActions.makeCall();
                         } else {
                             new AlertDialog.Builder(this)
                                     .setTitle("Emergency call forwarding failed!")
@@ -87,14 +86,13 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                         if (messagingPermissionGranted) {
-                            sendSMS();
+                            emergencyActions.sendSMS();
                         } else {
                             Toast.makeText(this, "Emergency text message sending failed. Please enable the permissions.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
 
-        // redirects to reg
         binding.loginRegText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,7 +102,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // login process
         binding.signInBtn.setOnClickListener(view -> {
             Log.i("LoginActivity", "onCreate: Login process started.");
 
@@ -201,15 +198,12 @@ public class LoginActivity extends AppCompatActivity {
                     });
         });
 
-        // 1990 emergency call & send SMS
         binding.emergencyBtnLogin.setOnClickListener(view -> {
             if (Permissions.permissionEnabled(this, Manifest.permission.CALL_PHONE) &&
                     Permissions.permissionEnabled(this, Manifest.permission.SEND_SMS)) {
-                // make call & SMS
-                makeEmergencyCall();
-                sendSMS();
+                emergencyActions.makeCall();
+                emergencyActions.sendSMS();
             } else {
-                // request and continue
                 launcher.launch(new String[]{
                         Manifest.permission.CALL_PHONE,
                         Manifest.permission.SEND_SMS
@@ -217,13 +211,44 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // TODO: forgot password process
+
         binding.loginForgotPassword.setOnClickListener(view -> {
+
+            String email = binding.loginEmailField.getText().toString();
+            TextView emailError = binding.loginEmailError;
+
+            if (firebaseAuth.getCurrentUser() != null) {
+                redirectToMain();
+                return;
+            }
+
+            if (email.isEmpty()) {
+                emailError.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                emailError.setVisibility(View.VISIBLE);
+                emailError.setText("* Enter a valid email address.");
+                return;
+            }
+
+            firebaseAuth.sendPasswordResetEmail(email)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("LoginActivity", "password reset email link sent");
+                                Toast.makeText(LoginActivity.this, "Password reset link sent to email", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        }
+                    });
         });
 
     }
 
-    private void notifyServer(String firebaseToken){
+    private void notifyServer(String firebaseToken) {
         Retrofit retrofit = RetrofitClient.getInstance(firebaseToken);
         AuthApiService apiService = retrofit.create(AuthApiService.class);
 
@@ -251,27 +276,6 @@ public class LoginActivity extends AppCompatActivity {
                 binding.signInBtn.setAlpha(1f);
             }
         });
-    }
-
-    private void makeEmergencyCall() {
-        Intent callingIntent = new Intent(Intent.ACTION_CALL);
-        callingIntent.setData(Uri.parse("tel:0740971467"));
-        startActivity(callingIntent);
-    }
-
-    private void sendSMS() {
-        // TODO: get current location and attach it
-        String message = "Pulse: EMERGENCY! \n " + preferences.getString("fname", "") + " needs your help. \n Currect Location: {location}";
-        List<String> contactList = Arrays.asList(preferences.getString("cgiverContact", null),
-                preferences.getString("emergencyContact", null));
-
-        SmsManager manager = SmsManager.getDefault();
-
-        for (String contact : contactList) {
-            if (contact != null) {
-                manager.sendTextMessage(contact, null, message, null, null);
-            }
-        }
     }
 
     private void redirectToMain() {

@@ -20,3 +20,7 @@ spring:
 payhere:
   merchant-id: 1224658
   merchant-secret: NjU2MjMwMzEzMTkxNjA2MjE5NDE2NDIyNDg4MzIyODc4MjgxMTY0
+
+agora:
+  app-id: bf77db5c8aea4ce8bc554316cb246b84
+  app-certificate: 6b7295f454444e3c94128ff617cb2ddc

@@ -2,6 +2,8 @@ package com.ecads.pulse.android.dto;
 
 import com.ecads.pulse.android.model.Hospital;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SearchResultDto {
-    private AvailableConsultantDto consultantDto;
-    private HospitalDto hospital;
+    private List<AvailableConsultantDto> consultantList;
+    private List<HospitalDto> hospitalList;
 }

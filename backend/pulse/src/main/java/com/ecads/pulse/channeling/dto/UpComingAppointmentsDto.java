@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpComingAppointmentsDto {
+    private String appointmentId;
     private String therapistName;
     private String scheduledTime;
     private String hospital;
