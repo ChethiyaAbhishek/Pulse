@@ -30,6 +30,7 @@ import com.ecads.pulse.android.databinding.SideNavigationHeaderBinding;
 import com.ecads.pulse.android.fragment.ChannelFragment;
 import com.ecads.pulse.android.fragment.HomeFragment;
 import com.ecads.pulse.android.fragment.ProfileFragment;
+import com.ecads.pulse.android.fragment.SettingsFragment;
 import com.ecads.pulse.android.model.Hospital;
 import com.ecads.pulse.android.model.Patient;
 import com.ecads.pulse.android.network.AuthApiService;
@@ -207,9 +208,9 @@ public class MainActivity extends AppCompatActivity implements
 //            loadFragment(new ChannelFragment());
             bottomMenu.findItem(R.id.bn_progress).setChecked(true);
 
-        } else if (itemId == R.id.bn_profile) {
-            loadFragment(new ProfileFragment());
-            bottomMenu.findItem(R.id.bn_profile).setChecked(true);
+        } else if (itemId == R.id.bn_settings) {
+            loadFragment(new SettingsFragment());
+            bottomMenu.findItem(R.id.bn_settings).setChecked(true);
 
         } else if (itemId == R.id.sn_channel_history) {
             Intent intent = new Intent(MainActivity.this, PreviousAppointmentsActivity.class);
@@ -220,11 +221,6 @@ public class MainActivity extends AppCompatActivity implements
             //TODO: Load prescription fragment
 //            loadFragment(new ChannelFragment());
             sideMenu.findItem(R.id.sn_prescriptions).setChecked(true);
-
-        } else if (itemId == R.id.sn_settings) {
-            //TODO: Load settings fragment
-//            loadFragment(new ChannelFragment());
-            sideMenu.findItem(R.id.sn_settings).setChecked(true);
 
         } else if (itemId == R.id.sn_logout) {
             sideMenu.findItem(R.id.sn_logout).setChecked(true);

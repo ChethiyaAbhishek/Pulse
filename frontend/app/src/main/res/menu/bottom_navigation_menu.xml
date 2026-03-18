@@ -21,7 +21,7 @@
         android:title="Progress" />
 
     <item
-        android:id="@+id/bn_profile"
-        android:icon="@drawable/user_icon"
-        android:title="Profile" />
+        android:id="@+id/bn_settings"
+        android:icon="@drawable/settings_icon"
+        android:title="Settings" />
 </menu>

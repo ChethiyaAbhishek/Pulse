@@ -15,10 +15,6 @@
     </group>
 
     <group>
-        <item android:id="@+id/sn_settings"
-            android:title="Settings"
-            android:icon="@drawable/settings_icon" />
-
         <item android:id="@+id/sn_logout"
             android:title="Log Out"
             android:icon="@drawable/logout_icon" />

@@ -342,9 +342,9 @@ public class AppointmentService {
             throw new ShowErrorException("Appointment not found");
         }
 
-        if(updateDto.getStatusId() == 0){
+        if (updateDto.getStatusId() == 0) {
             appointment.setAppointmentStatus(AppointmentStatus.COMPLETED);
-        } else if(updateDto.getStatusId() == 1){
+        } else if (updateDto.getStatusId() == 1) {
             appointment.setAppointmentStatus(AppointmentStatus.DISCONNECTED);
         }
 

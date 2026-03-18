@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/confirmation_alert_bg"
+    android:orientation="vertical"
+    android:padding="@dimen/value_15dp">
+
+    <LinearLayout
+        android:id="@+id/reportHeading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/activity_padding"
+            android:text="Upload Report"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/size_20"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/uploadReport"
+            android:layout_width="@dimen/circular_btn"
+            android:layout_height="@dimen/circular_btn"
+            android:visibility="visible"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/circular_btn_shape"
+            android:backgroundTint="?attr/colorSurface"
+            android:src="@drawable/image_upload_icon" />
+
+        <ProgressBar
+            android:id="@+id/reportCardloadingProgress"
+            android:layout_width="wrap_content"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/reportTextLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value_15dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reportHeading">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Report Label"
+            android:textColor="?attr/colorAuthSubtext1"
+            android:textSize="@dimen/size_14" />
+
+        <EditText
+            android:id="@+id/reportCardLabel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/value_45dp"
+            android:layout_marginTop="@dimen/value_8dp"
+            android:layout_weight="1"
+            android:background="@drawable/textfield_background"
+            android:backgroundTint="?attr/colorSurface"
+            android:inputType="text"
+            android:paddingStart="@dimen/value_15dp"
+            android:paddingEnd="@dimen/value_15dp"
+            android:textColor="?attr/color_text_75"
+            android:textColorHint="?attr/color_text_75" />
+
+        <TextView
+            android:id="@+id/reportCardLabelError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/value_15dp"
+            android:layout_marginTop="@dimen/value_5dp"
+            android:text="* Report label is required."
+            android:textColor="@color/emergency_button_bg"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/imgContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value_15dp"
+        android:visibility="gone"
+        android:background="?attr/colorSurface"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reportTextLayout">
+
+        <ImageView
+            android:id="@+id/reportCardImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/value_8dp"
+            android:background="@drawable/card_bg"
+            android:clipToOutline="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/imgSelectorContainer"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="@dimen/value_15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reportTextLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/colorSurface"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Report Image"
+                android:textAlignment="center"
+                android:textColor="?attr/colorAuthSubtext1"
+                android:textSize="@dimen/size_17"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/reportCardImageError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/value_15dp"
+        android:layout_marginTop="@dimen/value_5dp"
+        android:text="* Report is required."
+        android:textColor="@color/emergency_button_bg"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/imgSelectorContainer"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

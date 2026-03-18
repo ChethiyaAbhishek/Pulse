@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingTop="@dimen/activity_padding"
-    android:paddingStart="@dimen/activity_padding"
-    android:paddingEnd="@dimen/activity_padding"
-    android:paddingBottom="@dimen/value_15dp"
     tools:context=".fragment.ProfileFragment">
 
     <LinearLayout
@@ -21,7 +18,6 @@
             android:id="@+id/profileHeaderName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Kusal Senevirathna"
             android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/size_24"
             android:textStyle="bold" />
@@ -31,7 +27,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/value_5dp"
-            android:text="kusal@gmail.com"
             android:textColor="?attr/color_text_75"
             android:textSize="@dimen/size_14" />
 
@@ -41,12 +36,6 @@
             android:layout_marginTop="@dimen/value_15dp"
             android:background="@drawable/progress_indicator_active" />
     </LinearLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/profileHeader"
-        android:layout_above="@id/profileChangesBtn">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -236,11 +225,9 @@
                 android:textSize="@dimen/size_12"/>
 
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
 
     <Button
         android:id="@+id/profileChangesBtn"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/value_15dp"
         android:layout_height="@dimen/btn_height"
@@ -248,4 +235,4 @@
         android:textSize="@dimen/size_17"
         android:textStyle="bold"/>
 
-</RelativeLayout>
+</LinearLayout>
