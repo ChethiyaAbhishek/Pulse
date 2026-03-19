@@ -74,6 +74,7 @@ dependencies {
 
     // Maps SDK
     implementation libs.play.services.maps
+    implementation 'com.google.android.libraries.places:places:3.5.0'
 
     //Agora Video SDK
     implementation 'io.agora.rtc:full-sdk:4.6.3'

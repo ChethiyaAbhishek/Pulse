@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,12 +33,14 @@ public class EmergencyActions {
     private String firestoreEmergencyContact;
     private String firestoreCareGiverContact;
     private final Context context;
+    private MapApi mapApi;
 
     public EmergencyActions(Context context) {
         this.context = context;
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         preferences = context.getSharedPreferences(SplashActivity.APP_DATA, MODE_PRIVATE);
+        mapApi = new MapApi();
     }
 
     public void makeCall() {
@@ -55,7 +58,7 @@ public class EmergencyActions {
                                 if (patient != null) {
                                     String emerContact = patient.getEmerContact();
                                     Intent callingIntent = new Intent(Intent.ACTION_CALL);
-                                    callingIntent.setData(Uri.parse(emerContact));
+                                    callingIntent.setData(Uri.parse("tel:" + emerContact));
                                     context.startActivity(callingIntent);
 
                                     firestoreEmergencyContact = patient.getCgiverContact();
@@ -103,7 +106,7 @@ public class EmergencyActions {
                                 if (documentSnapshot != null) {
                                     Patient patient = documentSnapshot.toObject(Patient.class);
                                     if (patient != null) {
-                                        firestoreEmergencyContact = patient.getCgiverContact();
+                                        firestoreEmergencyContact = patient.getEmerContact();
                                         firestoreCareGiverContact = patient.getCgiverContact();
                                         forwardSMS();
                                     }
@@ -119,11 +122,11 @@ public class EmergencyActions {
                 forwardSMS();
             }
         } else {
-            if(firestoreEmergencyContact == null){
+            if (firestoreEmergencyContact == null) {
                 firestoreEmergencyContact = emergencyContact;
             }
 
-            if(firestoreCareGiverContact == null){
+            if (firestoreCareGiverContact == null) {
                 firestoreCareGiverContact = careGiverContact;
             }
 
@@ -131,23 +134,37 @@ public class EmergencyActions {
         }
     }
 
-    private void forwardSMS(){
+    private void forwardSMS() {
 
         // TODO: get current location and attach it
-        String message = "Pulse: EMERGENCY! \n "
+        StringBuilder message = new StringBuilder("PULSE: EMERGENCY !!! \n"
                 + preferences.getString("fname", "")
-                + " needs your help. \n Currect Location: {location}";
+                + " needs your help.");
 
-        List<String> contactList = Arrays.asList(
-                firestoreCareGiverContact,
-                firestoreEmergencyContact);
+        mapApi.getCurrentLocation(context, latLng -> {
 
-        SmsManager manager = SmsManager.getDefault();
-
-        for (String contact : contactList) {
-            if (contact != null) {
-                manager.sendTextMessage(contact, null, message, null, null);
+            if (latLng != null) {
+                String mapUrl = "https://www.google.com/maps?q="
+                        + latLng.latitude + "," + latLng.longitude;
+                message.append("\nCurrect Location: \n ");
+                message.append(mapUrl);
             }
-        }
+
+            Log.i("Emergency", "SMS: " + message);
+
+            List<String> contactList = Arrays.asList(
+                    firestoreCareGiverContact,
+                    firestoreEmergencyContact);
+
+            SmsManager manager = SmsManager.getDefault();
+
+            for (String contact : contactList) {
+                if (contact != null) {
+                    manager.sendTextMessage(contact, null, message.toString(), null, null);
+                }
+            }
+        });
     }
+
+
 }

@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/confirmation_alert_bg"
-    android:orientation="vertical"
     android:padding="@dimen/value_15dp">
 
     <LinearLayout

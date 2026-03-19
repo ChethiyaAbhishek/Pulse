@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/confirmation_alert_bg"
+    android:orientation="vertical"
+    android:padding="@dimen/value_15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/presItemViewConsulName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Dr Isuru Gallage"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/size_20"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/presItemViewDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="03 FEB 2026"
+                android:textColor="?attr/color_text_75"
+                android:textSize="@dimen/size_12" />
+        </LinearLayout>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/presItemViewStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/value_15dp"
+            android:padding="0dp"
+            android:text="Active"
+            android:textSize="@dimen/size_10" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/presItemViewRecycler"
+        android:layout_width="match_parent"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value_8dp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/noPrescriptionItemsCard"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/value_35dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/value_15dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="?attr/colorSurface"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_10">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:textAlignment="center"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="No Prescription Medications Found"
+                android:textColor="?attr/color_text_75"
+                android:textSize="@dimen/size_12" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

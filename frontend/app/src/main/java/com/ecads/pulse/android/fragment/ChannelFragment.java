@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.SearchableInfo;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ecads.pulse.android.BuildConfig;
 import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.activity.AppointmentActivity;
 import com.ecads.pulse.android.adapter.AvailableConsultantsAdapter;
@@ -34,6 +36,7 @@ import com.ecads.pulse.android.databinding.FragmentChannelBinding;
 import com.ecads.pulse.android.dto.AvailableConsultantDto;
 import com.ecads.pulse.android.dto.HospitalDto;
 import com.ecads.pulse.android.dto.LocationDto;
+import com.ecads.pulse.android.dto.NearByResponseDto;
 import com.ecads.pulse.android.dto.SearchItemDto;
 import com.ecads.pulse.android.dto.SearchResultDto;
 import com.ecads.pulse.android.dto.SingleRequestDataDto;
@@ -41,8 +44,11 @@ import com.ecads.pulse.android.listener.CallBack;
 import com.ecads.pulse.android.model.AppointmentDto;
 import com.ecads.pulse.android.model.Hospital;
 import com.ecads.pulse.android.network.ChannelingApiService;
+import com.ecads.pulse.android.network.MapApiRetrofitClient;
+import com.ecads.pulse.android.network.MapApiService;
 import com.ecads.pulse.android.network.RetrofitClient;
 import com.ecads.pulse.android.utils.Helper;
+import com.ecads.pulse.android.utils.MapApi;
 import com.ecads.pulse.android.utils.Permissions;
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
@@ -50,6 +56,7 @@ import com.firebase.geofire.GeoQueryBounds;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -80,11 +87,13 @@ public class ChannelFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private GeoLocation currentLocation;
     private List<Hospital> placesApiList;
-    private final double radiusInM;
+    private final int radiusInM;
     private ActivityResultLauncher<String[]> launcher;
     private FusedLocationProviderClient fusedLocationClient;
     private String firebaseToken;
     private Retrofit retrofit;
+    private MapApi mapApi;
+    private String mapApiKey;
 
     public ChannelFragment() {
         //within 50km
@@ -97,6 +106,8 @@ public class ChannelFragment extends Fragment {
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+        mapApi = new MapApi();
+        mapApiKey = BuildConfig.MAPS_API_KEY;
 
         launcher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
@@ -335,7 +346,11 @@ public class ChannelFragment extends Fragment {
 
     private void retrieveHospitalList(
             List<GeoQueryBounds> bounds, List<Hospital> placesApiList, CallBack<List<Hospital>> callBack) {
-
+//        -------------
+        mapApi.getCurrentLocation(requireActivity(), latLng -> {
+            retrieveNearHospitalsFromPlacesApi(latLng);
+        });
+//        -------------
         if (bounds != null) {
             Log.i("Channel Fragment", "Hospitals retrieving started for bounds");
 
@@ -419,7 +434,75 @@ public class ChannelFragment extends Fragment {
                 });
     }
 
-    private List<Hospital> retrieveNearHospitalsFromPlacesApi() {
+    private List<Hospital> retrieveNearHospitalsFromPlacesApi(LatLng latLng) {
+
+        MapApiService api = MapApiRetrofitClient
+                .getInstance()
+                .create(MapApiService.class);
+
+        String location = latLng.latitude + "," + latLng.longitude;
+
+        Call<NearByResponseDto> responseCall = api.getNearbyHospitals(
+                location,
+                radiusInM,
+                "hospital",
+                "hospital medical",
+                mapApiKey
+        );
+
+        responseCall.enqueue(new Callback<NearByResponseDto>() {
+            @Override
+            public void onResponse(Call<NearByResponseDto> call, Response<NearByResponseDto> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+
+//                    List<NearByResponseDto.Result> results = response.body().getResults();
+//
+//                    for (NearByResponseDto.Result result : results) {
+//
+//                        List<NearByResponseDto.Result> filteredResults = new ArrayList<>();
+//
+//                        if (!result.getName().contains("veterinary")
+//                                && !result.name.contains("pharmacy")
+//                                && !result.name.contains("pet")
+//                                && !result.name.contains("animal")
+//                                && !result.name.contains("care")) {
+//
+//                            String imageUrl = "";
+//
+//                            if (result.photos != null && !result.photos.isEmpty()) {
+//
+//                                String photoRef = result.photos.get(0).photo_reference;
+//
+//                                imageUrl = "https://maps.googleapis.com/maps/api/place/photo"
+//                                        + "?maxwidth=400"
+//                                        + "&photo_reference=" + photoRef
+//                                        + "&key=" + mapApiKey;
+//                            }
+//
+//                            filteredResults.add(result);
+//
+//                            String placeId = result.place_id;
+//                            String name = result.name;
+//                            double lat = result.geometry.location.lat;
+//                            double lng = result.geometry.location.lng;
+//                            String address = result.vicinity;
+//
+//                            // Build your Hospital object here
+//                            Log.i("PlacesApi", "Hospital: placeId[" + placeId + "] name[" + name + "] imageUrl["+imageUrl+"] lat[" + lat + "] lng[" + lng + "] address[" + address + "]");
+//                        }else{
+//                            Log.e("PlacesApi", "excluded: "+ result);
+//                        }
+//                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NearByResponseDto> call, Throwable throwable) {
+                Log.e("PlacesApi", "onFailure: ", throwable);
+            }
+        });
+
         return null;
     }
 

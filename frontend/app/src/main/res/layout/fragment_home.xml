@@ -42,26 +42,26 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal">-->
 
-                <TextView
-                    android:id="@+id/homeRecoveryDayBadge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:background="@drawable/card_bg"
-                    android:paddingStart="@dimen/value_15dp"
-                    android:paddingTop="@dimen/value_8dp"
-                    android:paddingEnd="@dimen/value_15dp"
-                    android:paddingBottom="@dimen/value_8dp"
-                    android:text="Recovery Day 01"
-                    android:textAlignment="center"
-                    android:textColor="?attr/color_text_75"
-                    android:textSize="@dimen/size_14" />
+<!--                <TextView-->
+<!--                    android:id="@+id/homeRecoveryDayBadge"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="35dp"-->
+<!--                    android:background="@drawable/card_bg"-->
+<!--                    android:paddingStart="@dimen/value_15dp"-->
+<!--                    android:paddingTop="@dimen/value_8dp"-->
+<!--                    android:paddingEnd="@dimen/value_15dp"-->
+<!--                    android:paddingBottom="@dimen/value_8dp"-->
+<!--                    android:text="Recovery Day 01"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="?attr/color_text_75"-->
+<!--                    android:textSize="@dimen/size_14" />-->
 
-            </LinearLayout>
+<!--            </LinearLayout>-->
 
         </LinearLayout>
 
@@ -93,7 +93,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:maxLines="2"
-                            android:text="Today's Session Ready"
+                            android:text="You're doing great, keep going!"
                             android:textColor="?attr/colorOnSurface"
                             android:textSize="@dimen/size_20"
                             android:textStyle="bold" />
@@ -104,83 +104,37 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLines="2"
-                            android:text="Morning Balance Exercises"
+                            android:text="Small steps today lead to big wins tomorrow"
                             android:textColor="?attr/color_text_75"
                             android:textSize="@dimen/size_12" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/value_15dp"
-                            android:gravity="center"
-                            android:orientation="horizontal">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginTop="@dimen/value_15dp"-->
+<!--                            android:gravity="center"-->
+<!--                            android:orientation="horizontal">-->
 
-                            <Button
-                                android:id="@+id/homeExerciseStartNowBtn"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Start Now →"
-                                android:textSize="@dimen/size_12" />
+<!--                            <Button-->
+<!--                                android:id="@+id/homeExerciseStartNowBtn"-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:text="Start Now →"-->
+<!--                                android:textSize="@dimen/size_12" />-->
 
-                            <TextView
-                                android:id="@+id/homeCompletedExercisesCount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/value_15dp"
-                                android:text="1/5"
-                                android:textColor="?attr/color_text_75"
-                                android:textSize="@dimen/size_14" />
+<!--                            <TextView-->
+<!--                                android:id="@+id/homeCompletedExercisesCount"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginStart="@dimen/value_15dp"-->
+<!--                                android:text="1/5"-->
+<!--                                android:textColor="?attr/color_text_75"-->
+<!--                                android:textSize="@dimen/size_14" />-->
 
-                        </LinearLayout>
+<!--                        </LinearLayout>-->
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/value_8dp"
-                android:orientation="vertical">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="@dimen/value_15dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/card_bg"
-                        android:orientation="vertical"
-                        android:padding="@dimen/padding_10">
-
-                        <!--                        <ImageView-->
-                        <!--                            android:layout_width="24dp"-->
-                        <!--                            android:layout_height="24dp"-->
-                        <!--                            android:src="@drawable/ic_physical_improvement"-->
-                        <!--                            app:tint="#9e9e9e" />-->
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Physical \n improvement"
-                            android:textColor="?attr/color_text_75"
-                            android:textSize="@dimen/size_12" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="10%"
-                            android:textColor="?attr/color70"
-                            android:textSize="@dimen/size_32"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-
             </LinearLayout>
 
         </LinearLayout>
@@ -246,10 +200,10 @@
 
 <!--        </LinearLayout>-->
 
-<!--        &lt;!&ndash; Action Buttons &ndash;&gt;-->
+        <!-- Action Buttons -->
 <!--        <LinearLayout-->
 <!--            android:id="@+id/llActionButtons"-->
-<!--            android:layout_width="0dp"-->
+<!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="wrap_content"-->
 <!--            android:layout_marginTop="16dp"-->
 <!--            android:orientation="horizontal"-->
@@ -303,7 +257,7 @@
 <!--        &lt;!&ndash; Horizontal RecyclerView for Appointments &ndash;&gt;-->
 <!--        <androidx.recyclerview.widget.RecyclerView-->
 <!--            android:id="@+id/rvAppointments"-->
-<!--            android:layout_width="0dp"-->
+<!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="wrap_content"-->
 <!--            android:layout_marginTop="16dp"-->
 <!--            android:clipToPadding="false"-->

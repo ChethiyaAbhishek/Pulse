@@ -24,11 +24,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.ecads.pulse.android.BuildConfig;
 import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.databinding.ActivityMainBinding;
 import com.ecads.pulse.android.databinding.SideNavigationHeaderBinding;
 import com.ecads.pulse.android.fragment.ChannelFragment;
 import com.ecads.pulse.android.fragment.HomeFragment;
+import com.ecads.pulse.android.fragment.PrescriptionFragment;
 import com.ecads.pulse.android.fragment.ProfileFragment;
 import com.ecads.pulse.android.fragment.SettingsFragment;
 import com.ecads.pulse.android.model.Hospital;
@@ -39,6 +41,8 @@ import com.ecads.pulse.android.utils.EmergencyActions;
 import com.ecads.pulse.android.utils.Permissions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -218,8 +222,7 @@ public class MainActivity extends AppCompatActivity implements
 //            sideMenu.findItem(R.id.sn_channel_history).setChecked(true);
 
         } else if (itemId == R.id.sn_prescriptions) {
-            //TODO: Load prescription fragment
-//            loadFragment(new ChannelFragment());
+            loadFragment(new PrescriptionFragment());
             sideMenu.findItem(R.id.sn_prescriptions).setChecked(true);
 
         } else if (itemId == R.id.sn_logout) {
