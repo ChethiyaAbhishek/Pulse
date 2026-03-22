@@ -32,6 +32,10 @@
     <color name="light_badge_bg_white_65">#f3f3f3</color> <!--  edited  -->
     <color name="light_card_bg">#dedede</color>            <!-- 95% edited -->
 
+    <color name="bpm_normal">#4CAF50</color>
+    <color name="bpm_elevated">#FFC107</color>
+    <color name="bpm_alert">#F44336</color>
+
     <!-- Dark Theme Colors -->
     <color name="dark_background">#0F1A0F</color>
     <color name="dark_text_primary">#E8F2E0</color>

@@ -2,12 +2,8 @@ package com.ecads.pulse.android.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,25 +20,19 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.ecads.pulse.android.BuildConfig;
 import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.databinding.ActivityMainBinding;
 import com.ecads.pulse.android.databinding.SideNavigationHeaderBinding;
 import com.ecads.pulse.android.fragment.ChannelFragment;
 import com.ecads.pulse.android.fragment.HomeFragment;
 import com.ecads.pulse.android.fragment.PrescriptionFragment;
-import com.ecads.pulse.android.fragment.ProfileFragment;
 import com.ecads.pulse.android.fragment.SettingsFragment;
-import com.ecads.pulse.android.model.Hospital;
-import com.ecads.pulse.android.model.Patient;
 import com.ecads.pulse.android.network.AuthApiService;
 import com.ecads.pulse.android.network.RetrofitClient;
 import com.ecads.pulse.android.utils.EmergencyActions;
 import com.ecads.pulse.android.utils.Permissions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -50,13 +40,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,7 +48,7 @@ import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        NavigationBarView.OnItemSelectedListener {
+        NavigationBarView.OnItemSelectedListener{
 
     private ActivityMainBinding binding;
     private BottomNavigationView bottomNavigationView;

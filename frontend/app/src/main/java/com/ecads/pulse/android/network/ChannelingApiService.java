@@ -64,4 +64,14 @@ public interface ChannelingApiService {
             @Body SingleRequestDataDto requestData
     );
 
+    @POST("channelling/todayAppointments")
+    Call<List<AppointmentDto>> retrieveTodayAppointments(
+            @Body SingleRequestDataDto requestData
+    );
+
+    @POST("channelling/recentlyBookedConsultants")
+    Call<List<AvailableConsultantDto>> recentlyBookedConsultants(
+            @Body SingleRequestDataDto requestData
+    );
+
 }

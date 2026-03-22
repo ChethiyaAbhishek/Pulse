@@ -17,16 +17,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.ecads.pulse.android.R;
+import com.ecads.pulse.android.dto.HospitalDto;
 import com.ecads.pulse.android.model.Hospital;
 
 import java.util.List;
 
 public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.ViewHolder> {
 
-    private List<Hospital> hospitals;
+    private List<HospitalDto> hospitals;
     private OnCardClickListener clickListener;
 
-    public HospitalAdapter(List<Hospital> hospitals, OnCardClickListener clickListener) {
+    public HospitalAdapter(List<HospitalDto> hospitals, OnCardClickListener clickListener) {
         this.hospitals = hospitals;
         this.clickListener = clickListener;
     }
@@ -43,7 +44,7 @@ public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         if (!hospitals.isEmpty()) {
-            Hospital hospital = hospitals.get(position);
+            HospitalDto hospital = hospitals.get(position);
 
             holder.hospitalName.setText(hospital.getName());
             holder.hospitalAddress.setText(hospital.getAddress());
@@ -54,11 +55,14 @@ public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.ViewHo
                     .centerCrop()
                     .into(holder.hospitalImg);
 
-            holder.contactBtn.setOnClickListener(view -> {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + hospital.getContact()));
-                view.getContext().startActivity(intent);
-            });
+            //TODO: GET AS A CALLBACK
+            if (!hospital.getContact().isEmpty()) {
+                holder.contactBtn.setOnClickListener(view -> {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + hospital.getContact()));
+                    view.getContext().startActivity(intent);
+                });
+            }
 
             holder.locationBtn.setOnClickListener(view -> {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -112,7 +116,7 @@ public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.ViewHo
     }
 
     public interface OnCardClickListener {
-        void onCardClick(Hospital hospital);
+        void onCardClick(HospitalDto hospital);
     }
 
 }

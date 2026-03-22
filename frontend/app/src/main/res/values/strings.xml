@@ -45,7 +45,7 @@
     <string name="ec_field_hint_text">Enter emergency contact number</string>
     <string name="ec_helper_text">*Someone we can reach quickly if needed (e.g., family member)</string>
     <string name="regf_btn_text">Continue</string>
-    <string name="emergency_btn_text">1990 EMERGENCY</string>
+    <string name="emergency_btn_text">EMERGENCY CALL</string>
     <string name="login_title_text">Welcome Back to</string>
     <string name="login_subtitle_text">This keeps your recovery data and doctor\nconnections safe and private.</string>
     <string name="forgot_password_text">Forgot Password?</string>
@@ -55,5 +55,8 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="profile_emergency_details_section_text"><![CDATA[Health & Emergency Details]]></string>
-
+    <string name="btn_book_now">Book Now</string>
+    <string name="title_heart_rate_monitor">Heart Rate Monitor</string>
+    <string name="status_measuring">Measuring…</string>
+    <string name="instruction_place_finger">Place index finger firmly\nover camera + flash</string>
 </resources>

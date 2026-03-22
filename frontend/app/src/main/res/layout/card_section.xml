@@ -33,4 +33,11 @@
         app:checkedIconVisible="false"
         app:chipBackgroundColor="?attr/colorCardBg" />
 
+    <LinearLayout
+        android:id="@+id/extraContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" />
+
 </LinearLayout>

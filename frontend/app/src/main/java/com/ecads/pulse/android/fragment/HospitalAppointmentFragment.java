@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CalendarView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,10 @@ import com.ecads.pulse.android.network.ChannelingApiService;
 import com.ecads.pulse.android.network.PaymentApiService;
 import com.ecads.pulse.android.network.RetrofitClient;
 import com.ecads.pulse.android.utils.Permissions;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -94,7 +99,11 @@ public class HospitalAppointmentFragment extends Fragment {
     private String[] days;
     private String publicUrl;
     private String hospitalName;
+    private LatLng latLng;
     private ActivityResultLauncher<String> launcher;
+    private BottomSheetDialog dialog;
+    private View confirmDialogView;
+    private MapView mapView;
 
     private Consultant selectedConsultant;
     private String selectedAppointmentDate;
@@ -111,6 +120,11 @@ public class HospitalAppointmentFragment extends Fragment {
             placeId = getArguments().getString("data");
             retrofit = RetrofitClient.getInstance(getArguments().getString("authToken"));
             authToken = getArguments().getString("authToken");
+            hospitalName = getArguments().getString("name");
+
+            latLng = new LatLng(
+                    getArguments().getDouble("lat"),
+                    getArguments().getDouble("lng"));
         }
 
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -144,6 +158,13 @@ public class HospitalAppointmentFragment extends Fragment {
             }
         });
 
+        dialog = new BottomSheetDialog(requireContext());
+        confirmDialogView = getLayoutInflater()
+                .inflate(R.layout.appointment_confirmation_dialog, null);
+        mapView = confirmDialogView.findViewById(R.id.appointmentConMapView);
+        mapView.onCreate(null);
+        mapView.onResume();
+
         options = new String[]{"Filter by consultant speciality", ConsultantSpecialities.NEUROLOGIST.toString(), ConsultantSpecialities.PHYSIOTHERAPIST.toString()};
         days = new String[]{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
@@ -175,14 +196,52 @@ public class HospitalAppointmentFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
     private void completeView(View view) {
         fetchPlaceDetails(hospital -> {
-            binding.hosAppointmentHospitalName.setText(hospital.getName());
-            this.hospitalName = hospital.getName();
-            binding.hosAppointmentAddress.setText(hospital.getAddress());
+
+            String name;
+            String address;
+            String imageUrl;
+            String mapUrl;
+
+            if (hospital == null) {
+                Log.i("PlaceIdCheck", "completeView: hospital null");
+                name = getArguments().getString("name");
+                address = getArguments().getString("address");
+                imageUrl = getArguments().getString("imageUrl");
+                mapUrl = getArguments().getString("mapUrl");
+            } else {
+                Log.i("PlaceIdCheck", "completeView: hospital have");
+                name = hospital.getName();
+                address = hospital.getAddress();
+                imageUrl = hospital.getImageUrl();
+                mapUrl = hospital.getMapUrl();
+            }
+
+            binding.hosAppointmentHospitalName.setText(name);
+            this.hospitalName = name;
+            binding.hosAppointmentAddress.setText(address);
 
             Glide.with(this)
-                    .load(hospital.getImageUrl())
+                    .load(imageUrl)
                     .centerCrop()
                     .into(new CustomTarget<Drawable>() {
                         @Override
@@ -202,30 +261,46 @@ public class HospitalAppointmentFragment extends Fragment {
                     });
 
             AutoCompleteTextView searchFilter = binding.hosAppointmentSearchFilter;
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_dropdown_item_1line, options);
-            searchFilter.setAdapter(adapter);
-            searchFilter.setText(options[0], false);
+            ImageButton searchBtn = binding.hosAppointmentSearchBtn;
+            searchFilter.setEnabled(true);
+            searchFilter.setAlpha(1f);
+            searchBtn.setEnabled(true);
+            searchBtn.setAlpha(1f);
+
+            if (hospital != null) {
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_dropdown_item_1line, options);
+                searchFilter.setAdapter(adapter);
+                searchFilter.setText(options[0], false);
+
+                searchBtn.setOnClickListener(v -> {
+                    fetchChannellingConsultants(hospital.getPlaceId(), true, results -> {
+                        updateConsultants(results);
+                    });
+                });
+
+                fetchChannellingConsultants(hospital.getPlaceId(), false, results -> {
+                    updateConsultants(results);
+                });
+            } else {
+                searchFilter.setEnabled(false);
+                searchFilter.setAlpha(0.5f);
+                searchBtn.setEnabled(false);
+                searchBtn.setAlpha(0.5f);
+                binding.hosAppointmentDocRecycler.setVisibility(View.GONE);
+                binding.chipDocNotFound.setVisibility(View.VISIBLE);
+            }
 
             binding.hosAppointmentLocationBtn.setOnClickListener(v -> {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(hospital.getMapUrl()));
+                intent.setData(Uri.parse(mapUrl));
                 v.getContext().startActivity(intent);
             });
 
             binding.hosAppointmentCallBtn.setOnClickListener(v -> {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + hospital.getContact()));
+//                intent.setData(Uri.parse("tel:" + hospital.getContact()));
+                intent.setData(Uri.parse("tel:0740971467"));
                 v.getContext().startActivity(intent);
-            });
-
-            binding.hosAppointmentSearchBtn.setOnClickListener(v -> {
-                fetchChannellingConsultants(hospital.getPlaceId(), true, results -> {
-                    updateConsultants(results);
-                });
-            });
-
-            fetchChannellingConsultants(hospital.getPlaceId(), false, results -> {
-                updateConsultants(results);
             });
         });
     }
@@ -723,30 +798,26 @@ public class HospitalAppointmentFragment extends Fragment {
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot == null) {
-                            fetchUsingPlacesApi(hospital -> {
-                                callBack.callBack(hospital);
-                            });
+                        if (documentSnapshot == null || !documentSnapshot.exists()) {
+                            Log.i("PlaceIdCheck", "onSuccess: no records");
+                            callBack.callBack(null);
                             return;
                         }
+
+                        Log.i("PlaceIdCheck", "onSuccess: records hv");
+
                         Hospital hospital = documentSnapshot.toObject(Hospital.class);
+                        Log.i("PlaceIdCheck", "onSuccess: record[" + hospital.getPlaceId() + "]");
                         callBack.callBack(hospital);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        fetchUsingPlacesApi(hospital -> {
-                            callBack.callBack(hospital);
-                        });
+                        callBack.callBack(null);
                     }
                 });
 
-    }
-
-    private void fetchUsingPlacesApi(CallBack<Hospital> callBack) {
-        //TODO: Fetch data from place api
-        callBack.callBack(null);
     }
 
     private final ActivityResultLauncher<Intent> payhereLauncher =
@@ -838,29 +909,33 @@ public class HospitalAppointmentFragment extends Fragment {
                             selectedConsultant.getTitle() + " " + selectedConsultant.getName()
                             + " on " + selectedAppointmentDate + " has been confirmed.");
 
-                    BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
-                    View view = getLayoutInflater()
-                            .inflate(R.layout.appointment_confirmation_dialog, null);
-
-                    TextView hospital = view.findViewById(R.id.appointmentConHospital);
+                    // CONFIRMATION DIALOG
+                    TextView hospital = confirmDialogView.findViewById(R.id.appointmentConHospital);
                     hospital.setText(hospitalName);
 
-                    TextView consultant = view.findViewById(R.id.appointmentConConsultantName);
+                    TextView consultant = confirmDialogView.findViewById(R.id.appointmentConConsultantName);
                     consultant.setText(selectedConsultant.getTitle() + " " + selectedConsultant.getName());
 
-                    TextView date = view.findViewById(R.id.appointmentConDate);
+                    TextView date = confirmDialogView.findViewById(R.id.appointmentConDate);
 //                    date.setText(new SimpleDateFormat("MMM dd yyyy", Locale.US).format(selectedAppointmentDate));
                     date.setText(selectedAppointmentDate);
 
-                    TextView time = view.findViewById(R.id.appointmentConTime);
+                    TextView time = confirmDialogView.findViewById(R.id.appointmentConTime);
                     time.setText(selectedSlot);
 
-                    TextView mode = view.findViewById(R.id.appointmentConMode);
+                    TextView mode = confirmDialogView.findViewById(R.id.appointmentConMode);
                     mode.setText(selectedAppointmentMode);
 
-                    //TODO: map integration
+                    mapView.getMapAsync(googleMap -> {
+                        LatLng location = latLng;
+                        googleMap.addMarker(new MarkerOptions().position(location).title(hospitalName));
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15f));
+                        googleMap.getUiSettings().setZoomControlsEnabled(true);
+                        googleMap.getUiSettings().setZoomGesturesEnabled(true);
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16f));
+                    });
 
-                    dialog.setContentView(view);
+                    dialog.setContentView(confirmDialogView);
                     dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialogInterface) {

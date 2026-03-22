@@ -24,6 +24,7 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -299,37 +300,39 @@ public class ChannellingService {
 
         List<Appointment> appointmentList = appointmentRepository.getAllByPatientUidAndAppointmentStatus(requestData.getData(), AppointmentStatus.CONFIRMED);
 
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+//        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//
+//        List<UpComingAppointmentsDto> dtoList = new ArrayList<>();
+//
+//        for (Appointment appointment : appointmentList) {
+//
+//            ConsultantDTO consultant = getConsultantByUid(appointment.getConsultantChannelingHospital().getConsultantUid());
+//            if (consultant == null) {
+//                log.debug("Appointment consultant not found, firestore fetching error");
+//                throw new ShowErrorException("Consultant not found");
+//            }
+//
+//            HospitalDto hospital = getHospitalByPlaceId(appointment.getConsultantChannelingHospital().getHospitalPlaceId());
+//            if (hospital == null) {
+//                log.debug("Appointment hospital not found, firestore fetching error");
+//                throw new ShowErrorException("Hospital not found");
+//            }
+//
+//            UpComingAppointmentsDto appointments = new UpComingAppointmentsDto(
+//                    String.valueOf(appointment.getId()),
+//                    consultant.getTitle() + " " + consultant.getName(),
+//                    appointment.getAppointmentStartsAt().format(timeFormatter) + " - " + appointment.getAppointmentEndsAt().format(timeFormatter),
+//                    hospital.getName(),
+//                    appointment.getAppointmentDate().format(dateFormatter),
+//                    hospital.getMapUrl(),
+//                    appointment.getMeetingLink()
+//            );
+//
+//            dtoList.add(appointments);
+//        }
 
-        List<UpComingAppointmentsDto> dtoList = new ArrayList<>();
-
-        for (Appointment appointment : appointmentList) {
-
-            ConsultantDTO consultant = getConsultantByUid(appointment.getConsultantChannelingHospital().getConsultantUid());
-            if (consultant == null) {
-                log.debug("Appointment consultant not found, firestore fetching error");
-                throw new ShowErrorException("Consultant not found");
-            }
-
-            HospitalDto hospital = getHospitalByPlaceId(appointment.getConsultantChannelingHospital().getHospitalPlaceId());
-            if (hospital == null) {
-                log.debug("Appointment hospital not found, firestore fetching error");
-                throw new ShowErrorException("Hospital not found");
-            }
-
-            UpComingAppointmentsDto appointments = new UpComingAppointmentsDto(
-                    String.valueOf(appointment.getId()),
-                    consultant.getTitle() + " " + consultant.getName(),
-                    appointment.getAppointmentStartsAt().format(timeFormatter) + " - " + appointment.getAppointmentEndsAt().format(timeFormatter),
-                    hospital.getName(),
-                    appointment.getAppointmentDate().format(dateFormatter),
-                    hospital.getMapUrl(),
-                    appointment.getMeetingLink()
-            );
-
-            dtoList.add(appointments);
-        }
+        List<UpComingAppointmentsDto> dtoList = getFormattedResponseAppointments(appointmentList);
 
         return ResponseEntity.ok(dtoList);
     }
@@ -443,7 +446,144 @@ public class ChannellingService {
         return ResponseEntity.ok(resultsDto);
     }
 
+    public ResponseEntity<List<UpComingAppointmentsDto>> fetchTodayAppointments(
+            SingleRequestDataDto requestData) {
+        if (requestData.getData() == null) {
+            return ResponseEntity.badRequest().build();
+        }
 
+        List<Appointment> appointmentList = appointmentRepository
+                .getAllByPatientUidAndAppointmentStatusAndAppointmentDate(
+                        requestData.getData(), AppointmentStatus.CONFIRMED, LocalDate.now());
+
+        List<UpComingAppointmentsDto> dtoList = getFormattedResponseAppointments(appointmentList);
+
+        return ResponseEntity.ok(dtoList);
+    }
+
+    public ResponseEntity<List<AvailableConsultantDto>> fetchRecentlyBookedConsultants(
+            SingleRequestDataDto requestData) {
+        if (requestData.getData() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<Appointment> appointmentList = appointmentRepository
+                .getAllByPatientUidAndAppointmentStatusIsNot(
+                        requestData.getData(), AppointmentStatus.CANCELLED);
+
+        Set<AvailableConsultantDto> suggestedList = new HashSet<>();
+        suggestedList.addAll(getSuggestedConsultantDetails(appointmentList));
+
+        if (suggestedList.isEmpty() || suggestedList.size() < 6) {
+            List<Appointment> extraList = appointmentRepository
+                    .getAllByAppointmentStatusIsNot(AppointmentStatus.CANCELLED,
+                            PageRequest.of(0, 15));
+
+            Set<AvailableConsultantDto> dtoList = getSuggestedConsultantDetails(extraList);
+
+            for (AvailableConsultantDto dto : dtoList) {
+                if (suggestedList.size() >= 6) {
+                    break;
+                }
+
+                if (suggestedList.stream().noneMatch(
+                        exDto -> exDto.getConsultant().getUid().equals(dto.getConsultant().getUid()))) {
+                    suggestedList.add(dto);
+                }
+            }
+        }
+
+        return ResponseEntity.ok(suggestedList.stream().toList());
+    }
+
+
+    private Set<AvailableConsultantDto> getSuggestedConsultantDetails(List<Appointment> appointmentList) {
+        Set<AvailableConsultantDto> resultDto = new HashSet<>();
+        if (!appointmentList.isEmpty()) {
+
+            Map<String, HospitalDto> hospitalMap = new HashMap<>();
+            Map<String, ConsultantDTO> consultantMap = new HashMap<>();
+
+            for (Appointment appointment : appointmentList) {
+                if (appointment.getConsultantChannelingHospital().getIsActive()) {
+
+                    String consultant = appointment.getConsultantChannelingHospital().getConsultantUid();
+                    String hospital = appointment.getConsultantChannelingHospital().getHospitalPlaceId();
+
+                    AvailableConsultantDto availableConsultantDto = new AvailableConsultantDto();
+                    availableConsultantDto.setAvailableSlots(new ArrayList<>());
+
+                    if (consultantMap.containsKey(consultant)) {
+                        availableConsultantDto.setConsultant(consultantMap.get(consultant));
+                    } else {
+                        ConsultantDTO consultantDTO = getConsultantByUid(consultant);
+                        consultantMap.put(consultant, consultantDTO);
+                        availableConsultantDto.setConsultant(consultantDTO);
+                    }
+
+                    List<HospitalDto> hospitalDtoToConvert = new ArrayList<>();
+                    if (hospitalMap.containsKey(hospital)) {
+                        hospitalDtoToConvert.add(hospitalMap.get(hospital));
+                        HospitalApiDto hospitalApiDto = convertHospitalsToApiDto(hospitalDtoToConvert).get(0);
+
+                        availableConsultantDto.setHospital(hospitalApiDto);
+                    } else {
+                        HospitalDto hospitalDto = getHospitalByPlaceId(hospital);
+
+                        hospitalDtoToConvert.add(hospitalDto);
+                        HospitalApiDto hospitalApiDto = convertHospitalsToApiDto(hospitalDtoToConvert).get(0);
+
+                        hospitalMap.put(hospital, hospitalDto);
+                        availableConsultantDto.setHospital(hospitalApiDto);
+                    }
+
+                    if (resultDto.stream().noneMatch(exDto -> exDto.getConsultant().getUid().equals(consultant))) {
+                        resultDto.add(availableConsultantDto);
+                    }
+                }
+            }
+        }
+
+        return resultDto;
+    }
+
+    private List<UpComingAppointmentsDto> getFormattedResponseAppointments(
+            List<Appointment> appointmentList) {
+
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        List<UpComingAppointmentsDto> dtoList = new ArrayList<>();
+
+        for (Appointment appointment : appointmentList) {
+
+            ConsultantDTO consultant = getConsultantByUid(appointment.getConsultantChannelingHospital().getConsultantUid());
+            if (consultant == null) {
+                log.debug("Appointment consultant not found, firestore fetching error");
+                throw new ShowErrorException("Consultant not found");
+            }
+
+            HospitalDto hospital = getHospitalByPlaceId(appointment.getConsultantChannelingHospital().getHospitalPlaceId());
+            if (hospital == null) {
+                log.debug("Appointment hospital not found, firestore fetching error");
+                throw new ShowErrorException("Hospital not found");
+            }
+
+            UpComingAppointmentsDto appointments = new UpComingAppointmentsDto(
+                    String.valueOf(appointment.getId()),
+                    consultant.getTitle() + " " + consultant.getName(),
+                    appointment.getAppointmentStartsAt().format(timeFormatter) + " - " + appointment.getAppointmentEndsAt().format(timeFormatter),
+                    hospital.getName(),
+                    appointment.getAppointmentDate().format(dateFormatter),
+                    hospital.getMapUrl(),
+                    appointment.getMeetingLink()
+            );
+
+            dtoList.add(appointments);
+        }
+
+        return dtoList;
+    }
 
     private List<ConsultantDTO> searchConsultantByName(String searchText) {
         if (!searchText.isEmpty()) {

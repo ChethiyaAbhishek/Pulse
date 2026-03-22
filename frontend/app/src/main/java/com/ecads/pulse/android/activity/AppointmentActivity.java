@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -112,6 +113,27 @@ public class AppointmentActivity extends AppCompatActivity {
         bundle.putString("authToken", authToken);
 
         if (type.equals(Helper.HOSPITAL)) {
+            if(intent.hasExtra("imageUrl")){
+                bundle.putString("imageUrl", intent.getStringExtra("imageUrl"));
+            }
+            if(intent.hasExtra("name")){
+                bundle.putString("name", intent.getStringExtra("name"));
+            }
+            if(intent.hasExtra("address")){
+                bundle.putString("address", intent.getStringExtra("address"));
+            }
+            if(intent.hasExtra("mapUrl")){
+                bundle.putString("mapUrl", intent.getStringExtra("mapUrl"));
+            }
+            if(intent.hasExtra("lat")){
+                bundle.putDouble("lat", intent.getDoubleExtra("lat", 0.0));
+                Log.i("MapCheck", "middle: lat["+intent.getDoubleExtra("lat", 0.0)+"]");
+            }
+            if(intent.hasExtra("lng")){
+                bundle.putDouble("lng", intent.getDoubleExtra("lng", 0.0));
+                Log.i("MapCheck", "middle: lat["+intent.getDoubleExtra("lng", 0.0)+"]");
+            }
+
             HospitalAppointmentFragment fragment = new HospitalAppointmentFragment();
             fragment.setArguments(bundle);
             loadFragment(fragment);

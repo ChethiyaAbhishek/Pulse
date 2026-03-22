@@ -42,26 +42,46 @@
 
             </LinearLayout>
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal">-->
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:orientation="horizontal">-->
 
-<!--                <TextView-->
-<!--                    android:id="@+id/homeRecoveryDayBadge"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="35dp"-->
-<!--                    android:background="@drawable/card_bg"-->
-<!--                    android:paddingStart="@dimen/value_15dp"-->
-<!--                    android:paddingTop="@dimen/value_8dp"-->
-<!--                    android:paddingEnd="@dimen/value_15dp"-->
-<!--                    android:paddingBottom="@dimen/value_8dp"-->
-<!--                    android:text="Recovery Day 01"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:textColor="?attr/color_text_75"-->
-<!--                    android:textSize="@dimen/size_14" />-->
+            <!--                <TextView-->
+            <!--                    android:id="@+id/homeRecoveryDayBadge"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="35dp"-->
+            <!--                    android:background="@drawable/card_bg"-->
+            <!--                    android:paddingStart="@dimen/value_15dp"-->
+            <!--                    android:paddingTop="@dimen/value_8dp"-->
+            <!--                    android:paddingEnd="@dimen/value_15dp"-->
+            <!--                    android:paddingBottom="@dimen/value_8dp"-->
+            <!--                    android:text="Recovery Day 01"-->
+            <!--                    android:textAlignment="center"-->
+            <!--                    android:textColor="?attr/color_text_75"-->
+            <!--                    android:textSize="@dimen/size_14" />-->
 
-<!--            </LinearLayout>-->
+            <!--            </LinearLayout>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/profileIncompleteView"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value_15dp"
+            android:background="@drawable/emergency_btn_bg"
+            android:orientation="vertical"
+            android:padding="@dimen/value_15dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Complete your profile to add emergency and caregiver contact details."
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size_17" />
 
         </LinearLayout>
 
@@ -87,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/home_session_bg"
                         android:orientation="vertical"
-                        android:padding="@dimen/value_15dp">
+                        android:padding="@dimen/value_35dp">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -102,259 +122,128 @@
                             android:id="@+id/homeNextExerciseName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/value_8dp"
                             android:ellipsize="end"
                             android:maxLines="2"
                             android:text="Small steps today lead to big wins tomorrow"
                             android:textColor="?attr/color_text_75"
                             android:textSize="@dimen/size_12" />
 
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="@dimen/value_15dp"-->
-<!--                            android:gravity="center"-->
-<!--                            android:orientation="horizontal">-->
+                        <!--                        <LinearLayout-->
+                        <!--                            android:layout_width="match_parent"-->
+                        <!--                            android:layout_height="wrap_content"-->
+                        <!--                            android:layout_marginTop="@dimen/value_15dp"-->
+                        <!--                            android:gravity="center"-->
+                        <!--                            android:orientation="horizontal">-->
 
-<!--                            <Button-->
-<!--                                android:id="@+id/homeExerciseStartNowBtn"-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_weight="1"-->
-<!--                                android:text="Start Now →"-->
-<!--                                android:textSize="@dimen/size_12" />-->
+                        <!--                            <Button-->
+                        <!--                                android:id="@+id/homeExerciseStartNowBtn"-->
+                        <!--                                android:layout_width="0dp"-->
+                        <!--                                android:layout_height="wrap_content"-->
+                        <!--                                android:layout_weight="1"-->
+                        <!--                                android:text="Start Now →"-->
+                        <!--                                android:textSize="@dimen/size_12" />-->
 
-<!--                            <TextView-->
-<!--                                android:id="@+id/homeCompletedExercisesCount"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginStart="@dimen/value_15dp"-->
-<!--                                android:text="1/5"-->
-<!--                                android:textColor="?attr/color_text_75"-->
-<!--                                android:textSize="@dimen/size_14" />-->
+                        <!--                            <TextView-->
+                        <!--                                android:id="@+id/homeCompletedExercisesCount"-->
+                        <!--                                android:layout_width="wrap_content"-->
+                        <!--                                android:layout_height="wrap_content"-->
+                        <!--                                android:layout_marginStart="@dimen/value_15dp"-->
+                        <!--                                android:text="1/5"-->
+                        <!--                                android:textColor="?attr/color_text_75"-->
+                        <!--                                android:textSize="@dimen/size_14" />-->
 
-<!--                        </LinearLayout>-->
+                        <!--                        </LinearLayout>-->
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/value_8dp"
+            android:orientation="horizontal">
 
-<!--        &lt;!&ndash; Stats Row &ndash;&gt;-->
-<!--        <LinearLayout-->
-<!--            android:id="@+id/llStatsRow"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:orientation="horizontal"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/cardSession">-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/value_8dp"
+                android:layout_weight="1"
+                android:background="@drawable/chip_bg_2"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:padding="@dimen/value_8dp"
+                android:paddingStart="@dimen/value_15dp">
 
-<!--            &lt;!&ndash; Physical Improvement &ndash;&gt;-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Heart Rate"
+                    android:textColor="?attr/color_text_75"
+                    android:textSize="@dimen/size_14" />
 
-<!--            &lt;!&ndash; Heart Rate &ndash;&gt;-->
-<!--            <com.google.android.material.card.MaterialCardView-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="8dp"-->
-<!--                android:layout_weight="1"-->
-<!--                app:cardBackgroundColor="#2d332d"-->
-<!--                app:cardCornerRadius="12dp"-->
-<!--                app:cardElevation="0dp"-->
-<!--                app:strokeColor="#3d453d"-->
-<!--                app:strokeWidth="1dp">-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="-- bpm"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="@dimen/size_24"
+                    android:textStyle="bold" />
 
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:padding="12dp">-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NORMAL"
+                    android:textColor="?attr/color_text_75"
+                    android:textSize="@dimen/size_11" />
+            </LinearLayout>
 
-<!--                    <ImageView-->
-<!--                        android:layout_width="24dp"-->
-<!--                        android:layout_height="24dp"-->
-<!--                        android:src="@drawable/ic_heart_rate"-->
-<!--                        app:tint="#9e9e9e" />-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginTop="8dp"-->
-<!--                        android:text="Heart Rate"-->
-<!--                        android:textColor="#9e9e9e"-->
-<!--                        android:textSize="12sp" />-->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCallCaregiver"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="@dimen/value_8dp"
+                    android:background="@drawable/chip_bg_2"
+                    android:text="Call Caregiver"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="12sp"
+                    app:backgroundTint="@null"
+                    app:strokeColor="?attr/color40"
+                    app:strokeWidth="1dp" />
 
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginTop="4dp"-->
-<!--                        android:text="&#45;&#45; bpm"-->
-<!--                        android:textColor="@color/white"-->
-<!--                        android:textSize="20sp"-->
-<!--                        android:textStyle="bold" />-->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCheckHeartRate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/chip_bg_2"
+                    android:text="Check Heart Rate"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="12sp"
+                    app:backgroundTint="@null"
+                    app:strokeColor="?attr/color40"
+                    app:strokeWidth="1dp" />
 
-<!--                </LinearLayout>-->
+            </LinearLayout>
+        </LinearLayout>
 
-<!--            </com.google.android.material.card.MaterialCardView>-->
-
-<!--        </LinearLayout>-->
-
-        <!-- Action Buttons -->
-<!--        <LinearLayout-->
-<!--            android:id="@+id/llActionButtons"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:orientation="horizontal"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/llStatsRow">-->
-
-<!--            <Button-->
-<!--                android:id="@+id/btnCallHospital"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginEnd="8dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:backgroundTint="#2d332d"-->
-<!--                android:drawableStart="@drawable/ic_hospital"-->
-<!--                android:drawablePadding="8dp"-->
-<!--                android:text="Call nearest hospital"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="12sp"-->
-<!--                app:cornerRadius="12dp" />-->
-
-<!--            <Button-->
-<!--                android:id="@+id/btnCallCaregiver"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="8dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:backgroundTint="#2d332d"-->
-<!--                android:drawableStart="@drawable/ic_phone"-->
-<!--                android:drawablePadding="8dp"-->
-<!--                android:text="Call Caregiver"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="12sp"-->
-<!--                app:cornerRadius="12dp" />-->
-
-<!--        </LinearLayout>-->
-
-<!--        &lt;!&ndash; My Appointments Section &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/tvAppointmentsTitle"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="32dp"-->
-<!--            android:text="My Appointments"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="18sp"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/llActionButtons" />-->
-
-<!--        &lt;!&ndash; Horizontal RecyclerView for Appointments &ndash;&gt;-->
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/rvAppointments"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:clipToPadding="false"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:paddingStart="0dp"-->
-<!--            android:paddingEnd="16dp"-->
-<!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/tvAppointmentsTitle"-->
-<!--            tools:listitem="@layout/item_appointment_card" />-->
-
-<!--        &lt;!&ndash; Progress Overview Section &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/tvProgressOverviewTitle"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="32dp"-->
-<!--            android:text="Progress Overview"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="18sp"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/rvAppointments" />-->
-
-<!--        &lt;!&ndash; Horizontal RecyclerView for Progress Cards &ndash;&gt;-->
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/rvProgress"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:clipToPadding="false"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:paddingStart="0dp"-->
-<!--            android:paddingEnd="16dp"-->
-<!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/tvProgressOverviewTitle"-->
-<!--            tools:listitem="@layout/item_progress_card" />-->
-
-<!--        &lt;!&ndash; Hospitals Near Me Section &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/tvHospitalsNearMeTitle"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="32dp"-->
-<!--            android:text="Hospitals Near (Galle)"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="18sp"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/rvProgress" />-->
-
-<!--        &lt;!&ndash; Vertical RecyclerView for Hospitals &ndash;&gt;-->
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/rvHospitals"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:clipToPadding="false"-->
-<!--            android:paddingBottom="16dp"-->
-<!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/tvHospitalsNearMeTitle"-->
-<!--            tools:listitem="@layout/item_hospital_card" />-->
-
-<!--        &lt;!&ndash; Today Available Slots Section &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/tvAvailableSlotsTitle"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="32dp"-->
-<!--            android:text="Today Available Slots"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="18sp"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/rvHospitals" />-->
-
-<!--        &lt;!&ndash; Horizontal RecyclerView for Available Slots &ndash;&gt;-->
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/rvAvailableSlots"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:clipToPadding="false"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:paddingStart="0dp"-->
-<!--            android:paddingEnd="16dp"-->
-<!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/tvAvailableSlotsTitle"-->
-<!--            tools:listitem="@layout/item_available_slot_card" />-->
-
+        <LinearLayout
+            android:id="@+id/homeBody"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/value_8dp"
+            android:layout_weight="1"
+            android:orientation="vertical" />
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

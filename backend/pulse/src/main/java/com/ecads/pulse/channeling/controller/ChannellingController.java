@@ -74,4 +74,16 @@ public class ChannellingController {
             @RequestBody SingleRequestDataDto requestData) {
         return service.fetchSearchResults(requestData);
     }
+
+    @PostMapping("/todayAppointments")
+    public ResponseEntity<List<UpComingAppointmentsDto>> retrieveTodayAppointments(
+            @RequestBody SingleRequestDataDto requestData) {
+        return service.fetchTodayAppointments(requestData);
+    }
+
+    @PostMapping("/recentlyBookedConsultants")
+    public ResponseEntity<List<AvailableConsultantDto>> retrieveRecentlyBookedConsultants(
+            @RequestBody SingleRequestDataDto requestData) {
+        return service.fetchRecentlyBookedConsultants(requestData);
+    }
 }

@@ -46,8 +46,16 @@ public class AvailableConsultantsAdapter extends RecyclerView.Adapter<AvailableC
         holder.speciality.setText(availableConsultantDto.getConsultant().getSpeciality());
         holder.baseHospital.setText(availableConsultantDto.getConsultant().getBaseHospital());
 
-        holder.slotChip1.setText(availableConsultantDto.getAvailableSlots().get(0));
-        holder.slotChip2.setText(availableConsultantDto.getAvailableSlots().get(1));
+        if (!availableConsultantDto.getAvailableSlots().isEmpty()) {
+            holder.slotChip1.setVisibility(View.VISIBLE);
+            holder.slotChip2.setVisibility(View.VISIBLE);
+
+            holder.slotChip1.setText(availableConsultantDto.getAvailableSlots().get(0));
+            holder.slotChip2.setText(availableConsultantDto.getAvailableSlots().get(1));
+        } else {
+            holder.slotChip1.setVisibility(View.GONE);
+            holder.slotChip2.setVisibility(View.GONE);
+        }
 
 //        holder.slotChip1.setOnClickListener(new View.OnClickListener() {
 //            @Override

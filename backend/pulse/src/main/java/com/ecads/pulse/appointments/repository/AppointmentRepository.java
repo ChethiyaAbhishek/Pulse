@@ -4,6 +4,7 @@ import com.ecads.pulse.appointments.entity.Appointment;
 import com.ecads.pulse.appointments.enums.AppointmentStatus;
 import com.ecads.pulse.channeling.entity.ConsultantChannelingHospital;
 import com.ecads.pulse.payment.enums.PaymentStatus;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -24,4 +25,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> getAllByPatientUidAndAppointmentStatus(String patientUid, AppointmentStatus appointmentStatus);
 
     List<Appointment> getAllByPatientUidAndPaymentStatusIsNot(String patientUid, PaymentStatus paymentStatus, Sort sort);
+
+    List<Appointment> getAllByPatientUidAndAppointmentStatusAndAppointmentDate(String patientUid, AppointmentStatus appointmentStatus, LocalDate appointmentDate);
+
+    List<Appointment> getAllByPatientUidAndAppointmentStatusIsNot(String patientUid, AppointmentStatus appointmentStatus);
+
+    List<Appointment> getAllByAppointmentStatusIsNot(AppointmentStatus appointmentStatus, Pageable pageable);
 }

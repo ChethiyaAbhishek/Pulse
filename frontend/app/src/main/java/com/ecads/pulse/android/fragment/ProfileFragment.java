@@ -1,10 +1,12 @@
 package com.ecads.pulse.android.fragment;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ecads.pulse.android.R;
+import com.ecads.pulse.android.activity.SplashActivity;
 import com.ecads.pulse.android.databinding.FragmentProfileBinding;
 import com.ecads.pulse.android.model.Patient;
 import com.ecads.pulse.android.model.User;
@@ -48,6 +51,7 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private String mobileValidationRegex;
+    private SharedPreferences preferences;
 
     private Map<String, String> existingData;
 
@@ -70,6 +74,8 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        preferences = requireActivity().getSharedPreferences(SplashActivity.APP_DATA, MODE_PRIVATE);
 
         //calendar view for stroke date
         EditText dateOfStrokeField = binding.profileDosField;
@@ -353,10 +359,11 @@ public class ProfileFragment extends Fragment {
                         }
                     });
         }
-    }
 
-    private void checkTypingFields() {
-        //TODO: Check while typing
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("cgiverContact", cContact);
+        editor.putString("emergencyContact", emerContact);
+        editor.apply();
     }
 
     private void showErrorAlert() {

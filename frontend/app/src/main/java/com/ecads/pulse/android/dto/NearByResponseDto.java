@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 public class NearByResponseDto {
     private List<Result> results;
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Result {
         private String place_id;
         private String name;
@@ -20,16 +23,25 @@ public class NearByResponseDto {
         private String vicinity;
     }
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Photo {
         private String photo_reference;
         private int height;
         private int width;
     }
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Geometry {
         private Location location;
     }
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Location {
         private double lat;
         private double lng;

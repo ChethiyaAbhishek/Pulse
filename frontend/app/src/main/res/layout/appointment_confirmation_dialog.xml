@@ -173,16 +173,13 @@
         android:layout_height="150dp"
         android:layout_marginTop="@dimen/value_15dp"
         app:cardBackgroundColor="?attr/colorTextField"
-        app:cardCornerRadius="@dimen/value_15dp" />
+        app:cardCornerRadius="@dimen/value_15dp">
 
-<!--    <com.google.android.material.button.MaterialButton-->
-<!--        android:id="@+id/appointmentConHospitalBtn"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="@dimen/btn_height"-->
-<!--        android:layout_marginTop="@dimen/value_15dp"-->
-<!--        android:layout_marginBottom="@dimen/value_15dp"-->
-<!--        android:text="Back to Home"-->
-<!--        android:textSize="@dimen/size_17"-->
-<!--        android:textStyle="bold" />-->
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/appointmentConMapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

@@ -26,6 +26,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <application
         android:name=".Application"
@@ -38,6 +39,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pulse"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".activity.HeartRateMonitoringActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.ReportViewActivity"
             android:exported="false" />

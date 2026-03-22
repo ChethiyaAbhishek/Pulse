@@ -7,6 +7,7 @@
 
     <item
         android:id="@+id/bn_exercise"
+        android:visible="false"
         android:icon="@drawable/exercise_icon"
         android:title="Exercises" />
 
@@ -17,6 +18,7 @@
 
     <item
         android:id="@+id/bn_progress"
+        android:visible="false"
         android:icon="@drawable/progress_icon"
         android:title="Progress" />
 

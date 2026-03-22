@@ -71,12 +71,13 @@ public class EmergencyActions {
                         public void onFailure(@NonNull Exception e) {
                             new AlertDialog.Builder(context)
                                     .setTitle("No Emergency contact found")
-                                    .setMessage("Call nearest hospital?")
+                                    .setMessage("Call 1990?")
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                            // TODO: nearest hospital contact
-                                            //TODO: replace all emergency contact logic usages
+                                            Intent callingIntent = new Intent(Intent.ACTION_CALL);
+                                            callingIntent.setData(Uri.parse("tel:1990"));
+                                            context.startActivity(callingIntent);
                                         }
                                     })
                                     .setNegativeButton("No", null)
@@ -135,8 +136,6 @@ public class EmergencyActions {
     }
 
     private void forwardSMS() {
-
-        // TODO: get current location and attach it
         StringBuilder message = new StringBuilder("PULSE: EMERGENCY !!! \n"
                 + preferences.getString("fname", "")
                 + " needs your help.");
