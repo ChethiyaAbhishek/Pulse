@@ -2,8 +2,6 @@ package com.ecads.pulse.android.model;
 
 import com.google.firebase.firestore.GeoPoint;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

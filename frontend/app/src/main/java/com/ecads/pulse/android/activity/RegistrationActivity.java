@@ -1,7 +1,5 @@
 package com.ecads.pulse.android.activity;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,7 +8,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.fragment.Reg01Fragment;
-import com.ecads.pulse.android.fragment.Reg03Fragment;
 
 public class RegistrationActivity extends AppCompatActivity {
 

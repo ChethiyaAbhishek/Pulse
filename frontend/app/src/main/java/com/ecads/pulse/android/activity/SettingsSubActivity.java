@@ -6,23 +6,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.databinding.ActivitySettingsSubBinding;
+import com.ecads.pulse.android.fragment.PermissionFragment;
 import com.ecads.pulse.android.fragment.ProfileFragment;
 import com.ecads.pulse.android.fragment.ReportsFragment;
 import com.ecads.pulse.android.utils.EmergencyActions;
 import com.ecads.pulse.android.utils.Permissions;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsSubActivity extends AppCompatActivity {
 
@@ -79,11 +75,11 @@ public class SettingsSubActivity extends AppCompatActivity {
         }
 
         if (fragmentNo == 3) {
-            //TODO: LOAD PERMISSIONS
+            loadFragment(new PermissionFragment());
         }
 
         if (fragmentNo == 4) {
-            //TODO: LOAD NOTIFICATIONS
+
         }
 
         binding.settingsSubBtnBack.setOnClickListener(new View.OnClickListener() {

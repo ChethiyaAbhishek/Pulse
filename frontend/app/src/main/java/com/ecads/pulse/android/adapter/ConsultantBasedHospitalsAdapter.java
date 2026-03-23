@@ -8,12 +8,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.dto.HospitalDto;
-import com.ecads.pulse.android.model.Consultant;
 
 import java.util.List;
 

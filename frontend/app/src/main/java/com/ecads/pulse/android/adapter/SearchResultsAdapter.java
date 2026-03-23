@@ -21,7 +21,6 @@ import com.ecads.pulse.android.dto.AvailableConsultantDto;
 import com.ecads.pulse.android.dto.HospitalDto;
 import com.ecads.pulse.android.dto.SearchItemDto;
 import com.ecads.pulse.android.dto.SearchResultDto;
-import com.ecads.pulse.android.model.Hospital;
 import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;

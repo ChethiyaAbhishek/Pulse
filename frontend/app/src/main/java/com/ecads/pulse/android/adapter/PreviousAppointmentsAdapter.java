@@ -7,29 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.activity.OnlineAppointmentActivity;
-import com.ecads.pulse.android.dto.HospitalDto;
 import com.ecads.pulse.android.dto.PreviousAppointmentDto;
-import com.ecads.pulse.android.enums.AppointmentStatus;
 import com.ecads.pulse.android.enums.PaymentStatus;
-import com.ecads.pulse.android.model.AppointmentDto;
-import com.ecads.pulse.android.model.Consultant;
-import com.ecads.pulse.android.utils.Helper;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class PreviousAppointmentsAdapter extends RecyclerView.Adapter<PreviousAppointmentsAdapter.ViewHolder> {
 

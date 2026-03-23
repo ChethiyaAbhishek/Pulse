@@ -8,7 +8,6 @@ import com.ecads.pulse.android.dto.SingleRequestDataDto;
 import com.ecads.pulse.android.dto.TeleMedTokenReqDto;
 import com.ecads.pulse.android.model.AppointmentDto;
 import com.ecads.pulse.android.model.Consultant;
-import com.ecads.pulse.android.model.Hospital;
 
 import java.util.List;
 import java.util.Map;

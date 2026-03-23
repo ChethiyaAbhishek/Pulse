@@ -1,39 +1,33 @@
 package com.ecads.pulse.android.activity;
 
 import android.Manifest;
-import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.annotation.NonNull;
-import android.media.Image;
+
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.databinding.ActivityHeartRateMonitoringBinding;
 import com.ecads.pulse.android.dto.PpgDto;
 import com.ecads.pulse.android.utils.Permissions;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
 
 public class HeartRateMonitoringActivity extends AppCompatActivity {
 
@@ -46,6 +40,7 @@ public class HeartRateMonitoringActivity extends AppCompatActivity {
     private int peakCount = 0;
     private double currentBPM = 0;
     private ExecutorService cameraExecutor;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +52,7 @@ public class HeartRateMonitoringActivity extends AppCompatActivity {
         greenBuffer = new ArrayList<>();
         cameraExecutor = Executors.newSingleThreadExecutor();
         isCameraOn = false;
+        preferences = getSharedPreferences(SplashActivity.APP_DATA, MODE_PRIVATE);
 
         launcher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
@@ -69,6 +65,7 @@ public class HeartRateMonitoringActivity extends AppCompatActivity {
                 });
 
         checkAndRequestPermission();
+        binding.hrmProgress.setProgress(0);
 
         binding.hrmMeasurementBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +93,8 @@ public class HeartRateMonitoringActivity extends AppCompatActivity {
         binding.hrmMeasurementBtn.setAlpha(0.5f);
         binding.hrmMeasurementBtn.setText("Measuring...");
 
+        binding.hrmProgress.setProgress(0);
+
         isCameraOn = true;
 
         cameraProviderFuture.addListener(() -> {
@@ -103,13 +102,14 @@ public class HeartRateMonitoringActivity extends AppCompatActivity {
                 cameraProvider = cameraProviderFuture.get();
                 bindCameraUseCases();
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(HeartRateMonitoringActivity.class.getSimpleName(), "startCamera: ", e);
             }
         }, ContextCompat.getMainExecutor(this));
     }
 
     private void bindCameraUseCases() {
-        // Preview is required when using PreviewView
+        runOnUiThread(() -> binding.hrmProgress.setProgress(20));
+
         Preview preview = new Preview.Builder().build();
         preview.setSurfaceProvider(binding.previewView.getSurfaceProvider());
 
@@ -124,20 +124,21 @@ public class HeartRateMonitoringActivity extends AppCompatActivity {
 
         try {
             cameraProvider.unbindAll();
-            // Bind BOTH preview and imageAnalysis together
             var camera = cameraProvider.bindToLifecycle(
                     this,
                     cameraSelector,
-                    preview,      // ← must pass preview here
+                    preview,
                     imageAnalysis
             );
-            camera.getCameraControl().enableTorch(true);   // Flash ON
+            camera.getCameraControl().enableTorch(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(HeartRateMonitoringActivity.class.getSimpleName(), "bindCameraUseCases: ", e);
         }
     }
 
     private void processFrame(@NonNull ImageProxy image) {
+        runOnUiThread(() -> binding.hrmProgress.setProgress(40));
+
         double greenIntensity = extractGreenIntensity(image);
         long timestamp = System.currentTimeMillis();
 
@@ -153,7 +154,8 @@ public class HeartRateMonitoringActivity extends AppCompatActivity {
     }
 
     private double extractGreenIntensity(@NonNull ImageProxy image) {
-        // Correct fix for CameraX ImageProxy
+        runOnUiThread(() -> binding.hrmProgress.setProgress(60));
+
         androidx.camera.core.ImageProxy.PlaneProxy[] planes = image.getPlanes();
 
         java.nio.ByteBuffer buffer = planes[0].getBuffer();
@@ -212,27 +214,25 @@ public class HeartRateMonitoringActivity extends AppCompatActivity {
             }
         }
 
-        // Update UI on main thread
+        String status = currentBPM > 100 ? "Elevated" : "Normal";
+
         this.runOnUiThread(() -> {
+            runOnUiThread(() -> binding.hrmProgress.setProgress(100));
             binding.hrmBpmValue.setText(String.format("%.0f", currentBPM));
 
             if (currentBPM > 100) {
-//                bpmText.setTextColor(Color.parseColor("#FF4081"));
                 binding.hrmStatus.setText("Elevated");
-//                statusText.setTextColor(Color.parseColor("#FF4081"));
             } else if (currentBPM > 80) {
-//                bpmText.setTextColor(Color.parseColor("#FFAB40"));
                 binding.hrmStatus.setText("Normal");
-//                statusText.setTextColor(Color.parseColor("#FFAB40"));
             } else {
-//                bpmText.setTextColor(Color.parseColor("#4CAF50"));
                 binding.hrmStatus.setText("Normal");
-//                statusText.setTextColor(Color.parseColor("#4CAF50"));
             }
         });
     }
 
     private double calculateDynamicThreshold() {
+        runOnUiThread(() -> binding.hrmProgress.setProgress(80));
+
         double sum = 0;
         for (PpgDto p : greenBuffer) {
             sum += p.getIntensity();
@@ -243,25 +243,20 @@ public class HeartRateMonitoringActivity extends AppCompatActivity {
     private void stopCamera() {
         isCameraOn = false;
 
-        // Use the Main Executor or runOnUiThread to unbind the camera
         this.runOnUiThread(() -> {
             try {
                 if (cameraProvider != null) {
-                    // This MUST be on the main thread
                     cameraProvider.unbindAll();
                 }
 
-                // Update UI components
                 binding.hrmMeasurementBtn.setEnabled(true);
                 binding.hrmMeasurementBtn.setAlpha(1.0f);
                 binding.hrmMeasurementBtn.setText("Start Measurement");
                 binding.previewView.setVisibility(View.GONE);
 
-                // Clear the buffer so the next session starts fresh
                 greenBuffer.clear();
                 peakCount = 0;
                 lastPeakTime = 0;
-
             } catch (Exception e) {
                 e.printStackTrace();
             }

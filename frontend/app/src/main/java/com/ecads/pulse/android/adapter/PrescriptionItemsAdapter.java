@@ -3,8 +3,6 @@ package com.ecads.pulse.android.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,22 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ecads.pulse.android.R;
-import com.ecads.pulse.android.dto.PrescriptionDto;
 import com.ecads.pulse.android.dto.PrescriptionItemDto;
 import com.google.android.material.chip.Chip;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class PrescriptionItemsAdapter extends RecyclerView.Adapter<PrescriptionItemsAdapter.ViewHolder> {
 
     private List<PrescriptionItemDto> prescriptionItemsList;
-//    private OnCardClickListener clickListener;
 
     public PrescriptionItemsAdapter(List<PrescriptionItemDto> prescriptionItemsList) {
         this.prescriptionItemsList = prescriptionItemsList;
-//        this.clickListener = clickListener;
     }
 
     @NonNull
@@ -75,10 +68,6 @@ public class PrescriptionItemsAdapter extends RecyclerView.Adapter<PrescriptionI
             instructions = cardView.findViewById(R.id.prescriptionItemInstructions);
             card = cardView.findViewById(R.id.prescriptionItemCardLayout);
         }
-    }
-
-    public interface OnCardClickListener {
-        void onCardClick(PrescriptionItemDto prescriptionItemDto);
     }
 
 }

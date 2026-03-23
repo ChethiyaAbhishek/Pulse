@@ -59,4 +59,6 @@
     <string name="title_heart_rate_monitor">Heart Rate Monitor</string>
     <string name="status_measuring">Measuring…</string>
     <string name="instruction_place_finger">Place index finger firmly\nover camera + flash</string>
+    <string name="phone_communication"><![CDATA[Phone & Communication]]></string>
+    <string name="media_hardware"><![CDATA[Media & Hardware]]></string>
 </resources>

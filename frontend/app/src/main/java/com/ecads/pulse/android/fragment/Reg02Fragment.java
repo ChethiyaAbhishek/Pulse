@@ -5,7 +5,6 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,7 +24,6 @@ import android.widget.TextView;
 
 import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.activity.LoginActivity;
-import com.ecads.pulse.android.activity.RegistrationActivity;
 import com.ecads.pulse.android.activity.SplashActivity;
 import com.ecads.pulse.android.databinding.FragmentReg02Binding;
 import com.ecads.pulse.android.model.User;
@@ -42,8 +40,6 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;

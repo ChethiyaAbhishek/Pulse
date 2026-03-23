@@ -1,7 +1,5 @@
 package com.ecads.pulse.android.dto;
 
-import com.ecads.pulse.android.model.Hospital;
-
 import java.util.List;
 
 import lombok.AllArgsConstructor;

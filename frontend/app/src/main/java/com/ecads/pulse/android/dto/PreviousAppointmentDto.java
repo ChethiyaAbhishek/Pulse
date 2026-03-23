@@ -1,9 +1,6 @@
 package com.ecads.pulse.android.dto;
 
-import com.ecads.pulse.android.enums.AppointmentStatus;
 import com.ecads.pulse.android.enums.PaymentStatus;
-
-import java.time.LocalTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

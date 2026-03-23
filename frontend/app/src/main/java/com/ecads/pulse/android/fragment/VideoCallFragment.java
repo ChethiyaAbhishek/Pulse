@@ -35,7 +35,6 @@ import com.ecads.pulse.android.databinding.FragmentVideoCallBinding;
 import com.ecads.pulse.android.dto.AppointmentStatusUpdateDto;
 import com.ecads.pulse.android.listener.CallBack;
 import com.ecads.pulse.android.network.AppointmentApiService;
-import com.ecads.pulse.android.network.ChannelingApiService;
 import com.ecads.pulse.android.network.RetrofitClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

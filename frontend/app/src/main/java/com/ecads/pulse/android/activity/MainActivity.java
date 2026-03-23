@@ -2,7 +2,13 @@ package com.ecads.pulse.android.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -48,7 +54,8 @@ import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        NavigationBarView.OnItemSelectedListener{
+        NavigationBarView.OnItemSelectedListener,
+        SensorEventListener {
 
     private ActivityMainBinding binding;
     private BottomNavigationView bottomNavigationView;
@@ -61,6 +68,11 @@ public class MainActivity extends AppCompatActivity implements
     private ActivityResultLauncher<String[]> launcher;
     private EmergencyActions emergencyActions;
 
+    private SensorManager sensorManager;
+    private float acceleration;
+    private float currentAcceleration;
+    private float lastAcceleration;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +82,11 @@ public class MainActivity extends AppCompatActivity implements
 
         firebaseAuth = FirebaseAuth.getInstance();
         emergencyActions = new EmergencyActions(this);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        acceleration = 10f;
+        currentAcceleration = SensorManager.GRAVITY_EARTH;
+        lastAcceleration = SensorManager.GRAVITY_EARTH;
 
         launcher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
@@ -215,6 +232,14 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+                , SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment);
@@ -269,5 +294,49 @@ public class MainActivity extends AppCompatActivity implements
             // exception
             Log.e("Firebase Auth", "No firebase auth user");
         }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float x = event.values[0];
+        float y = event.values[1];
+        float z = event.values[2];
+
+        lastAcceleration = currentAcceleration;
+        currentAcceleration = (float) Math.sqrt((x * x) + (y * y) + (z * z));
+        float diff = currentAcceleration - lastAcceleration;
+        acceleration = (acceleration * 0.9f) + diff;
+
+        if (acceleration > 12) {
+            showEmergencyAlert();
+        }
+    }
+
+    private void showEmergencyAlert() {
+        new AlertDialog.Builder(this)
+                .setTitle("Emergency Triggered!")
+                .setMessage("Do you want to notify emergency contacts?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (Permissions.permissionEnabled(MainActivity.this, Manifest.permission.CALL_PHONE) &&
+                                Permissions.permissionEnabled(MainActivity.this, Manifest.permission.SEND_SMS)) {
+                            emergencyActions.makeCall();
+                            emergencyActions.sendSMS();
+                        } else {
+                            launcher.launch(new String[]{
+                                    Manifest.permission.CALL_PHONE,
+                                    Manifest.permission.SEND_SMS
+                            });
+                        }
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 }

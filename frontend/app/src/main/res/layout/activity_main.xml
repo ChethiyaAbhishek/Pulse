@@ -28,6 +28,7 @@
                 android:src="@drawable/menu_icon" />
 
             <ImageButton
+                android:visibility="gone"
                 android:id="@+id/notifications"
                 android:layout_width="@dimen/circular_btn"
                 android:layout_height="@dimen/circular_btn"

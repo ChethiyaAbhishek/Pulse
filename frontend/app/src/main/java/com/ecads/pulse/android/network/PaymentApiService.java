@@ -1,10 +1,6 @@
 package com.ecads.pulse.android.network;
 
 import com.ecads.pulse.android.dto.PaymentDetailsDto;
-import com.ecads.pulse.android.enums.PaymentStatus;
-import com.ecads.pulse.android.model.Consultant;
-
-import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;

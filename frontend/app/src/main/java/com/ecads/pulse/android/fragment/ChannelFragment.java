@@ -1,10 +1,8 @@
 package com.ecads.pulse.android.fragment;
 
 import android.Manifest;
-import android.app.SearchableInfo;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -37,7 +35,6 @@ import com.ecads.pulse.android.dto.AvailableConsultantDto;
 import com.ecads.pulse.android.dto.HospitalDto;
 import com.ecads.pulse.android.dto.LocationDto;
 import com.ecads.pulse.android.dto.NearByResponseDto;
-import com.ecads.pulse.android.dto.PlacesApiDto;
 import com.ecads.pulse.android.dto.SearchItemDto;
 import com.ecads.pulse.android.dto.SearchResultDto;
 import com.ecads.pulse.android.dto.SingleRequestDataDto;
@@ -63,7 +60,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.android.libraries.places.api.model.Place;
 import com.google.android.material.chip.Chip;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -78,7 +74,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;

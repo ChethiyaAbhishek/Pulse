@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.ecads.pulse.android.R;
 import com.ecads.pulse.android.dto.HospitalDto;
-import com.ecads.pulse.android.model.Hospital;
 
 import java.util.List;
 
@@ -55,7 +54,6 @@ public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.ViewHo
                     .centerCrop()
                     .into(holder.hospitalImg);
 
-            //TODO: GET AS A CALLBACK
             if (!hospital.getContact().isEmpty()) {
                 holder.contactBtn.setOnClickListener(view -> {
                     Intent intent = new Intent(Intent.ACTION_DIAL);

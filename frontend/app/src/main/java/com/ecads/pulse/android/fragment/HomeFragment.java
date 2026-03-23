@@ -2,18 +2,13 @@ package com.ecads.pulse.android.fragment;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -112,7 +107,7 @@ public class HomeFragment extends Fragment {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse("tel:" + careGiverContact));
                     view.getContext().startActivity(intent);
-                }else{
+                } else {
                     Toast.makeText(requireActivity(), "Caregivers contact has not provided: " + careGiverContact, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -125,6 +120,12 @@ public class HomeFragment extends Fragment {
                 requireActivity().startActivity(intent);
             }
         });
+
+//        String heartRateBpm = preferences.getString("heartRateBpm", "--");
+//        String heartRateStatus = preferences.getString("heartRateStatus", "");
+//
+//        binding.heartRateBpm.setText(heartRateBpm + " bpm");
+//        binding.heartRateStatus.setText(heartRateStatus);
     }
 
     private void attachTodayAppointments(LayoutInflater inflater, LinearLayout parent, CallBack<Boolean> callBack) {
@@ -346,13 +347,13 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void checkLocalStorageAndNotify(){
+    private void checkLocalStorageAndNotify() {
         String emergencyContact = preferences.getString("emergencyContact", null);
         String careGiverContact = preferences.getString("cgiverContact", null);
-        if(emergencyContact == null || emergencyContact.isEmpty()
-                || careGiverContact == null || careGiverContact.isEmpty()){
+        if (emergencyContact == null || emergencyContact.isEmpty()
+                || careGiverContact == null || careGiverContact.isEmpty()) {
             binding.profileIncompleteView.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             binding.profileIncompleteView.setVisibility(View.GONE);
         }
     }
