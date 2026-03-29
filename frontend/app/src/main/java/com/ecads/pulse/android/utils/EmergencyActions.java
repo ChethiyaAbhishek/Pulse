@@ -2,6 +2,7 @@ package com.ecads.pulse.android.utils;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,10 +33,10 @@ public class EmergencyActions {
     private SharedPreferences preferences;
     private String firestoreEmergencyContact;
     private String firestoreCareGiverContact;
-    private final Context context;
+    private final Activity context;
     private MapApi mapApi;
 
-    public EmergencyActions(Context context) {
+    public EmergencyActions(Activity context) {
         this.context = context;
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
@@ -86,7 +87,7 @@ public class EmergencyActions {
                     });
         } else {
             Intent callingIntent = new Intent(Intent.ACTION_CALL);
-            callingIntent.setData(Uri.parse(emergencyContact));
+            callingIntent.setData(Uri.parse("tel:" + emergencyContact));
             context.startActivity(callingIntent);
         }
     }

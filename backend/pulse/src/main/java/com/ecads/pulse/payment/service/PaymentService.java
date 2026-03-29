@@ -90,7 +90,7 @@ public class PaymentService {
             int statusCode = Integer.parseInt(notifyDto.getStatusCode());
 
             if (statusCode == PayhereStatusCode.SUCCESS.getCode()) {
-                log.debug("Payhere payment successful");
+                log.info("Payhere payment successful");
 
                 PlatformFees platformFees = feesRepository.getByIsActive(true);
 
@@ -113,12 +113,12 @@ public class PaymentService {
                 appointment.setPaymentStatus(PaymentStatus.PAID);
 
             } else if (statusCode == PayhereStatusCode.FAILED.getCode()) {
-                log.debug("Payhere payment failed");
+                log.info("Payhere payment failed");
                 appointment.setAppointmentStatus(AppointmentStatus.CANCELLED);
                 appointment.setPaymentStatus(PaymentStatus.FAILED);
 
             } else if (statusCode == PayhereStatusCode.CANCELLED.getCode()) {
-                log.debug("Payhere payment cancelled");
+                log.info("Payhere payment cancelled");
                 appointment.setAppointmentStatus(AppointmentStatus.CANCELLED);
                 appointment.setPaymentStatus(PaymentStatus.CANCELLED);
             }

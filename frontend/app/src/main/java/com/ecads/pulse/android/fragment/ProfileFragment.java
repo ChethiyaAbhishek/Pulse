@@ -49,6 +49,7 @@ public class ProfileFragment extends Fragment {
     private FirebaseFirestore firebaseFirestore;
     private String mobileValidationRegex;
     private SharedPreferences preferences;
+    private String name;
 
     private Map<String, String> existingData;
 
@@ -188,6 +189,9 @@ public class ProfileFragment extends Fragment {
                         if (user != null) {
                             binding.profileHeaderName.setText(user.getFname() + " " + user.getLname());
                             binding.profileHeaderEmail.setText(user.getEmail());
+                            name = user.getFname();
+                        }else{
+                            name = "";
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -360,6 +364,7 @@ public class ProfileFragment extends Fragment {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("cgiverContact", cContact);
         editor.putString("emergencyContact", emerContact);
+        editor.putString("fname", name);
         editor.apply();
     }
 
@@ -379,8 +384,10 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadFragment(Fragment fragment) {
+        if(requireActivity().findViewById(R.id.fragmentContainer) != null){
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment);
         transaction.commit();
+        }
     }
 }

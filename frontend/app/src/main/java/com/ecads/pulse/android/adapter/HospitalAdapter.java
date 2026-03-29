@@ -63,8 +63,11 @@ public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.ViewHo
             }
 
             holder.locationBtn.setOnClickListener(view -> {
+
+                String mapUrl = "http://maps.google.com/maps?q="+hospital.getLocation().getLatitude()+","+hospital.getLocation().getLongitude();
+
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(hospital.getMapUrl()));
+                intent.setData(Uri.parse(mapUrl));
                 view.getContext().startActivity(intent);
             });
 

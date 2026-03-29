@@ -295,6 +295,8 @@ public class ChannelFragment extends Fragment {
 
             HospitalAdapter adapter = new HospitalAdapter(results, hospital -> {
 
+                String mapUrl = "http://maps.google.com/maps?q=" + hospital.getLocation().getLatitude() + "," + hospital.getLocation().getLongitude();
+
                 Intent intent = new Intent(requireActivity(), AppointmentActivity.class);
                 intent.putExtra("type", Helper.HOSPITAL);
                 intent.putExtra("data", hospital.getPlaceId());
@@ -302,11 +304,11 @@ public class ChannelFragment extends Fragment {
                 intent.putExtra("imageUrl", hospital.getImageUrl());
                 intent.putExtra("name", hospital.getName());
                 intent.putExtra("address", hospital.getAddress());
-                intent.putExtra("mapUrl", hospital.getMapUrl());
+                intent.putExtra("mapUrl", mapUrl);
                 intent.putExtra("lat", hospital.getLocation().getLatitude());
                 intent.putExtra("lng", hospital.getLocation().getLongitude());
 
-                Log.i("MapCheck", "initial: lat["+hospital.getLocation().getLatitude()+"] lan["+hospital.getLocation().getLongitude()+"]");
+                Log.i("MapCheck", "initial: lat[" + hospital.getLocation().getLatitude() + "] lan[" + hospital.getLocation().getLongitude() + "]");
 
                 if (firebaseToken != null) {
                     intent.putExtra("authToken", firebaseToken);
@@ -502,7 +504,7 @@ public class ChannelFragment extends Fragment {
                             );
 
                             filteredResults.add(apiDto);
-                            Log.i("check", "hospital: name["+result.getName()+"] lat["+lat+"] lng["+lng+"]");
+                            Log.i("check", "hospital: name[" + result.getName() + "] lat[" + lat + "] lng[" + lng + "]");
                         } else {
                             Log.e("PlacesApi", "excluded: " + result);
                         }
@@ -653,12 +655,15 @@ public class ChannelFragment extends Fragment {
                                 Intent intent = new Intent(requireActivity(), AppointmentActivity.class);
 
                                 if (searchItem.getType() == SearchItemDto.TYPE_HOSPITAL) {
+
+                                    String mapUrl = "http://maps.google.com/maps?q=" + searchItem.getHospitalDto().getLocation().getLatitude() + "," + searchItem.getHospitalDto().getLocation().getLongitude();
+
                                     intent.putExtra("type", Helper.HOSPITAL);
                                     intent.putExtra("data", searchItem.getHospitalDto().getPlaceId());
                                     intent.putExtra("imageUrl", searchItem.getHospitalDto().getImageUrl());
                                     intent.putExtra("name", searchItem.getHospitalDto().getName());
                                     intent.putExtra("address", searchItem.getHospitalDto().getAddress());
-                                    intent.putExtra("mapUrl", searchItem.getHospitalDto().getMapUrl());
+                                    intent.putExtra("mapUrl", mapUrl);
                                     intent.putExtra("lat", searchItem.getHospitalDto().getLocation().getLatitude());
                                     intent.putExtra("lng", searchItem.getHospitalDto().getLocation().getLongitude());
                                 } else {

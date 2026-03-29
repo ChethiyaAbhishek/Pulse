@@ -91,6 +91,8 @@ public class HomeFragment extends Fragment {
 
         if (preferences.getString("fname", null) != null) {
             binding.userNameHome.setText("Hi " + preferences.getString("fname", "") + "!");
+        }else{
+            binding.userNameHome.setText("Hello!");
         }
     }
 
