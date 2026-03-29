@@ -1,8 +1,6 @@
 package com.ecads.pulse.telemedicine.util;
 
-import com.ecads.pulse.channeling.enums.SlotDurations;
 import com.ecads.pulse.common.enums.UserRole;
-import com.ecads.pulse.common.exception.ShowErrorException;
 import io.agora.media.RtcTokenBuilder2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

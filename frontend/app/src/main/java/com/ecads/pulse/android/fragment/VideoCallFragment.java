@@ -25,6 +25,7 @@ import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.RtcEngineConfig;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.rtc2.ChannelMediaOptions;
+import io.agora.rtc2.video.VideoEncoderConfiguration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,7 +50,7 @@ import java.time.format.DateTimeFormatter;
 public class VideoCallFragment extends Fragment {
 
     private FragmentVideoCallBinding binding;
-    private String myAppId = "bf77db5c8aea4ce8bc554316cb246b84";
+    private String myAppId = "dc628086203d494391265dce0323f892";
     private RtcEngine mRtcEngine;
     private boolean micMute;
     private boolean videoOff;
@@ -165,7 +166,7 @@ public class VideoCallFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
 
         channelName = getArguments().getString("channel");
-        token = getArguments().getString("token");
+//        token = getArguments().getString("token");
         consultantName = getArguments().getString("consultantName");
         appointmentId = getArguments().getString("appointmentId");
         slot = getArguments().getString("slot");
@@ -278,10 +279,23 @@ public class VideoCallFragment extends Fragment {
     private void joinChannel() {
         ChannelMediaOptions options = new ChannelMediaOptions();
         options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
-        options.channelProfile = Constants.CHANNEL_PROFILE_COMMUNICATION;
+//        options.channelProfile = Constants.CHANNEL_PROFILE_COMMUNICATION;
+        options.channelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
         options.publishCameraTrack = true;
         options.publishMicrophoneTrack = true;
-        mRtcEngine.joinChannel(token, channelName, 0, options);
+        options.autoSubscribeAudio = true;
+        options.autoSubscribeVideo = true;
+//        mRtcEngine.joinChannel(token, channelName, 1000, options);
+        mRtcEngine.joinChannel(null, channelName, 1000, options);
+
+        // In Android: joinChannel or initializeAgoraVideoSDK
+        VideoEncoderConfiguration config = new VideoEncoderConfiguration(
+                VideoEncoderConfiguration.VD_640x360, // Standard resolution
+                VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
+                VideoEncoderConfiguration.STANDARD_BITRATE,
+                VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_ADAPTIVE
+        );
+        mRtcEngine.setVideoEncoderConfiguration(config);
     }
 
     private void enableVideo() {
@@ -299,6 +313,9 @@ public class VideoCallFragment extends Fragment {
 
     private void setupRemoteVideo(int uid) {
         FrameLayout container = binding.remoteVideoViewContainer;
+        if (container.getChildCount() > 0) {
+            container.removeAllViews();
+        }
         SurfaceView surfaceView = new SurfaceView(getActivity().getBaseContext());
         container.addView(surfaceView);
         mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, uid));

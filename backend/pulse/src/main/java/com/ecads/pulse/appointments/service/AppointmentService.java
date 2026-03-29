@@ -27,7 +27,6 @@ import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -347,6 +346,26 @@ public class AppointmentService {
         } else if (updateDto.getStatusId() == 1) {
             appointment.setAppointmentStatus(AppointmentStatus.DISCONNECTED);
         }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Transactional
+    public ResponseEntity<Void> updateNoShowAppointmentStatus(
+            SingleRequestDataDto updateDto) {
+
+        if (updateDto == null || updateDto.getData().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Appointment appointment = appointmentRepository
+                .getAppointmentById(Long.valueOf(updateDto.getData()));
+
+        if (appointment == null) {
+            throw new ShowErrorException("Appointment not found");
+        }
+
+        appointment.setAppointmentStatus(AppointmentStatus.NO_SHOW);
 
         return ResponseEntity.ok().build();
     }

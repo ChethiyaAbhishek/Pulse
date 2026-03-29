@@ -1,6 +1,6 @@
 package com.ecads.pulse.authentication.controller;
 
-import com.ecads.pulse.authentication.dto.JwtTokenDTO;
+import com.ecads.pulse.authentication.dto.FcmTokenDto;
 import com.ecads.pulse.authentication.dto.LoginRequestDTO;
 import com.ecads.pulse.authentication.dto.RoleBasedDTO;
 import com.ecads.pulse.authentication.service.UserAuthenticationService;
@@ -29,6 +29,12 @@ public class UserAuthenticationController {
     public ResponseEntity<Void> patientLogout(@RequestHeader(AUTHORIZATION) String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         return service.patientLogout(token);
+    }
+
+    @PostMapping("/patient/updateFcmToken")
+    public ResponseEntity<Void> updateFcmToken(
+            @RequestBody FcmTokenDto requestData) {
+        return service.updatePatientFcmToken(requestData);
     }
 
     @PostMapping("/login/userRole")

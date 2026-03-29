@@ -1,11 +1,13 @@
 package com.ecads.pulse.authentication.service;
 
+import com.ecads.pulse.authentication.dto.FcmTokenDto;
 import com.ecads.pulse.authentication.dto.LoginRequestDTO;
 import com.ecads.pulse.authentication.dto.RoleBasedDTO;
 import com.ecads.pulse.authentication.entity.User;
 import com.ecads.pulse.authentication.exception.FirebaseAuthFailedException;
 import com.ecads.pulse.authentication.repository.UserRepository;
 import com.ecads.pulse.common.enums.UserRole;
+import com.ecads.pulse.common.exception.ShowErrorException;
 import com.ecads.pulse.common.util.FirebaseTokenVerification;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.NonNull;
@@ -76,6 +78,28 @@ public class UserAuthenticationService {
         } else {
             log.error("No user record found");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<Void> updatePatientFcmToken(FcmTokenDto requestData) {
+        if (requestData == null || requestData.getPatientUid().isEmpty()
+                || requestData.getFcmToken().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        String patientUid = requestData.getPatientUid();
+        String fcmToken = requestData.getFcmToken();
+
+        User user = repository.getByUid(patientUid);
+
+        if (user != null) {
+
+            user.setFcmToken(fcmToken);
+
+            return ResponseEntity.ok(null);
+        } else {
+            throw new ShowErrorException("No user found");
         }
     }
 

@@ -1,11 +1,9 @@
 package com.ecads.pulse.authentication.entity;
 
-import com.ecads.pulse.common.enums.Gender;
 import com.ecads.pulse.common.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity

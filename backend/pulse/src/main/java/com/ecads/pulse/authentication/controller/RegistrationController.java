@@ -25,6 +25,4 @@ public class RegistrationController {
         return service.registerPatient(requestDTO);
     }
 
-//    public ResponseEntity<JwtTokenDTO> registerTherapist(@RequestBody){}
-
 }

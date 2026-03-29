@@ -39,6 +39,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pulse"
         android:usesCleartextTraffic="true">
+        <service
+            android:name=".service.MessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <activity
             android:name=".activity.HeartRateMonitoringActivity"
             android:exported="false" />

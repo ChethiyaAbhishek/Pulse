@@ -11,4 +11,10 @@ public interface ConsultantChannelingHospitalRepository extends JpaRepository<Co
     ConsultantChannelingHospital getByHospitalPlaceIdAndConsultantUid(String hospitalPlaceId, String consultantUid);
 
     List<ConsultantChannelingHospital> getAllByConsultantUid(String consultantUid);
+
+    ConsultantChannelingHospital getByHospitalPlaceId(String hospitalPlaceId);
+
+    long countByIsActive(Boolean isActive);
+
+    long countByIsActiveAndHospitalPlaceId(Boolean isActive, String hospitalPlaceId);
 }

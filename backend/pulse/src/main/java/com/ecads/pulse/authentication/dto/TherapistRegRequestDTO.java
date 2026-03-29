@@ -1,13 +1,9 @@
 package com.ecads.pulse.authentication.dto;
 
-import com.ecads.pulse.common.enums.Gender;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 
 @Getter
 @Setter

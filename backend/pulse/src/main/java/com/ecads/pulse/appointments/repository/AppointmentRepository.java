@@ -31,4 +31,18 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> getAllByPatientUidAndAppointmentStatusIsNot(String patientUid, AppointmentStatus appointmentStatus);
 
     List<Appointment> getAllByAppointmentStatusIsNot(AppointmentStatus appointmentStatus, Pageable pageable);
+
+    List<Appointment> getAllByConsultantChannelingHospitalAndAppointmentStatus(ConsultantChannelingHospital consultantChannelingHospital, AppointmentStatus appointmentStatus);
+
+    List<Appointment> getAllByConsultantChannelingHospitalAndAppointmentStatusIsNot(ConsultantChannelingHospital consultantChannelingHospital, AppointmentStatus appointmentStatus);
+
+    List<Appointment> getAllByConsultantChannelingHospital(ConsultantChannelingHospital consultantChannelingHospital, Pageable pageable);
+
+    List<Appointment> getAllByConsultantChannelingHospital_HospitalPlaceId(String consultantChannelingHospitalHospitalPlaceId, Pageable pageable);
+
+    long countByAppointmentStatusIsNot(AppointmentStatus appointmentStatus);
+
+    List<Appointment> getAllByConsultantChannelingHospital_HospitalPlaceId(String consultantChannelingHospitalHospitalPlaceId);
+
+    long countByAppointmentStatus(AppointmentStatus appointmentStatus);
 }

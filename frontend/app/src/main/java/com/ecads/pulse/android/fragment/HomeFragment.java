@@ -88,6 +88,10 @@ public class HomeFragment extends Fragment {
             }
         });
         checkLocalStorageAndNotify();
+
+        if (preferences.getString("fname", null) != null) {
+            binding.userNameHome.setText("Hi " + preferences.getString("fname", "") + "!");
+        }
     }
 
     private void loadBody(LinearLayout layout) {

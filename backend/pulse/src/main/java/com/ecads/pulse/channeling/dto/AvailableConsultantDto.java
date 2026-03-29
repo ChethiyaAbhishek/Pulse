@@ -1,7 +1,6 @@
 package com.ecads.pulse.channeling.dto;
 
 import com.ecads.pulse.hospital.dto.HospitalApiDto;
-import com.ecads.pulse.hospital.dto.HospitalDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
